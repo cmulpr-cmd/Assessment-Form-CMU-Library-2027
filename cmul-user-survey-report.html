@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>สรุปผลการประเมินการเปิดรับข่าวสารและภาพลักษณ์ - สำนักหอสมุด มช.</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700;800;900&family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-primary: #0a0e1a;
+  --bg-card: #111827;
+  --border-subtle: rgba(255,255,255,0.06);
+  --text-primary: #f0f4ff;
+  --text-secondary: #8b9cc7;
+  --text-muted: #5a6a8a;
+  --accent-blue: #3b82f6;
+  --accent-cyan: #06b6d4;
+  --accent-emerald: #10b981;
+  --accent-amber: #f59e0b;
+  --accent-rose: #f43f5e;
+  --accent-violet: #8b5cf6;
+  --accent-orange: #f97316;
+  --accent-pink: #ec4899;
+  --accent-sky: #38bdf8;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'IBM Plex Sans Thai', 'Noto Sans Thai', sans-serif; background: var(--bg-primary); color: var(--text-primary); min-height: 100vh; overflow-x: hidden; }
+
+.noise-overlay { position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.03; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+
+.hero { position: relative; padding: 60px 40px 40px; text-align: center; overflow: hidden; }
+.hero::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(ellipse at 50% 0%, rgba(6,182,212,0.12) 0%, transparent 60%), radial-gradient(ellipse at 20% 50%, rgba(236,72,153,0.08) 0%, transparent 50%), radial-gradient(ellipse at 80% 50%, rgba(59,130,246,0.08) 0%, transparent 50%); z-index: 0; }
+.hero-content { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; }
+.hero-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 100px; background: rgba(6,182,212,0.12); border: 1px solid rgba(6,182,212,0.2); color: var(--accent-cyan); font-size: 13px; font-weight: 500; letter-spacing: 0.5px; margin-bottom: 20px; }
+.hero-badge::before { content: ''; width: 6px; height: 6px; background: var(--accent-cyan); border-radius: 50%; animation: pulse 2s infinite; }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+.hero h1 { font-family: 'Noto Sans Thai', sans-serif; font-size: 34px; font-weight: 800; line-height: 1.3; background: linear-gradient(135deg, #fff 0%, #a5b4fc 50%, #06b6d4 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 12px; }
+.hero-sub { font-size: 16px; color: var(--text-secondary); font-weight: 400; margin-bottom: 8px; }
+.hero-meta { display: flex; justify-content: center; gap: 24px; margin-top: 24px; flex-wrap: wrap; }
+.meta-item { display: flex; align-items: center; gap: 8px; color: var(--text-muted); font-size: 13px; }
+.meta-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--accent-cyan); }
+
+.kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; max-width: 1200px; margin: 0 auto; padding: 0 40px 40px; }
+.kpi-card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 16px; padding: 24px; position: relative; overflow: hidden; transition: transform 0.3s; }
+.kpi-card:hover { transform: translateY(-2px); }
+.kpi-card::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; }
+.kpi-card:nth-child(1)::after { background: linear-gradient(135deg, #06b6d4, #3b82f6); }
+.kpi-card:nth-child(2)::after { background: linear-gradient(135deg, #10b981, #06b6d4); }
+.kpi-card:nth-child(3)::after { background: linear-gradient(135deg, #8b5cf6, #ec4899); }
+.kpi-card:nth-child(4)::after { background: linear-gradient(135deg, #f59e0b, #f97316); }
+.kpi-label { font-size: 13px; color: var(--text-muted); font-weight: 500; margin-bottom: 8px; }
+.kpi-value { font-size: 36px; font-weight: 800; letter-spacing: -1px; line-height: 1; margin-bottom: 6px; }
+.kpi-card:nth-child(1) .kpi-value { color: var(--accent-cyan); }
+.kpi-card:nth-child(2) .kpi-value { color: var(--accent-emerald); }
+.kpi-card:nth-child(3) .kpi-value { color: var(--accent-violet); }
+.kpi-card:nth-child(4) .kpi-value { color: var(--accent-amber); }
+.kpi-detail { font-size: 12px; color: var(--text-secondary); }
+
+.dashboard { max-width: 1200px; margin: 0 auto; padding: 0 40px 60px; display: grid; gap: 20px; }
+.row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+.row-full { display: grid; grid-template-columns: 1fr; }
+.card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 16px; padding: 28px; transition: border-color 0.3s; }
+.card:hover { border-color: rgba(255,255,255,0.1); }
+.card-header { margin-bottom: 20px; }
+.card-tag { display: inline-block; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; padding: 3px 10px; border-radius: 6px; margin-bottom: 10px; }
+.tag-blue { background: rgba(59,130,246,0.12); color: var(--accent-blue); }
+.tag-emerald { background: rgba(16,185,129,0.12); color: var(--accent-emerald); }
+.tag-violet { background: rgba(139,92,246,0.12); color: var(--accent-violet); }
+.tag-amber { background: rgba(245,158,11,0.12); color: var(--accent-amber); }
+.tag-rose { background: rgba(244,63,94,0.12); color: var(--accent-rose); }
+.tag-cyan { background: rgba(6,182,212,0.12); color: var(--accent-cyan); }
+.tag-pink { background: rgba(236,72,153,0.12); color: var(--accent-pink); }
+.tag-orange { background: rgba(249,115,22,0.12); color: var(--accent-orange); }
+.card-title { font-size: 17px; font-weight: 700; color: var(--text-primary); line-height: 1.4; }
+.chart-container { position: relative; width: 100%; }
+
+.donut-wrap { position: relative; display: flex; justify-content: center; }
+.donut-center { position: absolute; top: calc(50% - 18px); left: 50%; transform: translate(-50%, -50%); text-align: center; pointer-events: none; }
+.donut-center .big { font-size: 26px; font-weight: 800; display: block; }
+.donut-center .small { font-size: 11px; color: var(--text-muted); }
+
+.sat-item { display: flex; align-items: center; gap: 14px; margin-bottom: 12px; }
+.sat-label { font-size: 12px; color: var(--text-secondary); min-width: 160px; line-height: 1.3; }
+.sat-bar-wrap { flex: 1; height: 26px; background: rgba(255,255,255,0.04); border-radius: 8px; overflow: hidden; }
+.sat-bar { height: 100%; border-radius: 8px; display: flex; align-items: center; justify-content: flex-end; padding-right: 10px; transition: width 1.2s cubic-bezier(0.25,1,0.5,1); font-size: 12px; font-weight: 700; color: #fff; }
+.sat-bar.blue { background: linear-gradient(90deg, rgba(59,130,246,0.7), var(--accent-blue)); }
+.sat-bar.emerald { background: linear-gradient(90deg, rgba(16,185,129,0.7), var(--accent-emerald)); }
+.sat-bar.violet { background: linear-gradient(90deg, rgba(139,92,246,0.7), var(--accent-violet)); }
+.sat-bar.cyan { background: linear-gradient(90deg, rgba(6,182,212,0.7), var(--accent-cyan)); }
+.sat-bar.amber { background: linear-gradient(90deg, rgba(245,158,11,0.7), var(--accent-amber)); }
+.sat-bar.rose { background: linear-gradient(90deg, rgba(244,63,94,0.7), var(--accent-rose)); }
+.sat-bar.pink { background: linear-gradient(90deg, rgba(236,72,153,0.7), var(--accent-pink)); }
+
+.suggestion-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.suggestion-item { background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 14px; font-size: 12.5px; color: var(--text-secondary); line-height: 1.7; transition: background 0.3s; }
+.suggestion-item:hover { background: rgba(255,255,255,0.06); }
+.suggestion-num { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 6px; background: rgba(6,182,212,0.15); color: var(--accent-cyan); font-size: 11px; font-weight: 700; margin-right: 8px; }
+
+/* Keyword cloud */
+.keyword-grid { display: flex; flex-wrap: wrap; gap: 10px; }
+.kw-tag { display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 100px; font-size: 13px; font-weight: 500; border: 1px solid var(--border-subtle); transition: all 0.3s; }
+.kw-tag:hover { transform: scale(1.05); }
+.kw-tag .kw-count { font-size: 11px; font-weight: 700; opacity: 0.7; }
+
+.section-divider { border: none; border-top: 1px solid rgba(255,255,255,0.04); margin: 10px 0; }
+
+.report-footer { max-width: 1200px; margin: 0 auto; padding: 30px 40px 50px; text-align: center; color: var(--text-muted); font-size: 12px; border-top: 1px solid var(--border-subtle); }
+
+@media (max-width: 900px) {
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  .row-2, .row-3 { grid-template-columns: 1fr; }
+  .suggestion-grid { grid-template-columns: 1fr; }
+  .hero h1 { font-size: 24px; }
+  .hero, .kpi-grid, .dashboard { padding-left: 20px; padding-right: 20px; }
+}
+</style>
+</head>
+<body>
+<div class="noise-overlay"></div>
+
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">รายงานสรุปผล ปี 2569</div>
+    <h1>สรุปผลการประเมินการเปิดรับข่าวสาร<br>และภาพลักษณ์ของผู้ใช้บริการ</h1>
+    <p class="hero-sub">สำนักหอสมุด มหาวิทยาลัยเชียงใหม่ ประจำปี พ.ศ. 2569</p>
+    <div class="hero-meta">
+      <div class="meta-item"><div class="meta-dot"></div>ผู้ตอบแบบสอบถาม 411 คน</div>
+      <div class="meta-item"><div class="meta-dot"></div>เก็บข้อมูล 6 - 11 มี.ค. 2569</div>
+      <div class="meta-item"><div class="meta-dot"></div>6 กลุ่มสถานภาพ</div>
+    </div>
+  </div>
+</section>
+
+<div class="kpi-grid">
+  <div class="kpi-card">
+    <div class="kpi-label">ผู้ตอบแบบสอบถาม</div>
+    <div class="kpi-value">411</div>
+    <div class="kpi-detail">คน จาก 6 กลุ่มสถานภาพ</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">ความพึงพอใจเนื้อหาข่าวรวม</div>
+    <div class="kpi-value">4.28</div>
+    <div class="kpi-detail">จาก 5.00 (ระดับมาก)</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">ความพึงพอใจรูปแบบนำเสนอ</div>
+    <div class="kpi-value">4.47</div>
+    <div class="kpi-detail">จาก 5.00 (ระดับมาก)</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">ภาพลักษณ์องค์กรเฉลี่ย</div>
+    <div class="kpi-value">4.47</div>
+    <div class="kpi-detail">จาก 5.00 (ระดับมาก)</div>
+  </div>
+</div>
+
+<div class="dashboard">
+
+  <!-- Row 1: Demographics -->
+  <div class="row-3">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-tag tag-pink">ส่วนที่ 1</div>
+        <div class="card-title">สัดส่วนเพศ</div>
+      </div>
+      <div class="donut-wrap">
+        <canvas id="chartGender" height="220"></canvas>
+        <div class="donut-center">
+          <span class="big" style="color:var(--accent-cyan)">411</span>
+          <span class="small">คน</span>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-tag tag-violet">ส่วนที่ 1</div>
+        <div class="card-title">กลุ่มอายุ</div>
+      </div>
+      <div class="chart-container">
+        <canvas id="chartAge" height="220"></canvas>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-tag tag-cyan">ส่วนที่ 1</div>
+        <div class="card-title">ระดับการศึกษา</div>
+      </div>
+      <div class="donut-wrap">
+        <canvas id="chartEdu" height="220"></canvas>
+        <div class="donut-center">
+          <span class="big" style="color:var(--accent-emerald)">411</span>
+          <span class="small">คน</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Row 2: Status -->
+  <div class="row-full">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-tag tag-emerald">ส่วนที่ 1</div>
+        <div class="card-title">สถานภาพผู้ตอบแบบสอบถาม</div>
+      </div>
+      <div class="chart-container">
+        <canvas id="chartStatus" height="150"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Row 3: Channels -->
+  <div class="row-2">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-tag tag-blue">ส่วนที่ 2 ช่องทาง</div>
+        <div class="card-title">ช่องทางการเปิดรับข่าวสาร (ตอบได้หลายข้อ)</div>
+      </div>
+      <div class="chart-container">
+        <canvas id="chartChannels" height="320"></canvas>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-tag tag-amber">ส่วนที่ 2 ช่องทาง</div>
+        <div class="card-title">ช่องทางที่นิยมมากที่สุด (อันดับ 1)</div>
+      </div>
+      <div class="donut-wrap">
+        <canvas id="chartTopChannel" height="320"></canvas>
+        <div class="donut-center">
+          <span class="big" style="color:var(--accent-amber)">66.7%</span>
+          <span class="small">Facebook #1</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Row 4: Time & Frequency -->
+  <div class="row-2">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-tag tag-rose">ส่วนที่ 2 พฤติกรรม</div>
+        <div class="card-title">ช่วงเวลาเปิดรับข่าวสาร</div>
+      </div>
+      <div class="chart-container">
+        <canvas id="chartTime" height="260"></canvas>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-tag tag-cyan">ส่วนที่ 2 พฤติกรรม</div>
+        <div class="card-title">ความถี่ในการเปิดรับข่าวสาร</div>
+      </div>
+      <div class="donut-wrap">
+        <canvas id="chartFreq" height="260"></canvas>
+        <div class="donut-center">
+          <span class="big" style="color:var(--accent-sky)">51.1%</span>
+          <span class="small">เปิดรับทุกวัน</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Row 5: Content Types -->
+  <div class="row-full">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-tag tag-violet">ส่วนที่ 2 เนื้อหา</div>
+        <div class="card-title">ประเภทเนื้อหาที่เปิดรับ (หลายข้อ) vs ที่นิยมมากที่สุด (อันดับ 1)</div>
+      </div>
+      <div class="chart-container">
+        <canvas id="chartContent" height="200"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Row 6: Satisfaction - Content -->
+  <div class="row-full">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-tag tag-emerald">ส่วนที่ 3 ความพึงพอใจ</div>
+        <div class="card-title">ความพึงพอใจต่อเนื้อหาข่าวแต่ละประเภท (ค่าเฉลี่ย จาก 5.00)</div>
+      </div>
+      <div style="margin-top:8px;">
+        <div class="sat-item">
+          <div class="sat-label">แนะนำบริการ/นวัตกรรม</div>
+          <div class="sat-bar-wrap"><div class="sat-bar emerald" style="width:0%" data-target="86">4.30</div></div>
+        </div>
+        <div class="sat-item">
+          <div class="sat-label">ส่งเสริมการใช้ทรัพยากร</div>
+          <div class="sat-bar-wrap"><div class="sat-bar cyan" style="width:0%" data-target="86">4.30</div></div>
+        </div>
+        <div class="sat-item">
+          <div class="sat-label">ความรู้รอบตัว/Meme</div>
+          <div class="sat-bar-wrap"><div class="sat-bar violet" style="width:0%" data-target="85.8">4.29</div></div>
+        </div>
+        <div class="sat-item">
+          <div class="sat-label">กิจกรรมส่งเสริมการเรียนรู้</div>
+          <div class="sat-bar-wrap"><div class="sat-bar blue" style="width:0%" data-target="85.4">4.27</div></div>
+        </div>
+        <div class="sat-item">
+          <div class="sat-label">ข่าวผู้บริหาร/บุคลากร</div>
+          <div class="sat-bar-wrap"><div class="sat-bar amber" style="width:0%" data-target="84.6">4.23</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Row 7: Satisfaction - Presentation -->
+  <div class="row-full">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-tag tag-pink">ส่วนที่ 3 ความพึงพอใจ</div>
+        <div class="card-title">ความพึงพอใจต่อรูปแบบการนำเสนอ (ค่าเฉลี่ย จาก 5.00)</div>
+      </div>
+      <div style="margin-top:8px;">
+        <div class="sat-item">
+          <div class="sat-label">Caption อ่านง่าย ดึงดูด</div>
+          <div class="sat-bar-wrap"><div class="sat-bar pink" style="width:0%" data-target="90.4">4.52 ★</div></div>
+        </div>
+        <div class="sat-item">
+          <div class="sat-label">Infographic เข้าใจง่าย</div>
+          <div class="sat-bar-wrap"><div class="sat-bar violet" style="width:0%" data-target="90.2">4.51 ★</div></div>
+        </div>
+        <div class="sat-item">
+          <div class="sat-label">อัพเดทสม่ำเสมอ/เวลาเหมาะสม</div>
+          <div class="sat-bar-wrap"><div class="sat-bar cyan" style="width:0%" data-target="89.6">4.48</div></div>
+        </div>
+        <div class="sat-item">
+          <div class="sat-label">เปิดพื้นที่มีส่วนร่วม</div>
+          <div class="sat-bar-wrap"><div class="sat-bar blue" style="width:0%" data-target="89.4">4.47</div></div>
+        </div>
+        <div class="sat-item">
+          <div class="sat-label">คลิป 1-3 นาที</div>
+          <div class="sat-bar-wrap"><div class="sat-bar amber" style="width:0%" data-target="87.6">4.38</div></div>
+        </div>
+      </div>
+      <p style="font-size:11px; color:var(--text-muted); margin-top:12px;">★ = ระดับมากที่สุด (≥ 4.51)</p>
+    </div>
+  </div>
+
+  <!-- Row 8: Brand Image -->
+  <div class="row-2">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-tag tag-orange">ส่วนที่ 4 ภาพลักษณ์</div>
+        <div class="card-title">หากเปรียบสำนักหอสมุดเป็นคน</div>
+      </div>
+      <div class="chart-container">
+        <canvas id="chartPersona" height="260"></canvas>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-tag tag-rose">ส่วนที่ 4 ภาพลักษณ์</div>
+        <div class="card-title">ปัจจัยตัดสินใจรับฟังข่าวสาร</div>
+      </div>
+      <div class="chart-container">
+        <canvas id="chartFactors" height="260"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Row 9: Corporate Image Satisfaction -->
+  <div class="row-full">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-tag tag-cyan">ส่วนที่ 4 ภาพลักษณ์</div>
+        <div class="card-title">ความพึงพอใจต่อภาพลักษณ์การสื่อสารองค์กร (ค่าเฉลี่ย จาก 5.00)</div>
+      </div>
+      <div class="chart-container">
+        <canvas id="chartImageSat" height="180"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Row 10: Keywords -->
+  <div class="row-full">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-tag tag-violet">ส่วนที่ 4 ภาพลักษณ์</div>
+        <div class="card-title">Keyword เมื่อนึกถึง "สำนักหอสมุด มหาวิทยาลัยเชียงใหม่"</div>
+      </div>
+      <div class="keyword-grid" id="keywordCloud"></div>
+    </div>
+  </div>
+
+  <!-- Row 11: Content Satisfaction Detail - Radar -->
+  <div class="row-2">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-tag tag-blue">ส่วนที่ 3 รายละเอียด</div>
+        <div class="card-title">ความพึงพอใจรายด้าน (แต่ละประเภทข่าว)</div>
+      </div>
+      <div class="chart-container">
+        <canvas id="chartDetailRadar" height="300"></canvas>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-tag tag-emerald">ส่วนที่ 2 เนื้อหา</div>
+        <div class="card-title">เนื้อหาที่นิยมอันดับ 1, 2, 3 เปรียบเทียบ</div>
+      </div>
+      <div class="chart-container">
+        <canvas id="chartContentRank" height="300"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Row 12: Suggestions -->
+  <div class="row-full">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-tag tag-amber">ส่วนที่ 5</div>
+        <div class="card-title">ข้อเสนอแนะเพิ่มเติมจากผู้ใช้บริการ</div>
+      </div>
+      <div class="suggestion-grid">
+        <div class="suggestion-item"><span class="suggestion-num">1</span>ทำดีแล้ว อยากให้ทำต่อไป (13 คน) และคงความทันสมัย สื่อสารสั้น กระชับ เข้าใจง่าย (6 คน)</div>
+        <div class="suggestion-item"><span class="suggestion-num">2</span>อยากให้ปรับอุณหภูมิแอร์เพิ่มขึ้น หรือเปิดบริการเช่าผ้าห่ม (10 คน)</div>
+        <div class="suggestion-item"><span class="suggestion-num">3</span>อยากให้เปิด 24 ชม. มากกว่า 1 อาทิตย์/นอกช่วงสอบ และเปิดโซนอ่านหนังสือเพิ่ม (5 คน)</div>
+        <div class="suggestion-item"><span class="suggestion-num">4</span>อยากให้เพิ่มจำนวนปลั๊กพ่วงและสายชาร์จ / ซ่อมปลั๊กไฟ / เพิ่มแสงสว่างชั้น 2-3 (7 คน)</div>
+        <div class="suggestion-item"><span class="suggestion-num">5</span>ชอบงาน CMU Book Fair อยากให้เพิ่มเป็นปีละ 2 ครั้ง เทอมละครั้ง (3 คน)</div>
+        <div class="suggestion-item"><span class="suggestion-num">6</span>เพิ่ม PR ห้องสมุดคณะอื่นในเพจสำนักหอสมุด แบบ One Stop Service (2 คน)</div>
+        <div class="suggestion-item"><span class="suggestion-num">7</span>กราฟิกโพสต์โปรโมทกิจกรรมไม่ดึงดูดเท่าโพสต์กระแสสังคม ควรปรับสี/ภาพให้โดดเด่นขึ้น</div>
+        <div class="suggestion-item"><span class="suggestion-num">8</span>อยากให้แจ้งข่าวสารใน CMU Mobile / แนะนำหนังสือตามหมวดหมู่ผ่าน Line / เพิ่มแหล่งอ้างอิง</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer class="report-footer">
+  สำนักหอสมุด มหาวิทยาลัยเชียงใหม่ &middot; รายงานสรุปผลการประเมินการเปิดรับข่าวสารและภาพลักษณ์ของผู้ใช้บริการ ประจำปี พ.ศ. 2569<br>
+  เก็บข้อมูลระหว่างวันที่ 6 - 11 มีนาคม 2569 &middot; ผู้ตอบแบบสอบถาม 411 คน
+</footer>
+
+<script>
+Chart.defaults.font.family = "'IBM Plex Sans Thai', 'Noto Sans Thai', sans-serif";
+Chart.defaults.color = '#8b9cc7';
+Chart.defaults.plugins.legend.labels.usePointStyle = true;
+Chart.defaults.plugins.legend.labels.pointStyleWidth = 10;
+Chart.defaults.plugins.legend.labels.padding = 14;
+
+const c = {
+  blue:'#3b82f6', cyan:'#06b6d4', emerald:'#10b981', amber:'#f59e0b',
+  rose:'#f43f5e', violet:'#8b5cf6', orange:'#f97316', pink:'#ec4899',
+  sky:'#38bdf8', indigo:'#6366f1', teal:'#14b8a6', lime:'#84cc16',
+  slate:'#64748b'
+};
+
+// 1. Gender - ชาย=ฟ้า, หญิง=ชมพู
+new Chart(document.getElementById('chartGender'), {
+  type: 'doughnut',
+  data: { labels: ['หญิง (78.35%)', 'ชาย (21.65%)'], datasets: [{ data: [322, 89], backgroundColor: [c.pink, c.sky], borderWidth: 0, cutout: '68%' }] },
+  options: { plugins: { legend: { position: 'bottom', labels: { font: { size: 12 } } } }, responsive: true, maintainAspectRatio: false }
+});
+
+// 2. Age - แต่ละกลุ่มคนละเฉด
+new Chart(document.getElementById('chartAge'), {
+  type: 'bar',
+  data: {
+    labels: ['<18 ปี', '18-24 ปี', '25-34 ปี', '35-44 ปี', '45-54 ปี', '55+ ปี'],
+    datasets: [{ data: [4, 281, 79, 27, 17, 3], backgroundColor: [c.teal, c.cyan, c.blue, c.violet, c.amber, c.rose], borderRadius: 8, borderSkipped: false }]
+  },
+  options: { plugins: { legend: { display: false } }, scales: { y: { grid: { color: 'rgba(255,255,255,0.04)' } }, x: { grid: { display: false }, ticks: { font: { size: 10 } } } }, responsive: true, maintainAspectRatio: false }
+});
+
+// 3. Education
+new Chart(document.getElementById('chartEdu'), {
+  type: 'doughnut',
+  data: { labels: ['ปริญญาตรี (72.99%)', 'ต่ำกว่า ป.ตรี (16.30%)', 'ป.โท+ (10.71%)'], datasets: [{ data: [300, 67, 44], backgroundColor: [c.emerald, c.amber, c.violet], borderWidth: 0, cutout: '68%' }] },
+  options: { plugins: { legend: { position: 'bottom', labels: { font: { size: 11 } } } }, responsive: true, maintainAspectRatio: false }
+});
+
+// 4. Status
+new Chart(document.getElementById('chartStatus'), {
+  type: 'bar',
+  data: {
+    labels: ['นศ.ปริญญาตรี', 'บุคลากรสนับสนุน', 'นศ.บัณฑิตศึกษา', 'บุคคลทั่วไป', 'อาจารย์/นักวิจัย', 'Lifelong Learning'],
+    datasets: [{ data: [285, 62, 35, 16, 9, 4], backgroundColor: [c.cyan, c.emerald, c.blue, c.amber, c.violet, c.rose], borderRadius: 8, borderSkipped: false }]
+  },
+  options: { indexAxis: 'y', plugins: { legend: { display: false } }, scales: { x: { grid: { color: 'rgba(255,255,255,0.04)' } }, y: { grid: { display: false }, ticks: { font: { size: 11 } } } }, responsive: true, maintainAspectRatio: false }
+});
+
+// 5. Channels (multiple)
+new Chart(document.getElementById('chartChannels'), {
+  type: 'bar',
+  data: {
+    labels: ['Facebook', 'Line Official', 'Instagram', 'TikTok', 'กิจกรรม', 'บอร์ด/Signage', 'พูดคุย', 'Website', 'X', 'YouTube'],
+    datasets: [{ data: [369, 214, 142, 122, 92, 82, 78, 59, 23, 13], backgroundColor: [c.blue, c.emerald, c.pink, '#000', c.amber, c.orange, c.violet, c.cyan, c.slate, c.rose], borderRadius: 8, borderSkipped: false }]
+  },
+  options: { indexAxis: 'y', plugins: { legend: { display: false } }, scales: { x: { grid: { color: 'rgba(255,255,255,0.04)' } }, y: { grid: { display: false }, ticks: { font: { size: 11 } } } }, responsive: true, maintainAspectRatio: false }
+});
+
+// 6. Top Channel #1
+new Chart(document.getElementById('chartTopChannel'), {
+  type: 'doughnut',
+  data: {
+    labels: ['Facebook (66.66%)', 'Line (12.41%)', 'Instagram (10.95%)', 'TikTok (4.14%)', 'อื่นๆ (5.84%)'],
+    datasets: [{ data: [274, 51, 45, 17, 24], backgroundColor: [c.blue, c.emerald, c.pink, '#333', c.slate], borderWidth: 0, cutout: '65%' }]
+  },
+  options: { plugins: { legend: { position: 'bottom', labels: { font: { size: 11 } } } }, responsive: true, maintainAspectRatio: false }
+});
+
+// 7. Time
+new Chart(document.getElementById('chartTime'), {
+  type: 'bar',
+  data: {
+    labels: ['06-09', '09-12', '12-15', '15-18', '18-21', '21-24', '00-03', '03-06'],
+    datasets: [{ data: [10, 75, 84, 60, 122, 52, 4, 4], backgroundColor: [c.teal, c.cyan, c.blue, c.violet, c.pink, c.amber, c.slate, c.slate], borderRadius: 8, borderSkipped: false }]
+  },
+  options: { plugins: { legend: { display: false } }, scales: { y: { grid: { color: 'rgba(255,255,255,0.04)' } }, x: { grid: { display: false }, ticks: { font: { size: 10 } } } }, responsive: true, maintainAspectRatio: false }
+});
+
+// 8. Frequency
+new Chart(document.getElementById('chartFreq'), {
+  type: 'doughnut',
+  data: {
+    labels: ['ทุกวัน (51.09%)', '3-4 ครั้ง/สัปดาห์ (26.03%)', '1-2 ครั้ง/สัปดาห์ (12.17%)', '5-6 ครั้ง/สัปดาห์ (6.57%)', 'นานๆ ครั้ง (4.14%)'],
+    datasets: [{ data: [210, 107, 50, 27, 17], backgroundColor: [c.sky, c.blue, c.violet, c.emerald, c.amber], borderWidth: 0, cutout: '65%' }]
+  },
+  options: { plugins: { legend: { position: 'bottom', labels: { font: { size: 10 } } } }, responsive: true, maintainAspectRatio: false }
+});
+
+// 9. Content Types
+new Chart(document.getElementById('chartContent'), {
+  type: 'bar',
+  data: {
+    labels: ['ความรู้/Meme', 'แนะนำบริการ', 'ส่งเสริมทรัพยากร', 'กิจกรรมเรียนรู้', 'ข่าวผู้บริหาร'],
+    datasets: [
+      { label: 'เปิดรับ (หลายข้อ)', data: [314, 281, 245, 221, 84], backgroundColor: 'rgba(59,130,246,0.7)', borderRadius: 8, borderSkipped: false },
+      { label: 'นิยมอันดับ 1', data: [225, 82, 32, 63, 9], backgroundColor: 'rgba(16,185,129,0.7)', borderRadius: 8, borderSkipped: false }
+    ]
+  },
+  options: { plugins: { legend: { position: 'top', labels: { font: { size: 12 } } } }, scales: { y: { grid: { color: 'rgba(255,255,255,0.04)' } }, x: { grid: { display: false }, ticks: { font: { size: 10 } } } }, responsive: true, maintainAspectRatio: false }
+});
+
+// 10. Persona (Library as a person)
+new Chart(document.getElementById('chartPersona'), {
+  type: 'bar',
+  data: {
+    labels: ['สนุกสนาน ร่าเริง\nเข้าถึงง่าย', 'รุ่นใหม่ วัยรุ่น\nทันสมัย', 'เต็มใจ\nช่วยเหลือ', 'คิด\nสร้างสรรค์', 'สุขุม\nเงียบขรึม', 'สูงวัย/อื่นๆ'],
+    datasets: [{ data: [151, 144, 58, 32, 20, 6], backgroundColor: [c.pink, c.cyan, c.emerald, c.violet, c.amber, c.slate], borderRadius: 8, borderSkipped: false }]
+  },
+  options: { plugins: { legend: { display: false } }, scales: { y: { grid: { color: 'rgba(255,255,255,0.04)' } }, x: { grid: { display: false }, ticks: { font: { size: 10 }, maxRotation: 0 } } }, responsive: true, maintainAspectRatio: false }
+});
+
+// 11. Decision Factors
+new Chart(document.getElementById('chartFactors'), {
+  type: 'bar',
+  data: {
+    labels: ['น่าเชื่อถือ\nน่าสนใจ ทันสมัย', 'ประโยชน์ต่อ\nการเรียนรู้', 'กระชับ\nครอบคลุม', 'ติดตาม\nกิจกรรม', 'ประโยชน์\nต่องาน'],
+    datasets: [{ data: [148, 102, 74, 59, 28], backgroundColor: [c.blue, c.emerald, c.cyan, c.violet, c.amber], borderRadius: 8, borderSkipped: false }]
+  },
+  options: { plugins: { legend: { display: false } }, scales: { y: { grid: { color: 'rgba(255,255,255,0.04)' } }, x: { grid: { display: false }, ticks: { font: { size: 10 }, maxRotation: 0 } } }, responsive: true, maintainAspectRatio: false }
+});
+
+// 12. Corporate Image Satisfaction
+new Chart(document.getElementById('chartImageSat'), {
+  type: 'radar',
+  data: {
+    labels: ['ภาพลักษณ์ดี/ไว้วางใจ\n(4.50)', 'ความเข้าใจ/สัมพันธ์ดี\n(4.48)', 'ยอมรับ/เข้าร่วมกิจกรรม\n(4.46)', 'มืออาชีพ/พร้อมบริการ\n(4.45)'],
+    datasets: [{
+      label: 'ค่าเฉลี่ย', data: [4.50, 4.48, 4.46, 4.45],
+      borderColor: c.cyan, backgroundColor: 'rgba(6,182,212,0.15)',
+      pointBackgroundColor: c.cyan, pointBorderColor: '#fff', pointRadius: 6, borderWidth: 2
+    }]
+  },
+  options: { plugins: { legend: { display: false } }, scales: { r: { beginAtZero: false, min: 4.0, max: 5.0, angleLines: { color: 'rgba(255,255,255,0.06)' }, grid: { color: 'rgba(255,255,255,0.06)' }, pointLabels: { font: { size: 11 }, color: '#8b9cc7' }, ticks: { stepSize: 0.25, font: { size: 10 }, backdropColor: 'transparent' } } }, responsive: true, maintainAspectRatio: false }
+});
+
+// 13. Content Detail Radar
+new Chart(document.getElementById('chartDetailRadar'), {
+  type: 'radar',
+  data: {
+    labels: ['รวดเร็ว/ทันสถานการณ์', 'ประโยชน์ต่อการเรียน/วิจัย', 'น่าเชื่อถือ/อ้างอิงชัด'],
+    datasets: [
+      { label: 'ข่าวผู้บริหาร (4.23)', data: [4.23, 4.20, 4.26], borderColor: c.amber, backgroundColor: 'rgba(245,158,11,0.08)', pointBackgroundColor: c.amber, pointRadius: 4, borderWidth: 2 },
+      { label: 'กิจกรรมเรียนรู้ (4.27)', data: [4.29, 4.25, 4.27], borderColor: c.blue, backgroundColor: 'rgba(59,130,246,0.08)', pointBackgroundColor: c.blue, pointRadius: 4, borderWidth: 2 },
+      { label: 'แนะนำบริการ (4.30)', data: [4.29, 4.30, 4.31], borderColor: c.emerald, backgroundColor: 'rgba(16,185,129,0.08)', pointBackgroundColor: c.emerald, pointRadius: 4, borderWidth: 2 },
+      { label: 'ทรัพยากรสารสนเทศ (4.30)', data: [4.28, 4.29, 4.32], borderColor: c.cyan, backgroundColor: 'rgba(6,182,212,0.08)', pointBackgroundColor: c.cyan, pointRadius: 4, borderWidth: 2 },
+      { label: 'ความรู้/Meme (4.29)', data: [4.41, 4.20, 4.25], borderColor: c.pink, backgroundColor: 'rgba(236,72,153,0.08)', pointBackgroundColor: c.pink, pointRadius: 4, borderWidth: 2 }
+    ]
+  },
+  options: { plugins: { legend: { position: 'bottom', labels: { font: { size: 10 } } } }, scales: { r: { beginAtZero: false, min: 4.0, max: 4.5, angleLines: { color: 'rgba(255,255,255,0.06)' }, grid: { color: 'rgba(255,255,255,0.06)' }, pointLabels: { font: { size: 10 }, color: '#8b9cc7' }, ticks: { stepSize: 0.1, font: { size: 9 }, backdropColor: 'transparent' } } }, responsive: true, maintainAspectRatio: false }
+});
+
+// 14. Content Rank comparison
+new Chart(document.getElementById('chartContentRank'), {
+  type: 'bar',
+  data: {
+    labels: ['ความรู้/Meme', 'แนะนำบริการ', 'ส่งเสริมทรัพยากร', 'กิจกรรมเรียนรู้', 'ข่าวผู้บริหาร'],
+    datasets: [
+      { label: 'อันดับ 1', data: [225, 82, 32, 63, 9], backgroundColor: 'rgba(6,182,212,0.8)', borderRadius: 6, borderSkipped: false },
+      { label: 'อันดับ 2', data: [52, 128, 126, 87, 18], backgroundColor: 'rgba(59,130,246,0.7)', borderRadius: 6, borderSkipped: false },
+      { label: 'อันดับ 3', data: [67, 113, 126, 74, 31], backgroundColor: 'rgba(139,92,246,0.6)', borderRadius: 6, borderSkipped: false }
+    ]
+  },
+  options: { plugins: { legend: { position: 'top', labels: { font: { size: 11 } } } }, scales: { y: { grid: { color: 'rgba(255,255,255,0.04)' }, stacked: false }, x: { grid: { display: false }, ticks: { font: { size: 10 } } } }, responsive: true, maintainAspectRatio: false }
+});
+
+// Keywords cloud
+const keywords = [
+  { text: 'แอร์เย็น / หนาว / โรงเลี้ยงเพนกวิน', count: 132, color: c.cyan, bg: 'rgba(6,182,212,0.12)' },
+  { text: 'แอดมินไอริน', count: 60, color: c.pink, bg: 'rgba(236,72,153,0.12)' },
+  { text: 'คอนเทนต์รวดเร็ว / ทันกระแส', count: 46, color: c.blue, bg: 'rgba(59,130,246,0.12)' },
+  { text: 'แอดมินเลิศ / ตัวแม่', count: 40, color: c.violet, bg: 'rgba(139,92,246,0.12)' },
+  { text: 'นกเพนกวิน', count: 31, color: c.teal, bg: 'rgba(20,184,166,0.12)' },
+  { text: 'แหล่งข้อมูล / แหล่งเรียนรู้', count: 22, color: c.emerald, bg: 'rgba(16,185,129,0.12)' },
+  { text: 'สนุกสนาน / ตลกเฮฮา', count: 17, color: c.amber, bg: 'rgba(245,158,11,0.12)' },
+  { text: 'ครบครัน ทุกอย่าง', count: 16, color: c.orange, bg: 'rgba(249,115,22,0.12)' },
+  { text: 'หนังสือ / คลังหนังสือ', count: 12, color: c.indigo, bg: 'rgba(99,102,241,0.12)' },
+  { text: 'บ้าน / ที่พักผ่อน', count: 10, color: c.rose, bg: 'rgba(244,63,94,0.12)' },
+  { text: 'สะอาด / อากาศดี', count: 6, color: c.lime, bg: 'rgba(132,204,22,0.12)' },
+  { text: '24 ชม. / ที่อ่านหนังสือ', count: 5, color: c.sky, bg: 'rgba(56,189,248,0.12)' },
+  { text: 'แอดมินล้านนา / ภาษาถิ่น', count: 4, color: c.teal, bg: 'rgba(20,184,166,0.12)' },
+];
+
+const kwContainer = document.getElementById('keywordCloud');
+keywords.forEach(kw => {
+  const tag = document.createElement('div');
+  tag.className = 'kw-tag';
+  const scale = Math.max(0.85, Math.min(1.3, kw.count / 60));
+  tag.style.cssText = `color:${kw.color}; background:${kw.bg}; border-color:${kw.color}22; font-size:${13 * scale}px;`;
+  tag.innerHTML = `${kw.text} <span class="kw-count">${kw.count} คน</span>`;
+  kwContainer.appendChild(tag);
+});
+
+// Animate bars
+setTimeout(() => {
+  document.querySelectorAll('.sat-bar').forEach(bar => {
+    bar.style.width = bar.getAttribute('data-target') + '%';
+  });
+}, 500);
+</script>
+</body>
+</html>
