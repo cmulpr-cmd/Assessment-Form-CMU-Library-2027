@@ -40,21 +40,20 @@
 
     <script src="auth.js"></script>
     <script>
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyhhmLPaNOC3SF5XeX6XrxKpYUhK9TZY__QrtDzvLxns8K1JGi545-vcJaF-__s-wtORA/exec";
+        // ⭐ URL ใหม่ (จาก Deploy ล่าสุด - ไฟล์ assessment_backup_backend)
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxr0sOK9Vc5KqJWKBvQ66NTuTHBYhA8PIsacQQ1V-yy2HLTqp5Lwvdjyd9T79xl2JuHHg/exec";
         let accounts = {};
         let isReady = false;
 
         const statusEl = document.getElementById('status');
         const btnEl = document.getElementById('btnTxt');
 
-        // โหลดข้อมูลบัญชี พร้อมจัดการ error อย่างละเอียด
         fetch(SCRIPT_URL + "?action=getAccounts")
             .then(r => {
                 if (!r.ok) throw new Error("HTTP " + r.status);
                 return r.text();
             })
             .then(text => {
-                // ป้องกันกรณี response ไม่ใช่ JSON (เช่นหน้า Login ของ Google)
                 try {
                     return JSON.parse(text);
                 } catch (e) {
@@ -95,7 +94,6 @@
                 return;
             }
 
-            // แก้บั๊ก: เพิ่ม .trim() ทั้ง user และ password
             const u = document.getElementById('user').value.trim().toLowerCase();
             const p = document.getElementById('pass').value.trim();
             const acc = accounts[u];
