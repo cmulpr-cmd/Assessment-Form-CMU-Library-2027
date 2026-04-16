@@ -2,127 +2,342 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <title>ยินดีต้อนรับ - หน่วยสื่อสารองค์กร สำนักหอสมุด มช.</title>
-    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เข้าสู่ระบบ - หน่วยสื่อสารองค์กร สำนักหอสมุด มช.</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body { margin:0; height:100vh; display:flex; align-items:center; justify-content:center; background:#f0f4ff; font-family:'Sarabun',sans-serif; overflow:hidden; }
-        .bg { position:fixed; inset:0; background:radial-gradient(circle at 20% 30%, rgba(8,145,178,0.1) 0%, transparent 40%), radial-gradient(circle at 80% 70%, rgba(37,99,235,0.08) 0%, transparent 40%); z-index:-1; }
-        .card { background:rgba(255,255,255,0.8); backdrop-filter:blur(20px); padding:50px 40px; border-radius:30px; box-shadow:0 20px 60px rgba(0,0,0,0.05); width:100%; max-width:400px; text-align:center; border:1px solid rgba(255,255,255,0.5); transform:translateY(30px); opacity:0; animation:fade 0.8s forwards; }
-        @keyframes fade { to { transform:translateY(0); opacity:1; } }
-        img { height:65px; margin-bottom:25px; }
-        h1 { font-size:24px; color:#1e293b; margin:0 0 5px; font-weight:700; }
-        p { color:#64748b; font-size:14px; margin-bottom:35px; }
-        .input-group { text-align:left; margin-bottom:20px; }
-        label { display:block; font-size:13px; font-weight:600; color:#475569; margin-bottom:8px; }
-        input { width:100%; padding:14px; border:1.5px solid #e2e8f0; border-radius:15px; background:#fff; font-size:15px; outline:none; transition:0.3s; box-sizing:border-box; font-family:inherit; }
-        input:focus { border-color:#0891b2; box-shadow:0 0 0 4px rgba(8,145,178,0.1); }
-        .btn { width:100%; padding:15px; background:linear-gradient(135deg,#0891b2,#2563eb); color:white; border:none; border-radius:15px; font-size:16px; font-weight:600; cursor:pointer; transition:0.3s; margin-top:10px; font-family:inherit; }
-        .btn:hover:not(:disabled) { transform:translateY(-2px); box-shadow:0 8px 20px rgba(8,145,178,0.25); }
-        .btn:disabled { opacity:0.5; cursor:not-allowed; }
-        .forgot { background:none; border:none; color:#94a3b8; font-size:13px; margin-top:25px; cursor:pointer; font-family:inherit; }
-        .forgot:hover { color:#64748b; }
-        .status { margin-top:15px; font-size:13px; min-height:20px; font-weight:600; }
+        :root {
+            --primary: #0891b2;
+            --primary-grad: linear-gradient(135deg, #0891b2, #2563eb);
+            --bg-color: #f0f4ff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: rgba(0, 0, 0, 0.08);
+            --error: #ef4444;
+            --success: #10b981;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Sarabun', sans-serif; }
+
+        body {
+            min-height: 100vh; display: flex; align-items: center; justify-content: center;
+            background: linear-gradient(-45deg, #0f172a, #1e3a8a, #0891b2, #1d4ed8);
+            background-size: 400% 400%; animation: gradientBG 20s ease infinite;
+            overflow: hidden; position: relative;
+        }
+        @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+
+        /* Glass blobs */
+        .bg-blob { position: absolute; filter: blur(80px); opacity: 0.5; z-index: 0; border-radius: 50%; animation: float 20s infinite alternate; }
+        .blob-1 { width: 400px; height: 400px; background: #2563eb; top: -100px; left: -100px; }
+        .blob-2 { width: 350px; height: 350px; background: #db2777; bottom: -50px; right: -50px; animation-delay: -5s; }
+        @keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(50px, 50px) scale(1.1); } }
+
+        .main-container { position: relative; z-index: 10; width: 100%; max-width: 440px; padding: 20px; perspective: 1000px; }
+
+        /* Login Card */
+        .card {
+            background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.6); border-radius: 30px; padding: 45px 40px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15); text-align: center;
+            transform-origin: center; transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        .card.hide { transform: scale(0.9) rotateX(10deg); opacity: 0; pointer-events: none; position: absolute; }
+
+        .logo { height: 65px; margin-bottom: 20px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.05)); }
+        h1 { font-size: 26px; color: var(--text-main); font-weight: 800; margin-bottom: 5px; letter-spacing: -0.5px; }
+        p.subtitle { color: var(--text-muted); font-size: 14px; margin-bottom: 30px; font-weight: 500; }
+
+        /* Detected User Area */
+        .detected-wrap {
+            height: 0; opacity: 0; overflow: hidden; margin-bottom: 0;
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            background: rgba(8, 145, 178, 0.05); border-radius: 20px;
+            display: flex; align-items: center; gap: 15px; padding: 0 20px; border: 1px solid transparent;
+        }
+        .detected-wrap.show {
+            height: 85px; opacity: 1; margin-bottom: 25px; padding: 15px 20px;
+            border-color: rgba(8, 145, 178, 0.15); box-shadow: 0 4px 15px rgba(8, 145, 178, 0.05);
+        }
+        .detected-avatar { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 2px solid white; box-shadow: 0 4px 10px rgba(0,0,0,0.1); background-color: #fff; }
+        .detected-info { text-align: left; flex: 1; }
+        .detected-name { font-size: 15px; font-weight: 800; color: var(--primary); display: block; line-height: 1.2; }
+        .detected-role { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+
+        /* Input Fields */
+        .input-group { position: relative; margin-bottom: 20px; text-align: left; }
+        .input-icon { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: #94a3b8; pointer-events: none; transition: color 0.3s; }
+        .input-group input {
+            width: 100%; padding: 16px 16px 16px 50px; border-radius: 16px;
+            border: 1.5px solid var(--border); background: rgba(255, 255, 255, 0.7);
+            font-size: 15px; font-weight: 500; color: var(--text-main); outline: none; transition: all 0.3s; font-family: inherit;
+        }
+        .input-group input::placeholder { color: #94a3b8; font-weight: 400; }
+        .input-group input:focus { border-color: var(--primary); background: #ffffff; box-shadow: 0 0 0 5px rgba(8, 145, 178, 0.1); }
+        .input-group input:focus + .input-icon { color: var(--primary); }
+
+        /* Button */
+        .btn {
+            width: 100%; padding: 16px; background: var(--primary-grad); color: white;
+            border: none; border-radius: 16px; font-size: 17px; font-weight: 700;
+            cursor: pointer; transition: all 0.3s; margin-top: 5px; font-family: inherit;
+            display: flex; justify-content: center; align-items: center; gap: 10px;
+            box-shadow: 0 10px 20px rgba(8, 145, 178, 0.2);
+        }
+        .btn:hover:not(:disabled) { transform: translateY(-3px); box-shadow: 0 15px 25px rgba(8, 145, 178, 0.3); }
+        .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
+
+        .forgot { background: none; border: none; color: #94a3b8; font-size: 13px; font-weight: 600; margin-top: 25px; cursor: pointer; transition: 0.3s; font-family: inherit; }
+        .forgot:hover { color: var(--primary); }
+
+        .status { margin-top: 15px; font-size: 13px; min-height: 20px; font-weight: 600; transition: 0.3s; }
+        .spinner { width: 20px; height: 20px; border: 3px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* === Success Overlay & Animation === */
+        .success-overlay {
+            position: fixed; inset: 0; background: rgba(15, 23, 42, 0.4); backdrop-filter: blur(15px);
+            z-index: 100; display: flex; align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none; transition: opacity 0.5s ease;
+        }
+        .success-overlay.show { opacity: 1; pointer-events: all; }
+        
+        .success-card {
+            background: white; border-radius: 35px; padding: 50px 40px; text-align: center;
+            width: 100%; max-width: 400px; box-shadow: 0 30px 60px rgba(0,0,0,0.2);
+            transform: scale(0.8) translateY(30px); opacity: 0; transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .success-overlay.show .success-card { transform: scale(1) translateY(0); opacity: 1; }
+
+        .zoom-avatar-wrap { position: relative; width: 120px; height: 120px; margin: 0 auto 25px; }
+        .zoom-avatar {
+            width: 100%; height: 100%; border-radius: 50%; object-fit: cover;
+            border: 4px solid white; box-shadow: 0 15px 30px rgba(8, 145, 178, 0.2); background-color: #fff;
+            transform: scale(0); animation: popAvatar 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s forwards;
+        }
+        @keyframes popAvatar { from { transform: scale(0) rotate(-15deg); opacity: 0; } to { transform: scale(1) rotate(0); opacity: 1; } }
+
+        .greeting-text { font-size: 16px; color: var(--text-muted); font-weight: 600; margin-bottom: 5px; opacity: 0; animation: fadeUp 0.5s ease 0.4s forwards; }
+        .greeting-name { font-size: 26px; color: var(--primary); font-weight: 900; letter-spacing: -0.5px; margin-bottom: 25px; opacity: 0; animation: fadeUp 0.5s ease 0.5s forwards; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+        .loading-dash {
+            display: inline-flex; align-items: center; gap: 10px; background: rgba(8, 145, 178, 0.08);
+            padding: 12px 24px; border-radius: 100px; color: var(--primary); font-weight: 700; font-size: 14px;
+            opacity: 0; animation: fadeUp 0.5s ease 0.6s forwards;
+        }
+        .loader-dots::after { content: ''; animation: dots 1.5s linear infinite; }
+        @keyframes dots { 0% { content: ''; } 25% { content: '.'; } 50% { content: '..'; } 75% { content: '...'; } 100% { content: ''; } }
+
+        .mini-spinner { width: 16px; height: 16px; border: 2.5px solid rgba(8,145,178,0.2); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; }
+
     </style>
 </head>
 <body>
-    <div class="bg"></div>
-    <div class="card">
-        <img src="logo web.png" alt="CMUL Logo">
-        <h1>ลงชื่อเข้าใช้</h1>
-        <p>ระบบรายงานผล หน่วยสื่อสารองค์กร</p>
-        <form id="loginForm">
-            <div class="input-group"><label>Username</label><input type="text" id="user" required autocomplete="off"></div>
-            <div class="input-group"><label>Password</label><input type="password" id="pass" required></div>
-            <button type="submit" class="btn" id="btnTxt" disabled>กำลังโหลดระบบ...</button>
-        </form>
-        <div id="status" class="status" style="color:#64748b;">กำลังเชื่อมต่อระบบ...</div>
-        <button class="forgot" onclick="handleReset()">ลืมรหัสผ่าน? (คืนค่าเริ่มต้น)</button>
+
+    <div class="bg-blob blob-1"></div>
+    <div class="bg-blob blob-2"></div>
+
+    <div class="main-container">
+        <div class="card" id="loginCard">
+            <img src="logo web.png" alt="CMUL Logo" class="logo" onerror="this.style.display='none'">
+            <h1>เข้าสู่ระบบ</h1>
+            <p class="subtitle">ระบบรายงานผล หน่วยสื่อสารองค์กร</p>
+
+            <div class="detected-wrap" id="detectedWrap">
+                <img src="" alt="Avatar" class="detected-avatar" id="detectedAvatar">
+                <div class="detected-info">
+                    <span class="detected-name" id="detectedName">-</span>
+                    <span class="detected-role" id="detectedRole">-</span>
+                </div>
+            </div>
+
+            <form id="loginForm">
+                <div class="input-group">
+                    <input type="text" id="user" placeholder="ชื่อผู้ใช้งาน (Username)" required autocomplete="off">
+                    <svg class="input-icon" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="pass" placeholder="รหัสผ่าน (Password)" required>
+                    <svg class="input-icon" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                </div>
+                <button type="submit" class="btn" id="btnTxt" disabled>
+                    <div class="spinner" id="btnSpinner" style="display: block;"></div>
+                    <span id="btnTextLabel">กำลังเตรียมระบบ...</span>
+                </button>
+            </form>
+
+            <div id="status" class="status" style="color:#64748b;">กำลังเชื่อมต่อฐานข้อมูล...</div>
+            <button class="forgot" onclick="handleReset()">ลืมรหัสผ่าน? (คลิกเพื่อรีเซ็ต)</button>
+        </div>
+    </div>
+
+    <div class="success-overlay" id="successOverlay">
+        <div class="success-card">
+            <div class="zoom-avatar-wrap">
+                <img src="" alt="Welcome Avatar" class="zoom-avatar" id="successAvatar">
+            </div>
+            <div class="greeting-text" id="successGreeting">สวัสดี</div>
+            <div class="greeting-name" id="successName">Name</div>
+            
+            <div class="loading-dash">
+                <div class="mini-spinner"></div>
+                กำลังพาท่านไปยัง Dashboard<span class="loader-dots"></span>
+            </div>
+        </div>
     </div>
 
     <script>
-        // ═══════════════════════════════════════════════════════════════
-        // 🔗 Apps Script URL - ต้องตรงกับใน auth.js และ dashboard.html
-        // ═══════════════════════════════════════════════════════════════
+        // 🔗 URL ของ Apps Script
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw8J-omZtpiUk7gGAyBXVqO_u5ThRMEmJXNqAUfumTT0NRQz6Ue2Z9R_GUIWpgeIpK5/exec";
         
         let accounts = {};
         let isReady = false;
+
         const statusEl = document.getElementById('status');
         const btnEl = document.getElementById('btnTxt');
+        const btnSpinner = document.getElementById('btnSpinner');
+        const btnLabel = document.getElementById('btnTextLabel');
+        const userInp = document.getElementById('user');
 
-        // ถ้า login อยู่แล้ว → ไป dashboard เลย
-        if (sessionStorage.getItem("cc_pr_user")) {
-            window.location.href = "dashboard.html";
+        // ข้ามไป Dashboard ทันทีถ้า Login ค้างไว้
+        if (sessionStorage.getItem("cc_pr_user")) { window.location.href = "dashboard.html"; }
+
+        // ═══════════════════════════════════════════════════════════════
+        // 📸 ระบบดึงรูปภาพพนักงานจากโฟลเดอร์ Staff
+        // ═══════════════════════════════════════════════════════════════
+        // กำหนดชื่อไฟล์ให้ตรงกับรูปที่มีเป๊ะๆ (ระบุนามสกุลไฟล์ด้วย)
+        const knownImages = {
+            'apinanun.s': 'Staff/apinanun.jpg',
+            'chamaiporn.k': 'Staff/chamaiporn.jpg',
+            'thanapun.k': 'Staff/thanapun.jpg',
+            'thian': 'Staff/thianrawich.png'
+        };
+
+        function setAvatarImage(imgElementId, username, displayName) {
+            const imgEl = document.getElementById(imgElementId);
+            
+            // ใช้ชื่อไฟล์ที่กำหนดไว้ด้านบน ถ้าไม่มีให้ลองสุ่มเป็น .jpg ในโฟลเดอร์ Staff
+            imgEl.src = knownImages[username] || `Staff/${username}.jpg`;
+            
+            // ถ้ารูปโหลดไม่ขึ้น (ไม่มีไฟล์) ให้สร้างตัวอักษรย่อใส่สีสวยๆ แทนอัตโนมัติ
+            imgEl.onerror = function() {
+                this.onerror = null; // ป้องกันลูปไม่รู้จบ
+                this.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=0891b2&color=fff&size=150&font-size=0.33&bold=true`;
+            };
+        }
+        // ═══════════════════════════════════════════════════════════════
+
+        // --- ฟังก์ชันคำนวณคำทักทายตามเวลา ---
+        function getTimeGreeting() {
+            const hour = new Date().getHours();
+            if (hour >= 5 && hour < 12) return "สวัสดียามเช้าครับ 🌅";
+            if (hour >= 12 && hour < 17) return "สวัสดียามบ่ายครับ ☀️";
+            if (hour >= 17 && hour < 22) return "สวัสดียามเย็นครับ 🌆";
+            return "สวัสดียามค่ำคืนครับ 🌙";
         }
 
-        // โหลดข้อมูลบัญชี
+        // --- 1. โหลดข้อมูลบัญชีเตรียมไว้ ---
         fetch(SCRIPT_URL + "?action=getAccounts")
-            .then(r => r.text())
-            .then(text => {
-                try { return JSON.parse(text); }
-                catch (e) { throw new Error("Apps Script ตอบกลับไม่ถูกต้อง (เช็คสิทธิ์ Deploy = Anyone)"); }
-            })
+            .then(r => r.json())
             .then(d => {
-                if (d.success === false) throw new Error(d.message || "โหลดข้อมูลไม่สำเร็จ");
+                if (d.success === false) throw new Error(d.message);
                 accounts = d.accounts || {};
-                const count = Object.keys(accounts).length;
-                if (count === 0) {
-                    statusEl.style.color = "#ef4444";
-                    statusEl.innerText = "❌ ไม่พบข้อมูลบัญชีใน Sheet";
-                    return;
-                }
                 isReady = true;
+                
+                // ปรับปุ่มให้พร้อมกด
                 btnEl.disabled = false;
-                btnEl.innerText = "เข้าสู่ระบบ";
-                statusEl.style.color = "#059669";
-                statusEl.innerText = "✅ ระบบพร้อมใช้งาน (" + count + " บัญชี)";
+                btnSpinner.style.display = "none";
+                btnLabel.innerText = "เข้าสู่ระบบ";
+                statusEl.innerText = "";
             })
             .catch(err => {
-                console.error(err);
-                statusEl.style.color = "#ef4444";
-                statusEl.innerText = "❌ " + err.message;
-                btnEl.innerText = "ระบบไม่พร้อม";
+                statusEl.style.color = "var(--error)";
+                statusEl.innerText = "❌ เชื่อมต่อระบบล้มเหลว โปรดรีเฟรชหน้าเว็บ";
+                btnLabel.innerText = "ระบบขัดข้อง";
             });
 
+        // --- 2. Live Detection: พิมพ์ Username แล้วรูปโผล่ ---
+        userInp.addEventListener('input', function(e) {
+            if(!isReady) return; 
+            
+            const u = e.target.value.trim().toLowerCase();
+            const acc = accounts[u];
+            const wrap = document.getElementById('detectedWrap');
+
+            if (acc) {
+                // เจอผู้ใช้! โชว์รูปและข้อมูล
+                setAvatarImage('detectedAvatar', u, acc.displayName);
+                document.getElementById('detectedName').innerText = acc.displayName;
+                document.getElementById('detectedRole').innerText = acc.roleLabel;
+                wrap.classList.add('show');
+                statusEl.innerText = ""; 
+            } else {
+                // ไม่เจอ ซ่อนกลับ
+                wrap.classList.remove('show');
+            }
+        });
+
+        // --- 3. Submit Form & Success Animation ---
         document.getElementById('loginForm').onsubmit = (e) => {
             e.preventDefault();
-            if (!isReady) {
-                statusEl.style.color = "#ef4444";
-                statusEl.innerText = "ระบบยังไม่พร้อม";
-                return;
-            }
+            if (!isReady) return;
 
-            const u = document.getElementById('user').value.trim().toLowerCase();
+            const u = userInp.value.trim().toLowerCase();
             const p = document.getElementById('pass').value.trim();
             const acc = accounts[u];
 
+            // เช็คผู้ใช้
             if (!acc) {
-                statusEl.style.color = "#ef4444";
-                statusEl.innerText = "❌ ไม่พบชื่อผู้ใช้นี้";
+                statusEl.style.color = "var(--error)";
+                statusEl.innerText = "❌ ไม่พบรายชื่อผู้ใช้งานนี้ในระบบ";
                 return;
             }
 
+            // เช็ครหัสผ่าน
             if (acc.password === p) {
-                // บันทึก username ด้วย เพื่อใช้ตอนเปลี่ยนรหัส
+                // 3.1 บันทึก Session
                 sessionStorage.setItem("cc_pr_user", JSON.stringify({
                     username: u,
                     displayName: acc.displayName,
                     role: acc.role,
                     roleLabel: acc.roleLabel
                 }));
-                statusEl.style.color = "#059669";
-                statusEl.innerText = "✅ สำเร็จ! กำลังไปที่ Dashboard...";
-                setTimeout(() => window.location.href = "dashboard.html", 800);
+
+                // 3.2 เริ่ม Animation ซ่อนกล่องเดิม โชว์หน้าจอ Success
+                document.getElementById('loginCard').classList.add('hide'); // พับกล่องล็อกอินเก็บ
+                
+                setTimeout(() => {
+                    // เซ็ตข้อมูลในหน้าจอทักทาย
+                    setAvatarImage('successAvatar', u, acc.displayName);
+                    document.getElementById('successGreeting').innerText = getTimeGreeting();
+                    document.getElementById('successName').innerText = acc.displayName;
+                    
+                    // โชว์หน้าจอ Overlay
+                    document.getElementById('successOverlay').classList.add('show');
+
+                    // 3.3 รอแอนิเมชันเล่นจบ แล้วเด้งไป Dashboard (รอ 2.5 วินาที)
+                    setTimeout(() => window.location.href = "dashboard.html", 2500);
+                }, 300); 
+
             } else {
-                statusEl.style.color = "#ef4444";
+                statusEl.style.color = "var(--error)";
                 statusEl.innerText = "❌ รหัสผ่านไม่ถูกต้อง";
             }
         };
 
+        // --- 4. ฟังก์ชันรีเซ็ตรหัสผ่าน ---
         async function handleReset() {
-            const u = document.getElementById('user').value.trim();
-            if (!u) return alert("โปรดกรอก Username");
+            const u = userInp.value.trim();
+            if (!u) return alert("โปรดกรอก Username ของท่านก่อนกดรีเซ็ตรหัสผ่าน");
+            
             if(confirm("ระบบจะดำเนินการสร้างรหัสผ่านชั่วคราวและส่งไปยังอีเมลของคุณ ยืนยันการดำเนินการหรือไม่?")) {
+                btnEl.disabled = true;
+                btnSpinner.style.display = "block";
+                btnLabel.innerText = "กำลังส่งอีเมล...";
+                statusEl.style.color = "var(--primary)";
+                statusEl.innerText = "ระบบกำลังสร้างและส่งรหัสผ่านใหม่...";
+
                 try {
                     const res = await fetch(SCRIPT_URL + "?action=resetPassword&username=" + encodeURIComponent(u));
                     const d = await res.json();
@@ -130,9 +345,20 @@
                     if (d.success) location.reload();
                 } catch (err) {
                     alert("เกิดข้อผิดพลาด: " + err.message);
+                } finally {
+                    btnEl.disabled = false;
+                    btnSpinner.style.display = "none";
+                    btnLabel.innerText = "เข้าสู่ระบบ";
+                    statusEl.innerText = "";
                 }
             }
         }
+        
+        // --- ความปลอดภัยเบื้องต้น ---
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('keydown', e => {
+            if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I')) e.preventDefault();
+        });
     </script>
 </body>
 </html>
