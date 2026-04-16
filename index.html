@@ -17,7 +17,8 @@
         input { width:100%; padding:14px; border:1.5px solid #e2e8f0; border-radius:15px; background:#fff; font-size:15px; outline:none; transition:0.3s; box-sizing:border-box; }
         input:focus { border-color:#0891b2; box-shadow:0 0 0 4px rgba(8,145,178,0.1); }
         .btn { width:100%; padding:15px; background:linear-gradient(135deg,#0891b2,#2563eb); color:white; border:none; border-radius:15px; font-size:16px; font-weight:600; cursor:pointer; transition:0.3s; margin-top:10px; }
-        .btn:hover { transform:translateY(-2px); box-shadow:0 8px 20px rgba(8,145,178,0.25); }
+        .btn:hover:not(:disabled) { transform:translateY(-2px); box-shadow:0 8px 20px rgba(8,145,178,0.25); }
+        .btn:disabled { background:#94a3b8; cursor:not-allowed; }
         .forgot { background:none; border:none; color:#94a3b8; font-size:13px; margin-top:25px; cursor:pointer; }
         .status { margin-top:15px; font-size:13px; min-height:20px; font-weight:600; }
     </style>
@@ -31,28 +32,52 @@
         <form id="loginForm">
             <div class="input-group"><label>Username</label><input type="text" id="user" required autocomplete="off"></div>
             <div class="input-group"><label>Password</label><input type="password" id="pass" required></div>
-            <button type="submit" class="btn" id="btnTxt">เข้าสู่ระบบ</button>
+            <button type="submit" class="btn" id="loginBtn" disabled>กำลังโหลดข้อมูล...</button>
         </form>
         <div id="status" class="status"></div>
         <button class="forgot" onclick="handleReset()">ลืมรหัสผ่าน? (คืนค่าเริ่มต้น)</button>
     </div>
 
-    <script src="auth.js"></script>
     <script>
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyqId2pTu3eESlrk1w1-sFtxoMCRQVCC7WPXJ1p_JOhiaizULKbDcPCs03x5Va-SNLcyQ/exec";
+        // 🚨 วาง URL ใหม่ล่าสุดตรงนี้ 🚨
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbybeWIojJapOB5fdXNyoanzj74lch_poFcxro0LFySeCuhhLdL4qwHugJPm0EsGCkDN-g/exec";
         let accounts = {};
 
-        // โหลดข้อมูลแบบ GET ทะลุบล็อก
+        // โหลดข้อมูล
         fetch(SCRIPT_URL + "?action=getAccounts").then(r => r.json()).then(d => {
-            accounts = d.accounts;
-            document.getElementById('status').innerText = "ระบบพร้อมใช้งาน";
+            if(d.accounts) {
+                accounts = d.accounts;
+                document.getElementById('status').innerText = "เชื่อมต่อฐานข้อมูลสำเร็จ!";
+                document.getElementById('status').style.color = "#059669";
+                document.getElementById('loginBtn').disabled = false;
+                document.getElementById('loginBtn').innerText = "เข้าสู่ระบบ";
+            } else {
+                document.getElementById('status').innerText = "โหลดข้อมูลได้ แต่โครงสร้างใน Sheet ไม่ถูกต้อง";
+                document.getElementById('status').style.color = "#ef4444";
+            }
+        }).catch(e => {
+            document.getElementById('status').innerText = "การเชื่อมต่อล้มเหลว ตรวจสอบ URL หรืออินเทอร์เน็ต";
+            document.getElementById('status').style.color = "#ef4444";
         });
 
         document.getElementById('loginForm').onsubmit = (e) => {
             e.preventDefault();
             const u = document.getElementById('user').value.trim().toLowerCase();
             const p = document.getElementById('pass').value;
+            const statusBox = document.getElementById('status');
+            
             const acc = accounts[u];
+
+            // --- ระบบจับผิดข้อผิดพลาดให้คุณเห็นชัดๆ ---
+            if (!acc) {
+                alert(`❌ ไม่พบผู้ใช้: [${u}] ในฐานข้อมูลเลยครับ\nลองเช็คตัวสะกดดูอีกที`);
+                return;
+            }
+            if (acc.password !== p) {
+                alert(`❌ รหัสผ่านไม่ตรงกัน!\n\nคุณพิมพ์: [${p}]\nระบบดึงข้อมูลจาก Sheet มาได้: [${acc.password}]\n\n*ถ้าสิ่งที่ระบบดึงมาว่างเปล่า หรือเป็นชื่อคน แสดงว่ามันดึงคอลัมน์ผิดครับ*`);
+                return;
+            }
+            // ---------------------------------
 
             if (acc && acc.password === p) {
                 sessionStorage.setItem("cc_pr_user", JSON.stringify({
@@ -60,19 +85,20 @@
                     role: acc.role,
                     roleLabel: acc.roleLabel
                 }));
-                document.getElementById('status').style.color = "#059669";
-                document.getElementById('status').innerText = "สำเร็จ! กำลังไปที่ Dashboard...";
+                statusBox.style.color = "#059669";
+                statusBox.innerText = "สำเร็จ! กำลังไปที่ Dashboard...";
+                
+                // แจ้งเตือนความสำเร็จเพื่อความมั่นใจ!
+                alert(`✅ เข้าสู่ระบบสำเร็จ ยินดีต้อนรับ ${acc.displayName} (${acc.roleLabel})`);
+                
                 setTimeout(() => window.location.href = "dashboard.html", 1000);
-            } else {
-                document.getElementById('status').style.color = "#ef4444";
-                document.getElementById('status').innerText = "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง";
             }
         };
 
         async function handleReset() {
             const u = document.getElementById('user').value;
             if(!u) return alert("โปรดกรอก Username");
-            if(confirm("รีเซ็ตรหัสผ่านเป็น password123?")) {
+            if(confirm("ยืนยันรีเซ็ตรหัสผ่านเป็น password123?")) {
                 const res = await fetch(`${SCRIPT_URL}?action=resetPassword&username=${u}`);
                 const d = await res.json();
                 alert(d.message);
