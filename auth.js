@@ -3,7 +3,207 @@
     // ⭐ แก้ตรงนี้: วาง URL ที่ได้จาก Apps Script Deploy
     // (ต้องเป็น URL เดียวกับใน index.html และ dashboard.html)
     // ============================================
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby15LzDt9gWKk1Vg4ejtvXIGXy4Z7bd7inq-aZPlBiG0KjHbfsfzvzwDDbQaYYGYNMX/exec";
+    const SCRIPT_URL = "function myFunction() {
+ // ============================================================
+// 🎯 Apps Script สำหรับ CMUL PR Dashboard
+// สร้างขึ้นใหม่ - พร้อมใช้งานทันที
+//
+// 📋 โครงสร้าง Google Sheet ที่รองรับ:
+// ต้องมี Tab ชื่อ "accounts" โครงสร้างดังนี้:
+//
+// ┌──────────┬──────────┬───────┬──────────┐
+// │    A     │    B     │   C   │    D     │
+// ├──────────┼──────────┼───────┼──────────┤
+// │ Username │ Password │ Name  │ Position │  ← แถว 1 (หัวตาราง)
+// │ thian    │ 1234     │ คุณ..│ ผู้ดูแล  │  ← แถว 2+
+// └──────────┴──────────┴───────┴──────────┘
+// ============================================================
+
+const SHEET_NAME = "accounts"; 
+const DEFAULT_PASSWORD = "password123";
+const ALERT_EMAIL = "thianrawich.ph@gmail.com";
+
+// ตำแหน่งคอลัมน์ (นับจาก 0)
+const COL_USERNAME = 0;  // A
+const COL_PASSWORD = 1;  // B
+const COL_NAME     = 2;  // C
+const COL_POSITION = 3;  // D
+
+
+// ============================================================
+// 🧪 ฟังก์ชันทดสอบ - Run ตัวนี้ก่อน Deploy
+// ============================================================
+function TEST_checkSystem() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  
+  Logger.log("════════════════════════════════════════");
+  Logger.log("📁 ชื่อไฟล์: " + ss.getName());
+  Logger.log("🔗 URL: " + ss.getUrl());
+  Logger.log("📑 Tab ทั้งหมด: " + ss.getSheets().map(s => s.getName()).join(" | "));
+  Logger.log("════════════════════════════════════════");
+  
+  const sheet = findSheetByName(ss, SHEET_NAME);
+  if (!sheet) {
+    Logger.log("❌ ไม่พบ Tab ชื่อ '" + SHEET_NAME + "'");
+    Logger.log("→ แก้ไข: สร้าง/เปลี่ยนชื่อ Tab เป็น 'accounts'");
+    return;
+  }
+  
+  Logger.log("✅ พบ Tab 'accounts'");
+  const headers = sheet.getRange(1, 1, 1, 4).getValues()[0];
+  Logger.log("📋 หัวตาราง: A=" + headers[0] + " | B=" + headers[1] + " | C=" + headers[2] + " | D=" + headers[3]);
+  
+  const accounts = getAccountsFromSheet(sheet);
+  const count = Object.keys(accounts).length;
+  Logger.log("👥 พบผู้ใช้ " + count + " คน:");
+  Logger.log(JSON.stringify(accounts, null, 2));
+  
+  if (count > 0) {
+    Logger.log("════════════════════════════════════════");
+    Logger.log("🎉 ระบบพร้อม Deploy แล้ว!");
+  }
+}
+
+
+// ============================================================
+// 📡 Main Endpoints
+// ============================================================
+function doGet(e) {
+  try {
+    const action = e.parameter.action;
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    const sheet = findSheetByName(ss, SHEET_NAME);
+    
+    if (!sheet) {
+      const existingSheets = ss.getSheets().map(s => s.getName()).join(", ");
+      return createJsonResponse({ 
+        success: false, 
+        message: "ไม่พบ Sheet '" + SHEET_NAME + "' | มีอยู่: " + existingSheets 
+      });
+    }
+
+    // 1. ดึงข้อมูลบัญชี
+    if (action === "getAccounts") {
+      return createJsonResponse({ 
+        success: true, 
+        accounts: getAccountsFromSheet(sheet) 
+      });
+    }
+    
+    // 2. รีเซ็ตรหัสผ่าน
+    if (action === "resetPassword") {
+      const user = (e.parameter.username || "").trim().toLowerCase();
+      const data = sheet.getDataRange().getValues();
+      for (let i = 1; i < data.length; i++) {
+        if (data[i][COL_USERNAME].toString().trim().toLowerCase() === user) {
+          sheet.getRange(i + 1, COL_PASSWORD + 1).setValue(DEFAULT_PASSWORD); 
+          return createJsonResponse({ 
+            success: true, 
+            message: "รีเซ็ตรหัสผ่านเป็น " + DEFAULT_PASSWORD + " เรียบร้อยแล้ว" 
+          });
+        }
+      }
+      return createJsonResponse({ success: false, message: "ไม่พบชื่อผู้ใช้งานในระบบ" });
+    }
+
+    // 3. ดึงรายงาน HTML
+    if (action === 'getReportContent') {
+      const reportSheet = findSheetByName(ss, "2026-SEO MAR-html-embed"); 
+      if (!reportSheet) {
+        return ContentService.createTextOutput("ไม่พบหน้าข้อมูลรายงาน")
+          .setMimeType(ContentService.MimeType.TEXT);
+      }
+      const htmlContent = reportSheet.getRange("A1").getValue(); 
+      return ContentService.createTextOutput(htmlContent)
+        .setMimeType(ContentService.MimeType.TEXT);
+    }
+
+    // 4. ส่งเมลแจ้งเตือน
+    if (action === "sendAlertEmail") {
+      const user = e.parameter.user || "ไม่ระบุตัวตน";
+      const time = new Date().toLocaleString("th-TH", {timeZone: "Asia/Bangkok"});
+      MailApp.sendEmail(ALERT_EMAIL, 
+        "🚨 แจ้งเตือนความปลอดภัย: พยายามสั่งพิมพ์/บันทึกหน้าจอ", 
+        "ผู้ใช้งาน: " + user + "\nเวลา: " + time + "\nระบบ: PR CMUL Dashboard");
+      return createJsonResponse({ success: true });
+    }
+
+    return createJsonResponse({ success: false, message: "ไม่รู้จัก action: " + action });
+    
+  } catch (err) {
+    return createJsonResponse({ success: false, message: "Server Error: " + err.message });
+  }
+}
+
+function doPost(e) {
+  try {
+    if (e.parameter.action === "changePassword") {
+      const user = (e.parameter.username || "").trim().toLowerCase();
+      const oldPass = (e.parameter.oldPassword || "").trim();
+      const newPass = (e.parameter.newPassword || "").trim();
+      const ss = SpreadsheetApp.getActiveSpreadsheet();
+      const sheet = findSheetByName(ss, SHEET_NAME);
+      
+      if (!sheet) return createJsonResponse({ success: false, message: "ไม่พบ Sheet" });
+      
+      const data = sheet.getDataRange().getValues();
+      
+      for (let i = 1; i < data.length; i++) {
+        if (data[i][COL_USERNAME].toString().trim().toLowerCase() === user) {
+          if (data[i][COL_PASSWORD].toString().trim() === oldPass) {
+            sheet.getRange(i + 1, COL_PASSWORD + 1).setValue(newPass);
+            return createJsonResponse({ success: true, message: "เปลี่ยนรหัสผ่านสำเร็จ" });
+          }
+          return createJsonResponse({ success: false, message: "รหัสผ่านเดิมไม่ถูกต้อง" });
+        }
+      }
+      return createJsonResponse({ success: false, message: "ไม่พบผู้ใช้" });
+    }
+    return createJsonResponse({ success: false, message: "ไม่รู้จัก action" });
+  } catch (err) {
+    return createJsonResponse({ success: false, message: "Server Error: " + err.message });
+  }
+}
+
+
+// ============================================================
+// 🛠️ Helper Functions
+// ============================================================
+function getAccountsFromSheet(sheet) {
+  const data = sheet.getDataRange().getValues();
+  const accounts = {};
+  
+  for (let i = 1; i < data.length; i++) {
+    const user = (data[i][COL_USERNAME] || "").toString().trim().toLowerCase();
+    if (user) {
+      accounts[user] = {
+        password:    (data[i][COL_PASSWORD] || "").toString().trim(),
+        displayName: (data[i][COL_NAME]     || "").toString().trim(),
+        role:        "admin",
+        roleLabel:   (data[i][COL_POSITION] || "").toString().trim()
+      };
+    }
+  }
+  return accounts;
+}
+
+function findSheetByName(ss, name) {
+  const targetName = name.trim().toLowerCase();
+  const sheets = ss.getSheets();
+  for (let i = 0; i < sheets.length; i++) {
+    if (sheets[i].getName().trim().toLowerCase() === targetName) {
+      return sheets[i];
+    }
+  }
+  return null;
+}
+
+function createJsonResponse(data) {
+  return ContentService.createTextOutput(JSON.stringify(data))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+}
+";
     // ============================================
 
     // 1. ตรวจสอบการเข้าถึง
