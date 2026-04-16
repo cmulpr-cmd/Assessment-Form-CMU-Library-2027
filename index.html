@@ -18,7 +18,7 @@
         input:focus { border-color:#0891b2; box-shadow:0 0 0 4px rgba(8,145,178,0.1); }
         .btn { width:100%; padding:15px; background:linear-gradient(135deg,#0891b2,#2563eb); color:white; border:none; border-radius:15px; font-size:16px; font-weight:600; cursor:pointer; transition:0.3s; margin-top:10px; }
         .btn:hover:not(:disabled) { transform:translateY(-2px); box-shadow:0 8px 20px rgba(8,145,178,0.25); }
-        .btn:disabled { background:#94a3b8; cursor:not-allowed; }
+        .btn:disabled { opacity:0.5; cursor:not-allowed; }
         .forgot { background:none; border:none; color:#94a3b8; font-size:13px; margin-top:25px; cursor:pointer; }
         .status { margin-top:15px; font-size:13px; min-height:20px; font-weight:600; }
     </style>
@@ -32,77 +32,107 @@
         <form id="loginForm">
             <div class="input-group"><label>Username</label><input type="text" id="user" required autocomplete="off"></div>
             <div class="input-group"><label>Password</label><input type="password" id="pass" required></div>
-            <button type="submit" class="btn" id="loginBtn" disabled>กำลังโหลดข้อมูล...</button>
+            <button type="submit" class="btn" id="btnTxt" disabled>กำลังโหลดระบบ...</button>
         </form>
-        <div id="status" class="status"></div>
+        <div id="status" class="status" style="color:#64748b;">กำลังเชื่อมต่อระบบ...</div>
         <button class="forgot" onclick="handleReset()">ลืมรหัสผ่าน? (คืนค่าเริ่มต้น)</button>
     </div>
 
+    <script src="auth.js"></script>
     <script>
-        // 🚨 วาง URL ใหม่ล่าสุดตรงนี้ 🚨
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbybeWIojJapOB5fdXNyoanzj74lch_poFcxro0LFySeCuhhLdL4qwHugJPm0EsGCkDN-g/exec";
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyhhmLPaNOC3SF5XeX6XrxKpYUhK9TZY__QrtDzvLxns8K1JGi545-vcJaF-__s-wtORA/exec";
         let accounts = {};
+        let isReady = false;
 
-        // โหลดข้อมูล
-        fetch(SCRIPT_URL + "?action=getAccounts").then(r => r.json()).then(d => {
-            if(d.accounts) {
-                accounts = d.accounts;
-                document.getElementById('status').innerText = "เชื่อมต่อฐานข้อมูลสำเร็จ!";
-                document.getElementById('status').style.color = "#059669";
-                document.getElementById('loginBtn').disabled = false;
-                document.getElementById('loginBtn').innerText = "เข้าสู่ระบบ";
-            } else {
-                document.getElementById('status').innerText = "โหลดข้อมูลได้ แต่โครงสร้างใน Sheet ไม่ถูกต้อง";
-                document.getElementById('status').style.color = "#ef4444";
-            }
-        }).catch(e => {
-            document.getElementById('status').innerText = "การเชื่อมต่อล้มเหลว ตรวจสอบ URL หรืออินเทอร์เน็ต";
-            document.getElementById('status').style.color = "#ef4444";
-        });
+        const statusEl = document.getElementById('status');
+        const btnEl = document.getElementById('btnTxt');
+
+        // โหลดข้อมูลบัญชี พร้อมจัดการ error อย่างละเอียด
+        fetch(SCRIPT_URL + "?action=getAccounts")
+            .then(r => {
+                if (!r.ok) throw new Error("HTTP " + r.status);
+                return r.text();
+            })
+            .then(text => {
+                // ป้องกันกรณี response ไม่ใช่ JSON (เช่นหน้า Login ของ Google)
+                try {
+                    return JSON.parse(text);
+                } catch (e) {
+                    console.error("Response ไม่ใช่ JSON:", text.substring(0, 200));
+                    throw new Error("Apps Script ส่งข้อมูลกลับมาไม่ถูกต้อง (อาจเป็นปัญหาสิทธิ์การเข้าถึง)");
+                }
+            })
+            .then(d => {
+                if (d.success === false) {
+                    throw new Error(d.message || "ไม่สามารถโหลดข้อมูลได้");
+                }
+                accounts = d.accounts || {};
+                const count = Object.keys(accounts).length;
+                if (count === 0) {
+                    statusEl.style.color = "#ef4444";
+                    statusEl.innerText = "❌ ไม่พบข้อมูลบัญชีใน Sheet";
+                    return;
+                }
+                isReady = true;
+                btnEl.disabled = false;
+                btnEl.innerText = "เข้าสู่ระบบ";
+                statusEl.style.color = "#059669";
+                statusEl.innerText = "✅ ระบบพร้อมใช้งาน (" + count + " บัญชี)";
+            })
+            .catch(err => {
+                console.error("โหลดบัญชีล้มเหลว:", err);
+                statusEl.style.color = "#ef4444";
+                statusEl.innerText = "❌ เชื่อมต่อระบบไม่ได้: " + err.message;
+                btnEl.innerText = "ระบบไม่พร้อม";
+            });
 
         document.getElementById('loginForm').onsubmit = (e) => {
             e.preventDefault();
-            const u = document.getElementById('user').value.trim().toLowerCase();
-            const p = document.getElementById('pass').value;
-            const statusBox = document.getElementById('status');
             
+            if (!isReady) {
+                statusEl.style.color = "#ef4444";
+                statusEl.innerText = "ระบบยังไม่พร้อม โปรดรอสักครู่";
+                return;
+            }
+
+            // แก้บั๊ก: เพิ่ม .trim() ทั้ง user และ password
+            const u = document.getElementById('user').value.trim().toLowerCase();
+            const p = document.getElementById('pass').value.trim();
             const acc = accounts[u];
 
-            // --- ระบบจับผิดข้อผิดพลาดให้คุณเห็นชัดๆ ---
             if (!acc) {
-                alert(`❌ ไม่พบผู้ใช้: [${u}] ในฐานข้อมูลเลยครับ\nลองเช็คตัวสะกดดูอีกที`);
+                statusEl.style.color = "#ef4444";
+                statusEl.innerText = "❌ ไม่พบชื่อผู้ใช้นี้ในระบบ";
                 return;
             }
-            if (acc.password !== p) {
-                alert(`❌ รหัสผ่านไม่ตรงกัน!\n\nคุณพิมพ์: [${p}]\nระบบดึงข้อมูลจาก Sheet มาได้: [${acc.password}]\n\n*ถ้าสิ่งที่ระบบดึงมาว่างเปล่า หรือเป็นชื่อคน แสดงว่ามันดึงคอลัมน์ผิดครับ*`);
-                return;
-            }
-            // ---------------------------------
 
-            if (acc && acc.password === p) {
+            if (acc.password === p) {
                 sessionStorage.setItem("cc_pr_user", JSON.stringify({
                     displayName: acc.displayName,
                     role: acc.role,
                     roleLabel: acc.roleLabel
                 }));
-                statusBox.style.color = "#059669";
-                statusBox.innerText = "สำเร็จ! กำลังไปที่ Dashboard...";
-                
-                // แจ้งเตือนความสำเร็จเพื่อความมั่นใจ!
-                alert(`✅ เข้าสู่ระบบสำเร็จ ยินดีต้อนรับ ${acc.displayName} (${acc.roleLabel})`);
-                
+                statusEl.style.color = "#059669";
+                statusEl.innerText = "✅ สำเร็จ! กำลังไปที่ Dashboard...";
                 setTimeout(() => window.location.href = "dashboard.html", 1000);
+            } else {
+                statusEl.style.color = "#ef4444";
+                statusEl.innerText = "❌ รหัสผ่านไม่ถูกต้อง";
             }
         };
 
         async function handleReset() {
-            const u = document.getElementById('user').value;
-            if(!u) return alert("โปรดกรอก Username");
-            if(confirm("ยืนยันรีเซ็ตรหัสผ่านเป็น password123?")) {
-                const res = await fetch(`${SCRIPT_URL}?action=resetPassword&username=${u}`);
-                const d = await res.json();
-                alert(d.message);
-                location.reload();
+            const u = document.getElementById('user').value.trim();
+            if (!u) return alert("โปรดกรอก Username");
+            if (confirm("รีเซ็ตรหัสผ่านของ \"" + u + "\" เป็น password123?")) {
+                try {
+                    const res = await fetch(`${SCRIPT_URL}?action=resetPassword&username=${encodeURIComponent(u)}`);
+                    const d = await res.json();
+                    alert(d.message);
+                    if (d.success) location.reload();
+                } catch (err) {
+                    alert("เกิดข้อผิดพลาด: " + err.message);
+                }
             }
         }
     </script>
