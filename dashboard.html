@@ -58,7 +58,8 @@
 <script src="auth.js"></script>
 <script>
     const currentY = 2569;
-    const SCRIPT_URL = "URL_APPS_SCRIPT_ที่นี่";
+    // แก้บั๊ก: ใส่ SCRIPT_URL จริง
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyqId2pTu3eESlrk1w1-sFtxoMCRQVCC7WPXJ1p_JOhiaizULKbDcPCs03x5Va-SNLcyQ/exec";
 
     // สร้างลิสต์ปี (ย้อนหลัง 3 - หน้า 3)
     const select = document.getElementById('mainYear');
@@ -67,6 +68,11 @@
         opt.value = i; opt.text = "ปีงบประมาณ " + i;
         if(i === currentY) opt.selected = true;
         select.appendChild(opt);
+    }
+
+    function applyYearFilter() {
+        // placeholder สำหรับ filter ปี
+        console.log("Year changed to:", document.getElementById('mainYear').value);
     }
 
     function showLoader(fn) {
@@ -113,17 +119,20 @@
         if(!m) return alert("โปรดเลือกเดือน");
 
         showLoader(async () => {
-            // ดึง HTML โค้ดรายงานจาก Sheet ตามที่คุณ Woody ต้องการ
-            const res = await fetch(`${SCRIPT_URL}?action=getReportContent&month=${m}`);
-            const html = await res.text();
-            
-            document.getElementById('col'+i).innerHTML = `
-                <div class="col-top">
-                    <div style="font-weight:700; color:var(--cyan);">${m}</div>
-                    <button onclick="resetColumn(${i})" style="font-size:11px; background:#e2e8f0; border:none; padding:4px 10px; border-radius:6px; cursor:pointer; margin-top:5px;">เปลี่ยนข้อมูล</button>
-                </div>
-                <div style="flex:1; padding:10px; overflow-y:auto;">${html}</div>
-            `;
+            try {
+                const res = await fetch(`${SCRIPT_URL}?action=getReportContent&month=${m}`);
+                const html = await res.text();
+                
+                document.getElementById('col'+i).innerHTML = `
+                    <div class="col-top">
+                        <div style="font-weight:700; color:var(--cyan);">${m}</div>
+                        <button onclick="resetColumn(${i})" style="font-size:11px; background:#e2e8f0; border:none; padding:4px 10px; border-radius:6px; cursor:pointer; margin-top:5px;">เปลี่ยนข้อมูล</button>
+                    </div>
+                    <div style="flex:1; padding:10px; overflow-y:auto;">${html}</div>
+                `;
+            } catch (err) {
+                alert("โหลดรายงานไม่สำเร็จ: " + err.message);
+            }
         });
     }
 </script>
