@@ -2,191 +2,83 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>เข้าสู่ระบบ - หน่วยสื่อสารองค์กร สำนักหอสมุด มช.</title>
-    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>ยินดีต้อนรับ - หน่วยสื่อสารองค์กร สำนักหอสมุด มช.</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary-blue: #0891b2;
-            --secondary-blue: #2563eb;
-            --bg-color: #f1f5f9;
-            --text-main: #1e293b;
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Sarabun', sans-serif; }
-
-        body {
-            min-height: 100vh;
-            display: flex; align-items: center; justify-content: center;
-            background: var(--bg-color); position: relative; overflow: hidden;
-        }
-
-        body::before {
-            content: ''; position: absolute; top: -10%; left: -10%; width: 40%; height: 40%;
-            background: radial-gradient(circle, rgba(8,145,178,0.1) 0%, transparent 70%);
-            animation: move 20s infinite alternate;
-        }
-        @keyframes move { to { transform: translate(50px, 50px); } }
-
-        .login-card {
-            background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px);
-            padding: 45px 35px; border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.05);
-            width: 100%; max-width: 400px; text-align: center; z-index: 10;
-            border: 1px solid rgba(255,255,255,0.6);
-            transform: translateY(20px); opacity: 0; animation: fadeInUp 0.8s ease forwards;
-        }
-
-        @keyframes fadeInUp { to { transform: translateY(0); opacity: 1; } }
-
-        .logo-box img { height: 65px; margin-bottom: 20px; }
-        .logo-box h1 { font-size: 24px; font-weight: 700; color: var(--text-main); margin-bottom: 5px; }
-        .logo-box p { font-size: 14px; color: #64748b; margin-bottom: 35px; }
-
-        .form-group { text-align: left; margin-bottom: 22px; }
-        .form-group label { display: block; font-size: 13px; font-weight: 600; color: #475569; margin-bottom: 8px; }
-        .form-group input {
-            width: 100%; padding: 14px 16px; border-radius: 12px;
-            border: 1px solid #e2e8f0; background: #f8fafc; font-size: 15px;
-            outline: none; transition: all 0.3s;
-        }
-        .form-group input:focus { border-color: var(--primary-blue); background: #fff; box-shadow: 0 0 0 4px rgba(8,145,178,0.1); }
-
-        .btn-login {
-            width: 100%; padding: 14px; background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
-            color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: 600;
-            cursor: pointer; transition: all 0.3s; margin-top: 5px;
-        }
-        .btn-login:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(8,145,178,0.25); }
-        .btn-login:disabled { background: #94a3b8; cursor: not-allowed; transform: none; box-shadow: none; }
-
-        .status-msg { font-size: 13px; margin-top: 15px; min-height: 20px; font-weight: 500; }
-        .error { color: #e11d48; }
-        .success { color: #059669; }
-
-        .forgot-btn {
-            background: none; border: none; color: #94a3b8; font-size: 13px;
-            margin-top: 25px; cursor: pointer; transition: color 0.3s;
-        }
-        .forgot-btn:hover { color: var(--primary-blue); }
+        body { margin:0; height:100vh; display:flex; align-items:center; justify-content:center; background:#f0f4ff; font-family:'Sarabun',sans-serif; overflow:hidden; }
+        .bg { position:fixed; inset:0; background:radial-gradient(circle at 20% 30%, rgba(8,145,178,0.1) 0%, transparent 40%), radial-gradient(circle at 80% 70%, rgba(37,99,235,0.08) 0%, transparent 40%); z-index:-1; }
+        .card { background:rgba(255,255,255,0.8); backdrop-filter:blur(20px); padding:50px 40px; border-radius:30px; box-shadow:0 20px 60px rgba(0,0,0,0.05); width:100%; max-width:400px; text-align:center; border:1px solid rgba(255,255,255,0.5); transform:translateY(30px); opacity:0; animation:fade 0.8s forwards; }
+        @keyframes fade { to { transform:translateY(0); opacity:1; } }
+        img { height:65px; margin-bottom:25px; }
+        h1 { font-size:24px; color:#1e293b; margin:0 0 5px; font-weight:700; }
+        p { color:#64748b; font-size:14px; margin-bottom:35px; }
+        .input-group { text-align:left; margin-bottom:20px; }
+        label { display:block; font-size:13px; font-weight:600; color:#475569; margin-bottom:8px; }
+        input { width:100%; padding:14px; border:1.5px solid #e2e8f0; border-radius:15px; background:#fff; font-size:15px; outline:none; transition:0.3s; box-sizing:border-box; }
+        input:focus { border-color:#0891b2; box-shadow:0 0 0 4px rgba(8,145,178,0.1); }
+        .btn { width:100%; padding:15px; background:linear-gradient(135deg,#0891b2,#2563eb); color:white; border:none; border-radius:15px; font-size:16px; font-weight:600; cursor:pointer; transition:0.3s; margin-top:10px; }
+        .btn:hover { transform:translateY(-2px); box-shadow:0 8px 20px rgba(8,145,178,0.25); }
+        .forgot { background:none; border:none; color:#94a3b8; font-size:13px; margin-top:25px; cursor:pointer; }
+        .status { margin-top:15px; font-size:13px; min-height:20px; font-weight:600; }
     </style>
 </head>
 <body>
-
-<div class="login-card">
-    <div class="logo-box">
-        <img src="logo web.png" alt="CMU Library Logo">
-        <h1>เข้าสู่ระบบ</h1>
-        <p>หน่วยสื่อสารองค์กร สำนักหอสมุด มช.</p>
+    <div class="bg"></div>
+    <div class="card">
+        <img src="logo web.png" alt="CMUL Logo">
+        <h1>ลงชื่อเข้าใช้</h1>
+        <p>ระบบรายงานผล หน่วยสื่อสารองค์กร</p>
+        <form id="loginForm">
+            <div class="input-group"><label>Username</label><input type="text" id="user" required autocomplete="off"></div>
+            <div class="input-group"><label>Password</label><input type="password" id="pass" required></div>
+            <button type="submit" class="btn" id="btnTxt">เข้าสู่ระบบ</button>
+        </form>
+        <div id="status" class="status"></div>
+        <button class="forgot" onclick="handleReset()">ลืมรหัสผ่าน? (คืนค่าเริ่มต้น)</button>
     </div>
 
-    <form id="loginForm">
-        <div class="form-group">
-            <label>Username</label>
-            <input type="text" id="username" placeholder="ระบุชื่อผู้ใช้งาน" required autocomplete="off">
-        </div>
-        <div class="form-group">
-            <label>Password</label>
-            <input type="password" id="password" placeholder="ระบุรหัสผ่าน" required>
-        </div>
-        <button type="submit" class="btn-login" id="submitBtn" disabled>กำลังเตรียมระบบ...</button>
-    </form>
+    <script src="auth.js"></script>
+    <script>
+        const SCRIPT_URL = "URL_APPS_SCRIPT_ที่นี่";
+        let accounts = {};
 
-    <div id="status" class="status-msg"></div>
-    <button class="forgot-btn" onclick="handleForgot()">ลืมรหัสผ่าน? (คืนค่าเริ่มต้น)</button>
-</div>
+        // โหลดข้อมูลแบบ GET ทะลุบล็อก
+        fetch(SCRIPT_URL + "?action=getAccounts").then(r => r.json()).then(d => {
+            accounts = d.accounts;
+            document.getElementById('status').innerText = "ระบบพร้อมใช้งาน";
+        });
 
-<script>
-    // ⚠️ นำ URL จากการ Deploy ครั้งใหม่ล่าสุดมาใส่ตรงนี้นะครับ
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyLZcuTDLsx6v_qu3OW-hh46MFL7i8m8IvtHqOo2lOHO6Ghp5wuftrzspPZv7xr_PBMPA/exec"; 
+        document.getElementById('loginForm').onsubmit = (e) => {
+            e.preventDefault();
+            const u = document.getElementById('user').value.trim().toLowerCase();
+            const p = document.getElementById('pass').value;
+            const acc = accounts[u];
 
-    // --- ระบบดึงข้อมูลใหม่แบบที่คุณให้ตัวอย่างมา ---
-    let accounts = {};
-    let accountsLoaded = false;
-    const submitBtn = document.getElementById('submitBtn');
-    const statusDiv = document.getElementById('status');
-
-    // ทันทีที่เปิดหน้าเว็บ ให้วิ่งไปโหลด User มาเก็บไว้ก่อน
-    (async function loadAccounts() {
-        try {
-            let res = await fetch(SCRIPT_URL + "?action=getAccounts");
-            let data = await res.json();
-            if (data.accounts) {
-                accounts = data.accounts;
-                accountsLoaded = true;
-                submitBtn.innerText = "ลงชื่อเข้าใช้";
-                submitBtn.disabled = false; // ปลดล็อคปุ่ม
+            if (acc && acc.password === p) {
+                sessionStorage.setItem("cc_pr_user", JSON.stringify({
+                    displayName: acc.displayName,
+                    role: acc.role,
+                    roleLabel: acc.roleLabel
+                }));
+                document.getElementById('status').style.color = "#059669";
+                document.getElementById('status').innerText = "สำเร็จ! กำลังไปที่ Dashboard...";
+                setTimeout(() => window.location.href = "dashboard.html", 1000);
+            } else {
+                document.getElementById('status').style.color = "#ef4444";
+                document.getElementById('status').innerText = "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง";
             }
-        } catch(e) { 
-            statusDiv.innerHTML = '<span class="error">การเชื่อมต่อผิดพลาด โปรดรีเฟรชหน้าใหม่</span>';
-        }
-    })();
+        };
 
-    // --- จัดการตอนกดล็อกอิน ---
-    document.getElementById('loginForm').onsubmit = (e) => {
-        e.preventDefault();
-        
-        if (!accountsLoaded) {
-            statusDiv.innerHTML = '<span class="error">กำลังโหลดฐานข้อมูล โปรดรอสักครู่...</span>';
-            return;
-        }
-
-        submitBtn.innerText = "กำลังตรวจสอบ...";
-        submitBtn.disabled = true;
-
-        const user = document.getElementById('username').value.trim();
-        const pass = document.getElementById('password').value.trim();
-        const acc = accounts[user];
-
-        // ตรวจสอบรหัสผ่านที่หน้าเว็บเลย
-        if (acc && acc.password === pass) {
-            statusDiv.innerHTML = '<span class="success">เข้าสู่ระบบสำเร็จ! กำลังไปที่หน้าหลัก...</span>';
-            
-            // เก็บ Session เพื่อให้ไฟล์ dashboard.html เอาไปแสดงชื่อมุมขวาบน
-            sessionStorage.setItem("cmul_session", JSON.stringify({
-                name: acc.name,
-                position: acc.position
-            }));
-
-            setTimeout(() => {
-                window.location.href = "dashboard.html";
-            }, 1000);
-        } else {
-            statusDiv.innerHTML = '<span class="error">ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง</span>';
-            submitBtn.innerText = "ลงชื่อเข้าใช้";
-            submitBtn.disabled = false;
-        }
-    };
-
-    // --- จัดการปุ่มลืมรหัสผ่าน ---
-    async function handleForgot() {
-        const user = document.getElementById('username').value.trim();
-        if (!user) return alert("กรุณาระบุ Username ก่อนทำการรีเซ็ตรหัสผ่าน");
-
-        if (confirm(`ยืนยันการรีเซ็ตรหัสผ่านของ ${user} เป็นค่าเริ่มต้น (password123)?`)) {
-            statusDiv.innerHTML = '<span style="color:var(--primary-blue)">กำลังดำเนินการ...</span>';
-            try {
-                // ส่งคำสั่งรีเซ็ตผ่าน GET
-                let res = await fetch(SCRIPT_URL + "?action=reset&username=" + encodeURIComponent(user));
-                let data = await res.json();
-                alert(data.message);
-                statusDiv.innerHTML = "";
-                
-                // โหลดข้อมูลใหม่เพื่ออัปเดตรหัสผ่านที่เพิ่งรีเซ็ต
-                if(data.success) {
-                    accountsLoaded = false;
-                    let reloadRes = await fetch(SCRIPT_URL + "?action=getAccounts");
-                    let reloadData = await reloadRes.json();
-                    if(reloadData.accounts) { accounts = reloadData.accounts; accountsLoaded = true; }
-                }
-            } catch (error) {
-                alert("รีเซ็ตไม่สำเร็จ โปรดลองอีกครั้ง");
-                statusDiv.innerHTML = "";
+        async function handleReset() {
+            const u = document.getElementById('user').value;
+            if(!u) return alert("โปรดกรอก Username");
+            if(confirm("รีเซ็ตรหัสผ่านเป็น password123?")) {
+                const res = await fetch(`${SCRIPT_URL}?action=resetPassword&username=${u}`);
+                const d = await res.json();
+                alert(d.message);
+                location.reload();
             }
         }
-    }
-
-    // ระบบความปลอดภัย
-    document.addEventListener('contextmenu', e => e.preventDefault());
-</script>
+    </script>
 </body>
 </html>
