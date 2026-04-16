@@ -8,25 +8,28 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700;800;900&family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg-primary: #0a0e1a;
-  --bg-card: #111827;
-  --bg-card-hover: #1a2337;
-  --border-subtle: rgba(255,255,255,0.06);
-  --text-primary: #f0f4ff;
-  --text-secondary: #8b9cc7;
-  --text-muted: #5a6a8a;
-  --accent-blue: #3b82f6;
-  --accent-cyan: #06b6d4;
-  --accent-emerald: #10b981;
-  --accent-amber: #f59e0b;
-  --accent-rose: #f43f5e;
-  --accent-violet: #8b5cf6;
-  --accent-orange: #f97316;
+  /* ปรับแต่งเป็นโทนสว่าง */
+  --bg-primary: #f8fafc;
+  --bg-card: #ffffff;
+  --bg-card-hover: #f1f5f9;
+  --border-subtle: rgba(0, 0, 0, 0.08);
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #64748b;
+  
+  --accent-blue: #2563eb;
+  --accent-cyan: #0891b2;
+  --accent-emerald: #059669;
+  --accent-amber: #d97706;
+  --accent-rose: #e11d48;
+  --accent-violet: #7c3aed;
+  --accent-orange: #ea580c;
+  
   --gradient-blue: linear-gradient(135deg, #3b82f6, #06b6d4);
   --gradient-emerald: linear-gradient(135deg, #10b981, #06b6d4);
   --gradient-violet: linear-gradient(135deg, #8b5cf6, #ec4899);
   --gradient-amber: linear-gradient(135deg, #f59e0b, #f97316);
-  --shadow-glow: 0 0 40px rgba(59,130,246,0.1);
+  --shadow-glow: 0 4px 20px rgba(0, 0, 0, 0.03);
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -39,8 +42,69 @@ body {
   overflow-x: hidden;
 }
 
+/* Preloader Styles */
+#preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: var(--bg-primary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.6s ease, visibility 0.6s ease;
+}
+
+.preloader-hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.penguin-loader {
+  width: 200px;
+  height: 200px;
+  margin-bottom: 24px;
+}
+
+.pen-arm {
+  transform-origin: 140px 85px;
+  animation: writing 0.4s ease-in-out infinite alternate;
+}
+
+@keyframes writing {
+  0% { transform: rotate(0deg) translate(0px, 0px); }
+  100% { transform: rotate(4deg) translate(-8px, 4px); }
+}
+
+.loading-text {
+  font-family: 'Noto Sans Thai', sans-serif;
+  font-size: 18px;
+  color: var(--text-primary);
+  font-weight: 600;
+  text-align: center;
+  max-width: 480px;
+  line-height: 1.5;
+  padding: 0 20px;
+}
+
+.loading-dots::after {
+  content: '';
+  display: inline-block;
+  width: 24px;
+  text-align: left;
+  animation: dots 1.5s steps(4, end) infinite;
+}
+
+@keyframes dots {
+  0%, 20% { content: ''; }
+  40% { content: '.'; }
+  60% { content: '..'; }
+  80%, 100% { content: '...'; }
+}
+
+/* Layout Styles */
 .noise-overlay {
-  position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.03;
+  position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.2;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
@@ -54,9 +118,9 @@ body {
 .hero::before {
   content: '';
   position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-  background: radial-gradient(ellipse at 50% 0%, rgba(59,130,246,0.12) 0%, transparent 60%),
-              radial-gradient(ellipse at 20% 50%, rgba(139,92,246,0.08) 0%, transparent 50%),
-              radial-gradient(ellipse at 80% 50%, rgba(6,182,212,0.08) 0%, transparent 50%);
+  background: radial-gradient(ellipse at 50% 0%, rgba(59,130,246,0.06) 0%, transparent 60%),
+              radial-gradient(ellipse at 20% 50%, rgba(139,92,246,0.04) 0%, transparent 50%),
+              radial-gradient(ellipse at 80% 50%, rgba(6,182,212,0.04) 0%, transparent 50%);
   z-index: 0;
 }
 
@@ -65,8 +129,8 @@ body {
 .hero-badge {
   display: inline-flex; align-items: center; gap: 8px;
   padding: 6px 16px; border-radius: 100px;
-  background: rgba(59,130,246,0.12); border: 1px solid rgba(59,130,246,0.2);
-  color: var(--accent-blue); font-size: 13px; font-weight: 500;
+  background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.2);
+  color: var(--accent-blue); font-size: 13px; font-weight: 600;
   letter-spacing: 0.5px; margin-bottom: 20px;
 }
 
@@ -77,7 +141,7 @@ body {
 .hero h1 {
   font-family: 'Noto Sans Thai', sans-serif;
   font-size: 36px; font-weight: 800; line-height: 1.3;
-  background: linear-gradient(135deg, #fff 0%, #a5b4fc 50%, #06b6d4 100%);
+  background: linear-gradient(135deg, #0f172a 0%, #4338ca 50%, #0284c7 100%);
   -webkit-background-clip: text; -webkit-text-fill-color: transparent;
   margin-bottom: 12px;
 }
@@ -94,7 +158,7 @@ body {
 
 .meta-item {
   display: flex; align-items: center; gap: 8px;
-  color: var(--text-muted); font-size: 13px;
+  color: var(--text-muted); font-size: 13px; font-weight: 500;
 }
 
 .meta-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--accent-blue); }
@@ -103,18 +167,20 @@ body {
 .kpi-grid {
   display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
   max-width: 1200px; margin: 0 auto; padding: 0 40px 40px;
+  position: relative; z-index: 1;
 }
 
 .kpi-card {
   background: var(--bg-card); border: 1px solid var(--border-subtle);
   border-radius: 16px; padding: 24px; position: relative; overflow: hidden;
-  transition: transform 0.3s, border-color 0.3s;
+  transition: transform 0.3s, box-shadow 0.3s;
+  box-shadow: var(--shadow-glow);
 }
 
-.kpi-card:hover { transform: translateY(-2px); border-color: rgba(255,255,255,0.12); }
+.kpi-card:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
 
 .kpi-card::after {
-  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
 }
 
 .kpi-card:nth-child(1)::after { background: var(--gradient-blue); }
@@ -122,7 +188,7 @@ body {
 .kpi-card:nth-child(3)::after { background: var(--gradient-violet); }
 .kpi-card:nth-child(4)::after { background: var(--gradient-amber); }
 
-.kpi-label { font-size: 13px; color: var(--text-muted); font-weight: 500; margin-bottom: 8px; }
+.kpi-label { font-size: 13px; color: var(--text-muted); font-weight: 600; margin-bottom: 8px; }
 
 .kpi-value {
   font-size: 36px; font-weight: 800; letter-spacing: -1px; line-height: 1;
@@ -140,6 +206,7 @@ body {
 .dashboard {
   max-width: 1200px; margin: 0 auto; padding: 0 40px 60px;
   display: grid; gap: 20px;
+  position: relative; z-index: 1;
 }
 
 .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
@@ -149,25 +216,26 @@ body {
 .card {
   background: var(--bg-card); border: 1px solid var(--border-subtle);
   border-radius: 16px; padding: 28px; position: relative;
-  transition: border-color 0.3s;
+  transition: box-shadow 0.3s;
+  box-shadow: var(--shadow-glow);
 }
 
-.card:hover { border-color: rgba(255,255,255,0.1); }
+.card:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.04); }
 
 .card-header { margin-bottom: 20px; }
 
 .card-tag {
-  display: inline-block; font-size: 11px; font-weight: 600;
-  text-transform: uppercase; letter-spacing: 1px;
-  padding: 3px 10px; border-radius: 6px; margin-bottom: 10px;
+  display: inline-block; font-size: 11px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.5px;
+  padding: 4px 12px; border-radius: 6px; margin-bottom: 12px;
 }
 
-.tag-blue { background: rgba(59,130,246,0.12); color: var(--accent-blue); }
-.tag-emerald { background: rgba(16,185,129,0.12); color: var(--accent-emerald); }
-.tag-violet { background: rgba(139,92,246,0.12); color: var(--accent-violet); }
-.tag-amber { background: rgba(245,158,11,0.12); color: var(--accent-amber); }
-.tag-rose { background: rgba(244,63,94,0.12); color: var(--accent-rose); }
-.tag-cyan { background: rgba(6,182,212,0.12); color: var(--accent-cyan); }
+.tag-blue { background: rgba(37,99,235,0.1); color: var(--accent-blue); }
+.tag-emerald { background: rgba(5,150,105,0.1); color: var(--accent-emerald); }
+.tag-violet { background: rgba(124,58,237,0.1); color: var(--accent-violet); }
+.tag-amber { background: rgba(217,119,6,0.1); color: var(--accent-amber); }
+.tag-rose { background: rgba(225,29,72,0.1); color: var(--accent-rose); }
+.tag-cyan { background: rgba(8,145,178,0.1); color: var(--accent-cyan); }
 
 .card-title { font-size: 17px; font-weight: 700; color: var(--text-primary); line-height: 1.4; }
 
@@ -176,33 +244,33 @@ body {
 
 /* Satisfaction Bar */
 .sat-item { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
-.sat-label { font-size: 13px; color: var(--text-secondary); min-width: 180px; line-height: 1.3; }
-.sat-bar-wrap { flex: 1; height: 28px; background: rgba(255,255,255,0.04); border-radius: 8px; overflow: hidden; position: relative; }
+.sat-label { font-size: 14px; color: var(--text-secondary); font-weight: 500; min-width: 180px; line-height: 1.3; }
+.sat-bar-wrap { flex: 1; height: 28px; background: rgba(0,0,0,0.04); border-radius: 8px; overflow: hidden; position: relative; }
 .sat-bar {
   height: 100%; border-radius: 8px; display: flex; align-items: center;
-  justify-content: flex-end; padding-right: 10px; transition: width 1.2s cubic-bezier(0.25,1,0.5,1);
+  justify-content: flex-end; padding-right: 12px; transition: width 1.2s cubic-bezier(0.25,1,0.5,1);
   font-size: 13px; font-weight: 700; color: #fff;
 }
-.sat-bar.blue { background: linear-gradient(90deg, rgba(59,130,246,0.7), var(--accent-blue)); }
-.sat-bar.emerald { background: linear-gradient(90deg, rgba(16,185,129,0.7), var(--accent-emerald)); }
-.sat-bar.violet { background: linear-gradient(90deg, rgba(139,92,246,0.7), var(--accent-violet)); }
-.sat-bar.cyan { background: linear-gradient(90deg, rgba(6,182,212,0.7), var(--accent-cyan)); }
-.sat-bar.amber { background: linear-gradient(90deg, rgba(245,158,11,0.7), var(--accent-amber)); }
-.sat-bar.rose { background: linear-gradient(90deg, rgba(244,63,94,0.7), var(--accent-rose)); }
+.sat-bar.blue { background: linear-gradient(90deg, #60a5fa, var(--accent-blue)); }
+.sat-bar.emerald { background: linear-gradient(90deg, #34d399, var(--accent-emerald)); }
+.sat-bar.violet { background: linear-gradient(90deg, #a78bfa, var(--accent-violet)); }
+.sat-bar.cyan { background: linear-gradient(90deg, #22d3ee, var(--accent-cyan)); }
+.sat-bar.amber { background: linear-gradient(90deg, #fbbf24, var(--accent-amber)); }
+.sat-bar.rose { background: linear-gradient(90deg, #fb7185, var(--accent-rose)); }
 
 /* Suggestion cards */
 .suggestion-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .suggestion-item {
-  background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle);
-  border-radius: 12px; padding: 16px; font-size: 13px; color: var(--text-secondary);
-  line-height: 1.7; transition: background 0.3s;
+  background: rgba(0,0,0,0.02); border: 1px solid var(--border-subtle);
+  border-radius: 12px; padding: 16px; font-size: 14px; color: var(--text-secondary);
+  line-height: 1.6; transition: background 0.3s;
 }
-.suggestion-item:hover { background: rgba(255,255,255,0.06); }
+.suggestion-item:hover { background: rgba(0,0,0,0.04); }
 .suggestion-num {
   display: inline-flex; align-items: center; justify-content: center;
-  width: 22px; height: 22px; border-radius: 6px;
-  background: rgba(59,130,246,0.15); color: var(--accent-blue);
-  font-size: 11px; font-weight: 700; margin-right: 8px; flex-shrink: 0;
+  width: 24px; height: 24px; border-radius: 6px;
+  background: rgba(37,99,235,0.1); color: var(--accent-blue);
+  font-size: 12px; font-weight: 700; margin-right: 10px; flex-shrink: 0;
 }
 
 /* Donut center */
@@ -212,20 +280,20 @@ body {
   text-align: center; pointer-events: none;
 }
 .donut-center .big { font-size: 28px; font-weight: 800; display: block; }
-.donut-center .small { font-size: 12px; color: var(--text-muted); }
+.donut-center .small { font-size: 12px; color: var(--text-muted); font-weight: 500;}
 
 /* Footer */
 .report-footer {
   max-width: 1200px; margin: 0 auto; padding: 30px 40px 50px;
-  text-align: center; color: var(--text-muted); font-size: 12px;
+  text-align: center; color: var(--text-muted); font-size: 13px;
   border-top: 1px solid var(--border-subtle);
+  position: relative; z-index: 1;
 }
 
-/* Print */
 /* Back to home bar */
 .back-bar {
   position: sticky; top: 0; z-index: 100;
-  background: rgba(10,14,26,0.85); backdrop-filter: blur(16px);
+  background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border-subtle);
   padding: 12px 40px; display: flex; align-items: center; justify-content: space-between;
 }
@@ -233,29 +301,29 @@ body {
   display: inline-flex; align-items: center; gap: 8px;
   color: var(--accent-cyan); font-size: 14px; font-weight: 600;
   text-decoration: none; padding: 8px 18px; border-radius: 10px;
-  background: rgba(6,182,212,0.08); border: 1px solid rgba(6,182,212,0.15);
+  background: rgba(8,145,178,0.08); border: 1px solid rgba(8,145,178,0.15);
   transition: all 0.3s;
   font-family: inherit;
 }
-.back-btn:hover { background: rgba(6,182,212,0.18); transform: translateX(-2px); }
-.back-bar-title { font-size: 13px; color: var(--text-muted); }
+.back-btn:hover { background: rgba(8,145,178,0.15); transform: translateX(-2px); }
+.back-bar-title { font-size: 13px; font-weight: 600; color: var(--text-muted); }
 
 /* Back to top */
 .back-top {
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
   color: var(--text-secondary); font-size: 14px; font-weight: 600;
   text-decoration: none; padding: 12px 28px; border-radius: 12px;
-  background: rgba(255,255,255,0.04); border: 1px solid var(--border-subtle);
+  background: rgba(0,0,0,0.04); border: 1px solid var(--border-subtle);
   transition: all 0.3s; margin-top: 16px;
   font-family: inherit; cursor: pointer;
 }
-.back-top:hover { background: rgba(255,255,255,0.08); color: var(--text-primary); transform: translateY(-2px); }
+.back-top:hover { background: rgba(0,0,0,0.08); color: var(--text-primary); transform: translateY(-2px); }
 
 @media print {
   body { background: #fff; color: #1a1a1a; }
-  .card { border: 1px solid #e5e7eb; break-inside: avoid; }
-  .kpi-card { break-inside: avoid; }
-  .back-bar, .back-top { display: none; }
+  .card { border: 1px solid #e5e7eb; break-inside: avoid; box-shadow: none; }
+  .kpi-card { break-inside: avoid; box-shadow: none; }
+  .back-bar, .back-top, #preloader { display: none; }
 }
 
 @media (max-width: 900px) {
@@ -268,15 +336,43 @@ body {
 </style>
 </head>
 <body id="top">
+
+<div id="preloader">
+  <svg class="penguin-loader" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <path d="M10 170 L190 170 L200 200 L0 200 Z" fill="#cbd5e1" />
+    <rect x="50" y="140" width="90" height="50" fill="#ffffff" rx="3" transform="rotate(-4 95 165)" stroke="#94a3b8" stroke-width="1.5"/>
+    <line x1="60" y1="150" x2="130" y2="150" stroke="#cbd5e1" stroke-width="2" transform="rotate(-4 95 165)"/>
+    <line x1="60" y1="162" x2="110" y2="162" stroke="#cbd5e1" stroke-width="2" transform="rotate(-4 95 165)"/>
+    <line x1="60" y1="174" x2="120" y2="174" stroke="#cbd5e1" stroke-width="2" transform="rotate(-4 95 165)"/>
+    <rect x="120" y="159" width="6" height="6" fill="#e2e8f0" transform="rotate(-4 95 165)"/>
+    <rect x="130" y="171" width="6" height="6" fill="#e2e8f0" transform="rotate(-4 95 165)"/>
+    
+    <ellipse cx="100" cy="95" rx="55" ry="70" fill="#1e293b"/>
+    <ellipse cx="100" cy="105" rx="42" ry="55" fill="#f8fafc"/>
+    <circle cx="82" cy="55" r="6" fill="#ffffff"/>
+    <circle cx="82" cy="55" r="2.5" fill="#0f172a"/>
+    <circle cx="118" cy="55" r="6" fill="#ffffff"/>
+    <circle cx="118" cy="55" r="2.5" fill="#0f172a"/>
+    <path d="M90 68 L110 68 L100 80 Z" fill="#f59e0b"/>
+    <path d="M50 85 Q 25 115 35 150 Q 55 130 55 90" fill="#1e293b"/>
+    
+    <g class="pen-arm">
+      <path d="M150 85 Q 175 115 140 155 Q 135 125 145 90" fill="#1e293b"/>
+      <rect x="135" y="140" width="8" height="35" fill="#ef4444" transform="rotate(35 139 157)" rx="2"/>
+      <polygon points="121,178 126,168 132,172" fill="#64748b"/>
+      <polygon points="121,178 124,175 123,173" fill="#1e293b"/>
+    </g>
+  </svg>
+  <div class="loading-text">กำลังโหลดข้อมูล<br>สรุปผลการประเมินการเปิดรับและการสื่อสารองค์กรของบุคลากร สำนักหอสมุด<span class="loading-dots"></span></div>
+</div>
+
 <div class="noise-overlay"></div>
 
-<!-- BACK BAR -->
 <nav class="back-bar">
   <a href="index.html" class="back-btn">← กลับหน้าหลัก</a>
   <span class="back-bar-title">รายงานบุคลากรภายใน</span>
 </nav>
 
-<!-- HERO -->
 <section class="hero">
   <div class="hero-content">
     <div class="hero-badge">รายงานสรุปผล ปี 2569</div>
@@ -290,7 +386,6 @@ body {
   </div>
 </section>
 
-<!-- KPI -->
 <div class="kpi-grid">
   <div class="kpi-card">
     <div class="kpi-label">ผู้ตอบแบบสอบถาม</div>
@@ -314,10 +409,8 @@ body {
   </div>
 </div>
 
-<!-- DASHBOARD -->
 <div class="dashboard">
 
-  <!-- Row 1: Demographics -->
   <div class="row-3">
     <div class="card">
       <div class="card-header">
@@ -356,7 +449,6 @@ body {
     </div>
   </div>
 
-  <!-- Row 2: Channels -->
   <div class="row-2">
     <div class="card">
       <div class="card-header">
@@ -382,7 +474,6 @@ body {
     </div>
   </div>
 
-  <!-- Row 3: Time & Frequency -->
   <div class="row-2">
     <div class="card">
       <div class="card-header">
@@ -408,7 +499,6 @@ body {
     </div>
   </div>
 
-  <!-- Row 4: Content Types -->
   <div class="row-full">
     <div class="card">
       <div class="card-header">
@@ -421,7 +511,6 @@ body {
     </div>
   </div>
 
-  <!-- Row 5: Satisfaction -->
   <div class="row-full">
     <div class="card">
       <div class="card-header">
@@ -457,7 +546,6 @@ body {
     </div>
   </div>
 
-  <!-- Row 6: CMUL News -->
   <div class="row-2">
     <div class="card">
       <div class="card-header">
@@ -479,7 +567,6 @@ body {
     </div>
   </div>
 
-  <!-- Row 7: Department -->
   <div class="row-full">
     <div class="card">
       <div class="card-header">
@@ -492,7 +579,6 @@ body {
     </div>
   </div>
 
-  <!-- Row 8: Suggestions -->
   <div class="row-full">
     <div class="card">
       <div class="card-header">
@@ -522,19 +608,36 @@ body {
 </footer>
 
 <script>
+// Preloader Logic
+window.addEventListener('load', function() {
+  // ตั้งค่าหน่วงเวลาโชว์แอนิเมชัน 2.5 วินาที
+  setTimeout(function() {
+    document.getElementById('preloader').classList.add('preloader-hidden');
+    
+    // Animate satisfaction bars only after preloader is hidden
+    setTimeout(() => {
+      document.querySelectorAll('.sat-bar').forEach(bar => {
+        bar.style.width = bar.getAttribute('data-target') + '%';
+      });
+    }, 200);
+  }, 2500); 
+});
+
+// Chart.js Configuration for Light Theme
 Chart.defaults.font.family = "'IBM Plex Sans Thai', 'Noto Sans Thai', sans-serif";
-Chart.defaults.color = '#8b9cc7';
+Chart.defaults.color = '#64748b'; // Darker text for light mode
 Chart.defaults.plugins.legend.labels.usePointStyle = true;
 Chart.defaults.plugins.legend.labels.pointStyleWidth = 10;
 Chart.defaults.plugins.legend.labels.padding = 16;
+const gridColor = 'rgba(0, 0, 0, 0.05)'; // Darker grid lines for light mode
 
 const colors = {
   blue: '#3b82f6', cyan: '#06b6d4', emerald: '#10b981',
   amber: '#f59e0b', rose: '#f43f5e', violet: '#8b5cf6', orange: '#f97316',
-  blueA: 'rgba(59,130,246,0.7)', cyanA: 'rgba(6,182,212,0.7)',
-  emeraldA: 'rgba(16,185,129,0.7)', amberA: 'rgba(245,158,11,0.7)',
-  roseA: 'rgba(244,63,94,0.7)', violetA: 'rgba(139,92,246,0.7)',
-  orangeA: 'rgba(249,115,22,0.7)',
+  blueA: 'rgba(59,130,246,0.8)', cyanA: 'rgba(6,182,212,0.8)',
+  emeraldA: 'rgba(16,185,129,0.8)', amberA: 'rgba(245,158,11,0.8)',
+  roseA: 'rgba(244,63,94,0.8)', violetA: 'rgba(139,92,246,0.8)',
+  orangeA: 'rgba(249,115,22,0.8)',
 };
 
 // 1. Gender
@@ -542,7 +645,7 @@ new Chart(document.getElementById('chartGender'), {
   type: 'doughnut',
   data: {
     labels: ['หญิง (75.4%)', 'ชาย (24.6%)'],
-    datasets: [{ data: [49, 16], backgroundColor: ['#ec4899', '#38bdf8'], borderWidth: 0, cutout: '68%' }]
+    datasets: [{ data: [49, 16], backgroundColor: ['#ec4899', '#38bdf8'], borderWidth: 2, borderColor: '#fff', cutout: '68%' }]
   },
   options: { plugins: { legend: { position: 'bottom', labels: { font: { size: 12 } } } }, responsive: true, maintainAspectRatio: false }
 });
@@ -557,7 +660,7 @@ new Chart(document.getElementById('chartAge'), {
   options: {
     plugins: { legend: { display: false } },
     scales: {
-      y: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { font: { size: 11 } } },
+      y: { grid: { color: gridColor }, ticks: { font: { size: 11 } } },
       x: { grid: { display: false }, ticks: { font: { size: 11 } } }
     },
     responsive: true, maintainAspectRatio: false
@@ -569,7 +672,7 @@ new Chart(document.getElementById('chartType'), {
   type: 'doughnut',
   data: {
     labels: ['ปฏิบัติการ/วิชาชีพ (67.7%)', 'สนับสนุน/บริการ (32.3%)'],
-    datasets: [{ data: [44, 21], backgroundColor: [colors.emerald, colors.amber], borderWidth: 0, cutout: '68%' }]
+    datasets: [{ data: [44, 21], backgroundColor: [colors.emerald, colors.amber], borderWidth: 2, borderColor: '#fff', cutout: '68%' }]
   },
   options: { plugins: { legend: { position: 'bottom', labels: { font: { size: 11 } } } }, responsive: true, maintainAspectRatio: false }
 });
@@ -589,7 +692,7 @@ new Chart(document.getElementById('chartChannels'), {
     indexAxis: 'y',
     plugins: { legend: { display: false } },
     scales: {
-      x: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { font: { size: 11 } } },
+      x: { grid: { color: gridColor }, ticks: { font: { size: 11 } } },
       y: { grid: { display: false }, ticks: { font: { size: 12 } } }
     },
     responsive: true, maintainAspectRatio: false
@@ -601,7 +704,7 @@ new Chart(document.getElementById('chartTopChannel'), {
   type: 'doughnut',
   data: {
     labels: ['Line (63.1%)', 'Facebook (20%)', 'e-Document (12.3%)', 'พูดคุย (4.6%)'],
-    datasets: [{ data: [41, 13, 8, 3], backgroundColor: [colors.emerald, colors.blue, colors.amber, colors.violet], borderWidth: 0, cutout: '65%' }]
+    datasets: [{ data: [41, 13, 8, 3], backgroundColor: [colors.emerald, colors.blue, colors.amber, colors.violet], borderWidth: 2, borderColor: '#fff', cutout: '65%' }]
   },
   options: { plugins: { legend: { position: 'bottom', labels: { font: { size: 11 } } } }, responsive: true, maintainAspectRatio: false }
 });
@@ -620,7 +723,7 @@ new Chart(document.getElementById('chartTime'), {
   options: {
     plugins: { legend: { display: false } },
     scales: {
-      y: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { font: { size: 11 } } },
+      y: { grid: { color: gridColor }, ticks: { font: { size: 11 } } },
       x: { grid: { display: false }, ticks: { font: { size: 10 } } }
     },
     responsive: true, maintainAspectRatio: false
@@ -632,7 +735,7 @@ new Chart(document.getElementById('chartFreq'), {
   type: 'doughnut',
   data: {
     labels: ['ทุกวัน (72.3%)', '3-4 ครั้ง/สัปดาห์ (12.3%)', '5-6 ครั้ง/สัปดาห์ (6.2%)', '1-2 ครั้ง/สัปดาห์ (4.6%)', 'นานๆ ครั้ง (4.6%)'],
-    datasets: [{ data: [47, 8, 4, 3, 3], backgroundColor: [colors.cyan, colors.blue, colors.violet, colors.amber, colors.rose], borderWidth: 0, cutout: '65%' }]
+    datasets: [{ data: [47, 8, 4, 3, 3], backgroundColor: [colors.cyan, colors.blue, colors.violet, colors.amber, colors.rose], borderWidth: 2, borderColor: '#fff', cutout: '65%' }]
   },
   options: { plugins: { legend: { position: 'bottom', labels: { font: { size: 11 } } } }, responsive: true, maintainAspectRatio: false }
 });
@@ -650,7 +753,7 @@ new Chart(document.getElementById('chartContent'), {
   options: {
     plugins: { legend: { position: 'top', labels: { font: { size: 12 } } } },
     scales: {
-      y: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { font: { size: 11 } } },
+      y: { grid: { color: gridColor }, ticks: { font: { size: 11 } } },
       x: { grid: { display: false }, ticks: { font: { size: 11 } } }
     },
     responsive: true, maintainAspectRatio: false
@@ -671,7 +774,7 @@ new Chart(document.getElementById('chartCMUL'), {
   options: {
     plugins: { legend: { display: false } },
     scales: {
-      y: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { font: { size: 11 } } },
+      y: { grid: { color: gridColor }, ticks: { font: { size: 11 } } },
       x: { grid: { display: false }, ticks: { font: { size: 11 } } }
     },
     responsive: true, maintainAspectRatio: false
@@ -686,7 +789,7 @@ new Chart(document.getElementById('chartCMULSat'), {
     datasets: [{
       label: 'ค่าเฉลี่ย',
       data: [4.08, 4.06, 4.03, 3.93],
-      borderColor: colors.cyan, backgroundColor: 'rgba(6,182,212,0.15)',
+      borderColor: colors.cyan, backgroundColor: 'rgba(8, 145, 178, 0.15)',
       pointBackgroundColor: colors.cyan, pointBorderColor: '#fff', pointRadius: 5, borderWidth: 2
     }]
   },
@@ -695,9 +798,9 @@ new Chart(document.getElementById('chartCMULSat'), {
     scales: {
       r: {
         beginAtZero: false, min: 3.5, max: 4.5,
-        angleLines: { color: 'rgba(255,255,255,0.06)' },
-        grid: { color: 'rgba(255,255,255,0.06)' },
-        pointLabels: { font: { size: 12 }, color: '#8b9cc7' },
+        angleLines: { color: gridColor },
+        grid: { color: gridColor },
+        pointLabels: { font: { size: 12 }, color: '#64748b' },
         ticks: { stepSize: 0.25, font: { size: 10 }, backdropColor: 'transparent' }
       }
     },
@@ -712,26 +815,19 @@ new Chart(document.getElementById('chartDept'), {
     labels: ['สำนักงานสำนัก', 'จัดการทรัพยากรฯ', 'บริการ/เรียนรู้', 'วิทย์สุขภาพ', 'มนุษยศาสตร์ฯ', 'สารสนเทศล้านนาฯ', 'วิทย์/เทคโนโลยี', 'IT ห้องสมุด'],
     datasets: [{
       data: [13, 11, 10, 7, 7, 6, 6, 5],
-      backgroundColor: [colors.blue, colors.emerald, colors.cyan, colors.violet, colors.amber, colors.rose, colors.orange, '#64748b'],
+      backgroundColor: [colors.blue, colors.emerald, colors.cyan, colors.violet, colors.amber, colors.rose, colors.orange, '#94a3b8'],
       borderRadius: 8, borderSkipped: false
     }]
   },
   options: {
     plugins: { legend: { display: false } },
     scales: {
-      y: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { font: { size: 11 } } },
+      y: { grid: { color: gridColor }, ticks: { font: { size: 11 } } },
       x: { grid: { display: false }, ticks: { font: { size: 10 } } }
     },
     responsive: true, maintainAspectRatio: false
   }
 });
-
-// Animate satisfaction bars
-setTimeout(() => {
-  document.querySelectorAll('.sat-bar').forEach(bar => {
-    bar.style.width = bar.getAttribute('data-target') + '%';
-  });
-}, 500);
 </script>
 </body>
 </html>
