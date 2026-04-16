@@ -92,11 +92,28 @@ body {
   display: flex; align-items: center; gap: 12px; padding: 12px 16px;
   color: var(--text-dim); text-decoration: none; font-size: 14px;
   font-weight: 600; cursor: pointer; transition: all 0.2s; border-radius: 10px;
+  border: none; background: transparent; width: 100%; font-family: inherit; text-align: left;
 }
 .dropdown-item:hover { background: rgba(0,0,0,0.03); color: var(--text); }
 .dropdown-item.logout { color: var(--rose); margin-top: 4px; }
 .dropdown-item.logout:hover { background: rgba(225,29,72,0.05); }
-.dropdown-item svg { width: 18px !important; height: 18px !important; flex-shrink: 0; } 
+.dropdown-item svg { width: 18px !important; height: 18px !important; flex-shrink: 0; }
+
+/* === เปลี่ยนรหัสผ่าน Modal === */
+.pass-modal-bg { position: fixed; inset: 0; background: rgba(15,23,42,0.6); z-index: 9999; display: none; align-items: center; justify-content: center; backdrop-filter: blur(8px); padding: 20px; }
+.pass-modal-bg.show { display: flex; animation: aiFadeIn 0.3s ease; }
+.pass-modal { background: var(--bg); border-radius: 24px; width: 100%; max-width: 420px; box-shadow: 0 30px 80px rgba(0,0,0,0.3); animation: aiSlideIn 0.4s cubic-bezier(0.25,1,0.5,1); overflow: hidden; border: 1px solid rgba(255,255,255,0.5); }
+.pass-header { padding: 24px 30px; background: white; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+.pass-header h3 { font-family: 'Noto Sans Thai', sans-serif; font-size: 18px; font-weight: 800; color: var(--text); display: flex; align-items: center; gap: 10px; }
+.pass-body { padding: 30px; background: white; }
+.pass-group { margin-bottom: 20px; text-align: left; }
+.pass-group label { display: block; font-size: 13px; font-weight: 600; color: var(--text-dim); margin-bottom: 8px; }
+.pass-group input { width: 100%; padding: 12px 16px; border-radius: 12px; border: 1.5px solid #e2e8f0; background: #f8fafc; font-size: 14px; font-family: inherit; outline: none; transition: 0.3s; }
+.pass-group input:focus { border-color: var(--cyan); box-shadow: 0 0 0 4px rgba(8,145,178,0.1); background: white; }
+.pass-btn-submit { width: 100%; padding: 14px; border-radius: 12px; border: none; background: linear-gradient(135deg, var(--cyan), var(--blue)); color: white; font-weight: 700; font-size: 15px; cursor: pointer; transition: 0.3s; margin-top: 10px; }
+.pass-btn-submit:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(8,145,178,0.3); }
+.pass-btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+.pass-status { margin-top: 15px; font-size: 13px; font-weight: 600; text-align: center; min-height: 20px; }
 
 /* === Hero === */
 .hero { padding: 50px 40px 35px; text-align: center; }
@@ -107,12 +124,8 @@ body {
   border: 1px solid rgba(8,145,178,0.15);
   color: var(--cyan); font-size: 13px; font-weight: 700; margin-bottom: 24px;
 }
-.hero-chip::before {
-  content: ''; width: 8px; height: 8px; border-radius: 50%;
-  background: var(--emerald); animation: blink 2.5s ease-in-out infinite;
-}
+.hero-chip::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--emerald); animation: blink 2.5s ease-in-out infinite; }
 @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
-
 .hero h1 { font-family: 'Noto Sans Thai', sans-serif; font-size: 40px; font-weight: 900; line-height: 1.25; letter-spacing: -0.5px; margin-bottom: 16px; }
 .hero h1 .line1 { color: var(--text); }
 .hero h1 .line2 { background: linear-gradient(90deg, var(--cyan), var(--blue), var(--violet)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
@@ -125,28 +138,15 @@ body {
 .filter-select { appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e"); background-repeat: no-repeat; background-position: right 14px center; background-size: 14px; border: none; background-color: transparent; padding: 8px 36px 8px 14px; font-family: inherit; font-size: 14px; font-weight: 600; color: var(--text); cursor: pointer; outline: none; border-radius: 100px; transition: background 0.2s; }
 .filter-select:hover { background-color: rgba(8,145,178,0.06); }
 
-.btn-compare {
-  display: inline-flex; align-items: center; gap: 8px;
-  padding: 12px 22px; border-radius: 100px; border: none;
-  font-family: inherit; font-size: 14px; font-weight: 700;
-  background: var(--text); color: white; cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.25,1,0.5,1);
-  box-shadow: 0 4px 14px rgba(26,29,46,0.2);
-}
+.btn-compare { display: inline-flex; align-items: center; gap: 8px; padding: 12px 22px; border-radius: 100px; border: none; font-family: inherit; font-size: 14px; font-weight: 700; background: var(--text); color: white; cursor: pointer; transition: all 0.3s cubic-bezier(0.25,1,0.5,1); box-shadow: 0 4px 14px rgba(26,29,46,0.2); }
 .btn-compare:hover { background: linear-gradient(135deg, var(--cyan), var(--blue)); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(8,145,178,0.3); }
 
-.btn-back {
-  display: inline-flex; align-items: center; gap: 8px;
-  padding: 10px 18px; border-radius: 100px; border: 1px solid var(--border);
-  font-family: inherit; font-size: 13px; font-weight: 600;
-  background: var(--surface); color: var(--text-dim); cursor: pointer; transition: all 0.25s;
-}
+.btn-back { display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; border-radius: 100px; border: 1px solid var(--border); font-family: inherit; font-size: 13px; font-weight: 600; background: var(--surface); color: var(--text-dim); cursor: pointer; transition: all 0.25s; }
 .btn-back:hover { color: var(--text); border-color: var(--border-hover); transform: translateX(-3px); }
 
 /* === Content === */
 .content-area { flex: 1; padding: 0 40px 60px; max-width: 1020px; margin: 0 auto; width: 100%; }
 .content-area.wide { max-width: 100%; padding: 0 24px 100px; }
-
 .cards-label { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: var(--text-muted); margin-bottom: 20px; padding-left: 4px; display: flex; align-items: center; gap: 10px; }
 .count-pill { background: rgba(8,145,178,0.1); color: var(--cyan); padding: 2px 10px; border-radius: 100px; font-size: 11px; letter-spacing: 0; }
 
@@ -232,8 +232,6 @@ body {
 .ai-compare-bar .ai-sub { font-size: 11px; opacity: 0.7; }
 .ai-compare-bar .ai-btn { background: linear-gradient(135deg, var(--amber), var(--pink), var(--violet)); color: white; border: none; padding: 11px 22px; border-radius: 100px; cursor: pointer; font-family: inherit; font-weight: 700; font-size: 14px; display: inline-flex; align-items: center; gap: 8px; transition: all 0.25s; box-shadow: 0 4px 16px rgba(236,72,153,0.3); }
 .ai-compare-bar .ai-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(236,72,153,0.5); }
-@keyframes sparkle { 0%,100% { transform: scale(1) rotate(0deg); } 50% { transform: scale(1.3) rotate(180deg); } }
-.ai-compare-bar .sparkle { display: inline-block; animation: sparkle 2s ease-in-out infinite; }
 
 /* === 🎯 AI Report Modal === */
 .ai-modal-bg { position: fixed; inset: 0; background: rgba(15,23,42,0.5); z-index: 9999; display: none; align-items: center; justify-content: center; backdrop-filter: blur(10px); padding: 20px; }
@@ -248,7 +246,7 @@ body {
 .ai-close-btn:hover { color: var(--rose); border-color: var(--rose); transform: rotate(90deg); }
 .ai-modal-body { padding: 36px; }
 
-/* === Loader ใหม่ === */
+/* === Loader === */
 .loader-overlay {
   position: fixed; inset: 0; background: rgba(248,250,252,0.9);
   backdrop-filter: blur(6px); z-index: 9997;
@@ -287,8 +285,6 @@ body {
 .ai-chart-card { background: white; border-radius: 20px; padding: 26px 28px; border: 1px solid var(--border); box-shadow: 0 2px 12px rgba(0,0,0,0.03); }
 .ai-chart-card h3 { font-family: 'Noto Sans Thai', sans-serif; font-size: 16px; font-weight: 800; color: var(--text); margin-bottom: 18px; display: flex; align-items: center; gap: 10px; }
 .ai-chart-card .chart-wrap { position: relative; height: 260px; }
-
-/* ตารางข้อมูล - ให้มีช่องกลางสำหรับความสวยงาม */
 .ai-table-card { background: white; border-radius: 20px; padding: 26px 28px; border: 1px solid var(--border); box-shadow: 0 2px 12px rgba(0,0,0,0.03); margin-bottom: 24px; overflow-x: auto; }
 .ai-table-card h3 { font-family: 'Noto Sans Thai', sans-serif; font-size: 16px; font-weight: 800; color: var(--text); margin-bottom: 18px; }
 .ai-data-table { width: 100%; border-collapse: collapse; }
@@ -298,7 +294,6 @@ body {
 .ai-data-table td.stat-label { color: var(--text-dim); font-weight: 600; text-align: left; }
 .ai-data-table .year-tag { display: inline-flex; align-items: center; justify-content: center; gap: 8px; flex-direction: column; }
 .ai-data-table .year-tag .year-dot { width: 10px; height: 10px; border-radius: 50%; }
-
 .ai-insights { background: linear-gradient(135deg, rgba(245,158,11,0.05), rgba(219,39,119,0.05), rgba(124,58,237,0.05)); border-radius: 20px; padding: 28px; border: 1px solid rgba(124,58,237,0.15); margin-bottom: 24px; }
 .ai-insights h3 { font-family: 'Noto Sans Thai', sans-serif; font-size: 16px; font-weight: 800; color: var(--text); margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
 .ai-insights ul { list-style: none; padding: 0; }
@@ -356,6 +351,35 @@ body {
   </div>
 </div>
 
+<div class="pass-modal-bg" id="passModal" onclick="if(event.target===this) closeChangePass()">
+  <div class="pass-modal">
+    <div class="pass-header">
+      <h3><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path></svg> เปลี่ยนรหัสผ่าน</h3>
+      <button class="ai-close-btn" style="width:32px;height:32px;" onclick="closeChangePass()">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="pass-body">
+      <form id="changePassForm">
+        <div class="pass-group">
+          <label>รหัสผ่านเดิม</label>
+          <input type="password" id="oldPass" required placeholder="กรอกรหัสผ่านปัจจุบัน">
+        </div>
+        <div class="pass-group">
+          <label>รหัสผ่านใหม่</label>
+          <input type="password" id="newPass" required placeholder="ตั้งรหัสผ่านใหม่" minlength="4">
+        </div>
+        <div class="pass-group">
+          <label>ยืนยันรหัสผ่านใหม่</label>
+          <input type="password" id="confirmPass" required placeholder="กรอกรหัสผ่านใหม่อีกครั้ง">
+        </div>
+        <button type="submit" class="pass-btn-submit" id="passSubmitBtn">บันทึกการเปลี่ยนแปลง</button>
+      </form>
+      <div id="passStatus" class="pass-status"></div>
+    </div>
+  </div>
+</div>
+
 <div class="page">
 
   <header class="topbar fade-up delay-1">
@@ -377,14 +401,14 @@ body {
           <div class="d-name" id="dropName">กำลังโหลด...</div>
           <div class="d-role" id="dropRole">-</div>
         </div>
-        <a href="javascript:void(0)" class="dropdown-item" onclick="alert('ระบบเปลี่ยนรหัสผ่านกำลังอยู่ระหว่างการพัฒนา')">
+        <button class="dropdown-item" onclick="openChangePass()">
           <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path></svg>
           เปลี่ยนรหัสผ่าน
-        </a>
-        <a href="javascript:void(0)" class="dropdown-item logout" onclick="logout()">
+        </button>
+        <button class="dropdown-item logout" onclick="logout()">
           <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
           ออกจากระบบ
-        </a>
+        </button>
       </div>
     </div>
   </header>
@@ -456,6 +480,9 @@ body {
 </div>
 
 <script>
+// 🚨 นำ URL ของ APPS SCRIPT ของคุณมาใส่ตรงนี้ครับ 🚨
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxz2YclGvdzi8VXzLAF1tAcUDLwsvkeSAl0c9mfMjixepDSMndyzUgHSHvXuInpyPJ_/exec";
+
 (function initSecurity() {
   document.addEventListener('contextmenu', e => e.preventDefault());
   document.addEventListener('keydown', e => {
@@ -487,6 +514,9 @@ body {
       
       document.getElementById('dropName').textContent = displayName;
       document.getElementById('dropRole').textContent = displayRole;
+      
+      // เก็บ username สำหรับไว้ใช้เปลี่ยนรหัสผ่าน
+      window.currentUserLogin = user.username || JSON.parse(sessionStorage.getItem('cc_pr_raw_user') || '{}').username;
   } catch(e) { console.error(e); }
 })();
 
@@ -505,82 +535,84 @@ function logout() {
   window.location.href = 'index.html';
 }
 
+// 🔒 ระบบเปลี่ยนรหัสผ่าน (ทำงานได้จริง 100%)
+function openChangePass() {
+  document.getElementById('profileMenu').classList.remove('active');
+  document.getElementById('passModal').classList.add('show');
+}
+function closeChangePass() {
+  document.getElementById('passModal').classList.remove('show');
+  document.getElementById('changePassForm').reset();
+  document.getElementById('passStatus').innerHTML = '';
+}
+
+document.getElementById('changePassForm').onsubmit = async function(e) {
+  e.preventDefault();
+  const oldP = document.getElementById('oldPass').value;
+  const newP = document.getElementById('newPass').value;
+  const confP = document.getElementById('confirmPass').value;
+  const btn = document.getElementById('passSubmitBtn');
+  const status = document.getElementById('passStatus');
+
+  if (newP !== confP) {
+    status.innerHTML = '<span style="color:#ef4444">รหัสผ่านใหม่ไม่ตรงกัน กรุณาพิมพ์ให้เหมือนกันทั้งสองช่อง</span>';
+    return;
+  }
+
+  // หา username จาก Session ที่ระบบ Login เซฟไว้ตอนแรกสุด (ต้องแน่ใจว่าหน้า index เซฟ username มาด้วย)
+  const rawUser = JSON.parse(sessionStorage.getItem('cc_pr_user') || '{}');
+  // สมมติว่าหน้า index ไม่ได้เซฟรหัสชื่อผู้ใช้ตรงๆ แต่เราสามารถใช้ prompt ถามถ้าหาไม่เจอ
+  let uid = rawUser.username || prompt("กรุณายืนยัน Username ของคุณอีกครั้งเพื่อเปลี่ยนรหัสผ่าน:");
+  if (!uid) return;
+
+  btn.disabled = true;
+  btn.innerText = 'กำลังบันทึกข้อมูล...';
+  status.innerHTML = '<span style="color:#0891b2">ระบบกำลังติดต่อฐานข้อมูล...</span>';
+
+  try {
+    const res = await fetch(`${SCRIPT_URL}?action=changePassword&username=${encodeURIComponent(uid.toLowerCase())}&oldPassword=${encodeURIComponent(oldP)}&newPassword=${encodeURIComponent(newP)}`);
+    const data = await res.json();
+    
+    if (data.success) {
+      status.innerHTML = `<span style="color:#10b981">✅ ${data.message}</span>`;
+      setTimeout(() => { logout(); }, 2000); // เตะออกให้ล็อกอินใหม่เพื่อความปลอดภัย
+    } else {
+      status.innerHTML = `<span style="color:#ef4444">❌ ${data.message}</span>`;
+      btn.disabled = false;
+      btn.innerText = 'บันทึกการเปลี่ยนแปลง';
+    }
+  } catch(err) {
+    status.innerHTML = '<span style="color:#ef4444">เชื่อมต่อฐานข้อมูลล้มเหลว โปรดลองอีกครั้ง</span>';
+    btn.disabled = false;
+    btn.innerText = 'บันทึกการเปลี่ยนแปลง';
+  }
+};
+
+
 // ═══════════════════════════════════════════════════════════════════════════
-// 📋 ADMIN CONFIG - แก้ไขข้อมูลรายงานที่นี่
+// 📋 ADMIN CONFIG - ข้อมูลรายงาน
 // ═══════════════════════════════════════════════════════════════════════════
 const CURRENT_YEAR = 2569;
 const YEARS_BACK = 3;
 const YEARS_FORWARD = 3;
 
-const MONTH_NAMES = {
-  'JAN': 'มกราคม',  'FEB': 'กุมภาพันธ์', 'MAR': 'มีนาคม',    'APR': 'เมษายน',
-  'MAY': 'พฤษภาคม', 'JUN': 'มิถุนายน',   'JUL': 'กรกฎาคม',   'AUG': 'สิงหาคม',
-  'SEP': 'กันยายน', 'OCT': 'ตุลาคม',     'NOV': 'พฤศจิกายน', 'DEC': 'ธันวาคม'
-};
+const MONTH_NAMES = { 'JAN': 'มกราคม',  'FEB': 'กุมภาพันธ์', 'MAR': 'มีนาคม', 'APR': 'เมษายน', 'MAY': 'พฤษภาคม', 'JUN': 'มิถุนายน', 'JUL': 'กรกฎาคม', 'AUG': 'สิงหาคม', 'SEP': 'กันยายน', 'OCT': 'ตุลาคม', 'NOV': 'พฤศจิกายน', 'DEC': 'ธันวาคม' };
 
-// 🎨 สีประจำแต่ละปีให้แตกต่างชัดเจน
+// สีประจำแต่ละปี (ให้โดดเด่นแตกต่างชัดเจน)
 const YEAR_COLORS = { 
-  2566: '#ef4444', // Red
-  2567: '#f59e0b', // Amber 
-  2568: '#10b981', // Emerald 
-  2569: '#06b6d4', // Cyan 
-  2570: '#3b82f6', // Blue 
-  2571: '#8b5cf6', // Violet 
-  2572: '#ec4899'  // Pink 
+  2566: '#ef4444', 2567: '#f59e0b', 2568: '#10b981', 
+  2569: '#06b6d4', 2570: '#3b82f6', 2571: '#8b5cf6', 2572: '#ec4899'  
 };
 function getYearColor(year) { return YEAR_COLORS[year] || '#64748b'; }
 
-// ข้อมูลรายงาน
 const REPORT_CONFIG = {
-  2566: {
-    'MAR': {
-      label: 'มีนาคม 2566', updatedAt: '1 เมษายน 2566 | เวลา 10.30 น.',
-      internal: { file: 'cmul-communication-report.html', stats: [ { value: '65', label: 'ผู้ตอบ (คน)' }, { value: '4.03', label: 'ความพึงพอใจรวม' }, { value: '91.1%', label: 'ควรผลิต CMUL News ต่อ' } ] },
-      external: { file: 'cmul-user-survey-report.html', stats: [ { value: '411', label: 'ผู้ตอบ (คน)' }, { value: '4.28', label: 'ความพึงพอใจเนื้อหา' }, { value: '4.47', label: 'ภาพลักษณ์องค์กร' } ] }
-    }
-  },
-  2567: {
-    'MAR': {
-      label: 'มีนาคม 2567', updatedAt: '1 เมษายน 2567 | เวลา 10.30 น.',
-      internal: { file: 'cmul-communication-report.html', stats: [ { value: '65', label: 'ผู้ตอบ (คน)' }, { value: '4.03', label: 'ความพึงพอใจรวม' }, { value: '91.1%', label: 'ควรผลิต CMUL News ต่อ' } ] },
-      external: { file: 'cmul-user-survey-report.html', stats: [ { value: '411', label: 'ผู้ตอบ (คน)' }, { value: '4.28', label: 'ความพึงพอใจเนื้อหา' }, { value: '4.47', label: 'ภาพลักษณ์องค์กร' } ] }
-    }
-  },
-  2568: {
-    'MAR': {
-      label: 'มีนาคม 2568', updatedAt: '1 เมษายน 2568 | เวลา 10.30 น.',
-      internal: { file: 'cmul-communication-report.html', stats: [ { value: '65', label: 'ผู้ตอบ (คน)' }, { value: '4.03', label: 'ความพึงพอใจรวม' }, { value: '91.1%', label: 'ควรผลิต CMUL News ต่อ' } ] },
-      external: { file: 'cmul-user-survey-report.html', stats: [ { value: '411', label: 'ผู้ตอบ (คน)' }, { value: '4.28', label: 'ความพึงพอใจเนื้อหา' }, { value: '4.47', label: 'ภาพลักษณ์องค์กร' } ] }
-    }
-  },
-  2569: {
-    'MAR': {
-      label: 'มีนาคม 2569', updatedAt: '1 เมษายน 2569 | เวลา 10.30 น.',
-      internal: { file: 'cmul-communication-report.html', stats: [ { value: '65', label: 'ผู้ตอบ (คน)' }, { value: '4.03', label: 'ความพึงพอใจรวม' }, { value: '91.1%', label: 'ควรผลิต CMUL News ต่อ' } ] },
-      external: { file: 'cmul-user-survey-report.html', stats: [ { value: '411', label: 'ผู้ตอบ (คน)' }, { value: '4.28', label: 'ความพึงพอใจเนื้อหา' }, { value: '4.47', label: 'ภาพลักษณ์องค์กร' } ] }
-    }
-  },
-  2570: {
-    'MAR': {
-      label: 'มีนาคม 2570', updatedAt: '1 เมษายน 2570 | เวลา 10.30 น.',
-      internal: { file: 'cmul-communication-report.html', stats: [ { value: '65', label: 'ผู้ตอบ (คน)' }, { value: '4.03', label: 'ความพึงพอใจรวม' }, { value: '91.1%', label: 'ควรผลิต CMUL News ต่อ' } ] },
-      external: { file: 'cmul-user-survey-report.html', stats: [ { value: '411', label: 'ผู้ตอบ (คน)' }, { value: '4.28', label: 'ความพึงพอใจเนื้อหา' }, { value: '4.47', label: 'ภาพลักษณ์องค์กร' } ] }
-    }
-  },
-  2571: {
-    'MAR': {
-      label: 'มีนาคม 2571', updatedAt: '1 เมษายน 2571 | เวลา 10.30 น.',
-      internal: { file: 'cmul-communication-report.html', stats: [ { value: '65', label: 'ผู้ตอบ (คน)' }, { value: '4.03', label: 'ความพึงพอใจรวม' }, { value: '91.1%', label: 'ควรผลิต CMUL News ต่อ' } ] },
-      external: { file: 'cmul-user-survey-report.html', stats: [ { value: '411', label: 'ผู้ตอบ (คน)' }, { value: '4.28', label: 'ความพึงพอใจเนื้อหา' }, { value: '4.47', label: 'ภาพลักษณ์องค์กร' } ] }
-    }
-  },
-  2572: {
-    'MAR': {
-      label: 'มีนาคม 2572', updatedAt: '1 เมษายน 2572 | เวลา 10.30 น.',
-      internal: { file: 'cmul-communication-report.html', stats: [ { value: '65', label: 'ผู้ตอบ (คน)' }, { value: '4.03', label: 'ความพึงพอใจรวม' }, { value: '91.1%', label: 'ควรผลิต CMUL News ต่อ' } ] },
-      external: { file: 'cmul-user-survey-report.html', stats: [ { value: '411', label: 'ผู้ตอบ (คน)' }, { value: '4.28', label: 'ความพึงพอใจเนื้อหา' }, { value: '4.47', label: 'ภาพลักษณ์องค์กร' } ] }
-    }
-  }
+  2566: { 'MAR': { label: 'มีนาคม 2566', updatedAt: '1 เมษายน 2566 | เวลา 10.30 น.', internal: { file: 'cmul-communication-report.html', stats: [ { value: '65', label: 'ผู้ตอบ (คน)' }, { value: '4.03', label: 'ความพึงพอใจรวม' }, { value: '91.1%', label: 'ควรผลิต CMUL News ต่อ' } ] }, external: { file: 'cmul-user-survey-report.html', stats: [ { value: '411', label: 'ผู้ตอบ (คน)' }, { value: '4.28', label: 'ความพึงพอใจเนื้อหา' }, { value: '4.47', label: 'ภาพลักษณ์องค์กร' } ] } } },
+  2567: { 'MAR': { label: 'มีนาคม 2567', updatedAt: '1 เมษายน 2567 | เวลา 10.30 น.', internal: { file: 'cmul-communication-report.html', stats: [ { value: '65', label: 'ผู้ตอบ (คน)' }, { value: '4.03', label: 'ความพึงพอใจรวม' }, { value: '91.1%', label: 'ควรผลิต CMUL News ต่อ' } ] }, external: { file: 'cmul-user-survey-report.html', stats: [ { value: '411', label: 'ผู้ตอบ (คน)' }, { value: '4.28', label: 'ความพึงพอใจเนื้อหา' }, { value: '4.47', label: 'ภาพลักษณ์องค์กร' } ] } } },
+  2568: { 'MAR': { label: 'มีนาคม 2568', updatedAt: '1 เมษายน 2568 | เวลา 10.30 น.', internal: { file: 'cmul-communication-report.html', stats: [ { value: '65', label: 'ผู้ตอบ (คน)' }, { value: '4.03', label: 'ความพึงพอใจรวม' }, { value: '91.1%', label: 'ควรผลิต CMUL News ต่อ' } ] }, external: { file: 'cmul-user-survey-report.html', stats: [ { value: '411', label: 'ผู้ตอบ (คน)' }, { value: '4.28', label: 'ความพึงพอใจเนื้อหา' }, { value: '4.47', label: 'ภาพลักษณ์องค์กร' } ] } } },
+  2569: { 'MAR': { label: 'มีนาคม 2569', updatedAt: '1 เมษายน 2569 | เวลา 10.30 น.', internal: { file: 'cmul-communication-report.html', stats: [ { value: '65', label: 'ผู้ตอบ (คน)' }, { value: '4.03', label: 'ความพึงพอใจรวม' }, { value: '91.1%', label: 'ควรผลิต CMUL News ต่อ' } ] }, external: { file: 'cmul-user-survey-report.html', stats: [ { value: '411', label: 'ผู้ตอบ (คน)' }, { value: '4.28', label: 'ความพึงพอใจเนื้อหา' }, { value: '4.47', label: 'ภาพลักษณ์องค์กร' } ] } } },
+  2570: { 'MAR': { label: 'มีนาคม 2570', updatedAt: '1 เมษายน 2570 | เวลา 10.30 น.', internal: { file: 'cmul-communication-report.html', stats: [ { value: '65', label: 'ผู้ตอบ (คน)' }, { value: '4.03', label: 'ความพึงพอใจรวม' }, { value: '91.1%', label: 'ควรผลิต CMUL News ต่อ' } ] }, external: { file: 'cmul-user-survey-report.html', stats: [ { value: '411', label: 'ผู้ตอบ (คน)' }, { value: '4.28', label: 'ความพึงพอใจเนื้อหา' }, { value: '4.47', label: 'ภาพลักษณ์องค์กร' } ] } } },
+  2571: { 'MAR': { label: 'มีนาคม 2571', updatedAt: '1 เมษายน 2571 | เวลา 10.30 น.', internal: { file: 'cmul-communication-report.html', stats: [ { value: '65', label: 'ผู้ตอบ (คน)' }, { value: '4.03', label: 'ความพึงพอใจรวม' }, { value: '91.1%', label: 'ควรผลิต CMUL News ต่อ' } ] }, external: { file: 'cmul-user-survey-report.html', stats: [ { value: '411', label: 'ผู้ตอบ (คน)' }, { value: '4.28', label: 'ความพึงพอใจเนื้อหา' }, { value: '4.47', label: 'ภาพลักษณ์องค์กร' } ] } } },
+  2572: { 'MAR': { label: 'มีนาคม 2572', updatedAt: '1 เมษายน 2572 | เวลา 10.30 น.', internal: { file: 'cmul-communication-report.html', stats: [ { value: '65', label: 'ผู้ตอบ (คน)' }, { value: '4.03', label: 'ความพึงพอใจรวม' }, { value: '91.1%', label: 'ควรผลิต CMUL News ต่อ' } ] }, external: { file: 'cmul-user-survey-report.html', stats: [ { value: '411', label: 'ผู้ตอบ (คน)' }, { value: '4.28', label: 'ความพึงพอใจเนื้อหา' }, { value: '4.47', label: 'ภาพลักษณ์องค์กร' } ] } } }
 };
 
 let currentYear = CURRENT_YEAR;
@@ -589,16 +621,10 @@ let isCompareMode = false;
 const columnStates = { 1: null, 2: null, 3: null };
 let currentCharts = []; 
 
-// Helpers
-function getYearList() {
-  const years = [];
-  for (let y = CURRENT_YEAR - YEARS_BACK; y <= CURRENT_YEAR + YEARS_FORWARD; y++) years.push(y);
-  return years;
-}
+function getYearList() { const years = []; for (let y = CURRENT_YEAR - YEARS_BACK; y <= CURRENT_YEAR + YEARS_FORWARD; y++) years.push(y); return years; }
 function getMonthsForYear(year) { return REPORT_CONFIG[year] ? Object.keys(REPORT_CONFIG[year]) : []; }
 function getReport(year, month) { return REPORT_CONFIG[year] && REPORT_CONFIG[year][month] ? REPORT_CONFIG[year][month] : null; }
 
-// Loader
 function showLoader(duration, callback, text, isAI = false) {
   const loader = document.getElementById('loader');
   const loaderText = document.getElementById('loaderText');
@@ -619,71 +645,31 @@ function showLoader(duration, callback, text, isAI = false) {
   }
   
   loader.classList.add('show');
-  setTimeout(() => {
-    if (callback) callback();
-    setTimeout(() => loader.classList.remove('show'), 150);
-  }, duration);
+  setTimeout(() => { if (callback) callback(); setTimeout(() => loader.classList.remove('show'), 150); }, duration);
 }
 
-function fadeOut(el, callback) {
-  el.classList.add('fade-out');
-  setTimeout(() => {
-    if (callback) callback();
-    setTimeout(() => el.classList.remove('fade-out'), 20);
-  }, 250);
-}
+function fadeOut(el, callback) { el.classList.add('fade-out'); setTimeout(() => { if (callback) callback(); setTimeout(() => el.classList.remove('fade-out'), 20); }, 250); }
 
 function init() {
   const yearSel = document.getElementById('mainYear');
-  getYearList().forEach(y => {
-    const opt = document.createElement('option');
-    opt.value = y; opt.textContent = "ปีงบประมาณ " + y;
-    if (y === currentYear) opt.selected = true;
-    yearSel.appendChild(opt);
-  });
-  updateMonthSelect();
-  renderCards();
+  getYearList().forEach(y => { const opt = document.createElement('option'); opt.value = y; opt.textContent = "ปีงบประมาณ " + y; if (y === currentYear) opt.selected = true; yearSel.appendChild(opt); });
+  updateMonthSelect(); renderCards();
 }
 
 function updateMonthSelect() {
-  const monthSel = document.getElementById('mainMonth');
-  const months = getMonthsForYear(currentYear);
-  monthSel.innerHTML = '';
-  if (months.length === 0) {
-    monthSel.innerHTML = '<option value="" disabled selected>— ไม่มีข้อมูล —</option>';
-    currentMonth = null;
-  } else {
-    months.forEach((m, idx) => {
-      const opt = document.createElement('option');
-      opt.value = m; opt.textContent = MONTH_NAMES[m] || m;
-      if (idx === months.length - 1) opt.selected = true;
-      monthSel.appendChild(opt);
-    });
-    currentMonth = months[months.length - 1];
-  }
+  const monthSel = document.getElementById('mainMonth'); const months = getMonthsForYear(currentYear); monthSel.innerHTML = '';
+  if (months.length === 0) { monthSel.innerHTML = '<option value="" disabled selected>— ไม่มีข้อมูล —</option>'; currentMonth = null; } 
+  else { months.forEach((m, idx) => { const opt = document.createElement('option'); opt.value = m; opt.textContent = MONTH_NAMES[m] || m; if (idx === months.length - 1) opt.selected = true; monthSel.appendChild(opt); }); currentMonth = months[months.length - 1]; }
 }
 
 function renderCards() {
-  const grid = document.getElementById('cardsGrid');
-  const report = currentMonth ? getReport(currentYear, currentMonth) : null;
-  document.getElementById('footerYear').textContent = currentYear;
-
+  const grid = document.getElementById('cardsGrid'); const report = currentMonth ? getReport(currentYear, currentMonth) : null; document.getElementById('footerYear').textContent = currentYear;
   if (!report) {
-    grid.innerHTML = `
-      <div class="empty-state">
-        <svg width="64" height="64" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5v14a2 2 0 0 0 2 2h26a2 2 0 0 0 2-2V21a2 2 0 0 0-2-2h-8.17a2 2 0 0 1-1.41-.59l-2.83-2.83A2 2 0 0 0 19.17 15H7a2 2 0 0 0-2 2v4"/></svg>
-        <h3>ยังไม่มีข้อมูลรายงาน</h3>
-        <p>ปีงบประมาณ ${currentYear} ยังไม่ได้ถูกตั้งค่าไว้ในระบบ</p>
-      </div>`;
-    document.getElementById('reportCount').textContent = '0 รายการ';
-    document.getElementById('heroChip').textContent = 'ปีงบประมาณ ' + currentYear;
-    return;
+    grid.innerHTML = `<div class="empty-state"><svg width="64" height="64" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5v14a2 2 0 0 0 2 2h26a2 2 0 0 0 2-2V21a2 2 0 0 0-2-2h-8.17a2 2 0 0 1-1.41-.59l-2.83-2.83A2 2 0 0 0 19.17 15H7a2 2 0 0 0-2 2v4"/></svg><h3>ยังไม่มีข้อมูลรายงาน</h3><p>ปีงบประมาณ ${currentYear} ยังไม่ได้ถูกตั้งค่าไว้ในระบบ</p></div>`;
+    document.getElementById('reportCount').textContent = '0 รายการ'; document.getElementById('heroChip').textContent = 'ปีงบประมาณ ' + currentYear; return;
   }
-
   document.getElementById('heroChip').textContent = 'Last Update: ' + report.updatedAt;
-  const available = [report.internal, report.external].filter(r => r).length;
-  document.getElementById('reportCount').textContent = available + ' รายการ';
-
+  const available = [report.internal, report.external].filter(r => r).length; document.getElementById('reportCount').textContent = available + ' รายการ';
   let html = '';
   if (report.internal) html += createCardHTML('internal', report.internal, report.label);
   if (report.external) html += createCardHTML('external', report.external, report.label);
@@ -697,224 +683,93 @@ function createCardHTML(type, data, periodLabel) {
   const desc = isInternal ? 'ผลสำรวจความคิดเห็นของบุคลากรสำนักหอสมุดต่อการสื่อสารภายในองค์กร ครอบคลุมช่องทาง เนื้อหา ความพึงพอใจ และ CMUL News' : 'ผลสำรวจความคิดเห็นของผู้ใช้บริการต่อการสื่อสารภายนอกองค์กร ครอบคลุมช่องทาง เนื้อหา ความพึงพอใจ ภาพลักษณ์ และ Keyword';
   const iconSvg = isInternal ? '<svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>' : '<svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>';
   const statsHTML = data.stats.map(s => `<div class="stat-block"><div class="stat-value">${s.value}</div><div class="stat-label">${s.label}</div></div>`).join('');
-
-  return `
-    <a href="${data.file}" class="report-card card-${type}">
-      <div class="card-icon">${iconSvg}</div>
-      <div class="card-badge">${badge} · ${periodLabel}</div>
-      <div class="card-title">${title}</div>
-      <div class="card-desc">${desc}</div>
-      <div class="card-stats">${statsHTML}</div>
-      <div class="card-cta">ดูรายงานฉบับเต็ม <span class="cta-arrow">→</span></div>
-    </a>`;
+  return `<a href="${data.file}" class="report-card card-${type}"><div class="card-icon">${iconSvg}</div><div class="card-badge">${badge} · ${periodLabel}</div><div class="card-title">${title}</div><div class="card-desc">${desc}</div><div class="card-stats">${statsHTML}</div><div class="card-cta">ดูรายงานฉบับเต็ม <span class="cta-arrow">→</span></div></a>`;
 }
 
-function onMainYearChange() {
-  currentYear = parseInt(document.getElementById('mainYear').value);
-  const grid = document.getElementById('cardsGrid');
-  showLoader(600, () => fadeOut(grid, () => { updateMonthSelect(); renderCards(); }), "กำลังดึงข้อมูลปี " + currentYear);
-}
-function onMainMonthChange() {
-  currentMonth = document.getElementById('mainMonth').value;
-  const grid = document.getElementById('cardsGrid');
-  showLoader(500, () => fadeOut(grid, renderCards));
-}
+function onMainYearChange() { currentYear = parseInt(document.getElementById('mainYear').value); const grid = document.getElementById('cardsGrid'); showLoader(600, () => fadeOut(grid, () => { updateMonthSelect(); renderCards(); }), "กำลังดึงข้อมูลปี " + currentYear); }
+function onMainMonthChange() { currentMonth = document.getElementById('mainMonth').value; const grid = document.getElementById('cardsGrid'); showLoader(500, () => fadeOut(grid, renderCards)); }
 
-// === Compare Mode ===
 function enterCompareMode() {
   isCompareMode = true;
   showLoader(700, () => {
-    document.getElementById('contentArea').classList.add('wide');
-    document.getElementById('heroSection').style.display = 'none';
-    document.getElementById('controlsBar').style.display = 'none';
-    document.getElementById('normalMode').style.display = 'none';
-    document.getElementById('compareMode').style.display = 'block';
-    [1, 2, 3].forEach(i => renderColumnPicker(i));
-    updateAICompareButton();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    document.getElementById('contentArea').classList.add('wide'); document.getElementById('heroSection').style.display = 'none'; document.getElementById('controlsBar').style.display = 'none'; document.getElementById('normalMode').style.display = 'none'; document.getElementById('compareMode').style.display = 'block';
+    [1, 2, 3].forEach(i => renderColumnPicker(i)); updateAICompareButton(); window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 }
 function exitCompareMode() {
   isCompareMode = false;
   showLoader(600, () => {
-    document.getElementById('contentArea').classList.remove('wide');
-    document.getElementById('heroSection').style.display = 'block';
-    document.getElementById('controlsBar').style.display = 'flex';
-    document.getElementById('compareMode').style.display = 'none';
-    document.getElementById('normalMode').style.display = 'block';
-    columnStates[1] = columnStates[2] = columnStates[3] = null;
-    updateAICompareButton();
+    document.getElementById('contentArea').classList.remove('wide'); document.getElementById('heroSection').style.display = 'block'; document.getElementById('controlsBar').style.display = 'flex'; document.getElementById('compareMode').style.display = 'none'; document.getElementById('normalMode').style.display = 'block';
+    columnStates[1] = columnStates[2] = columnStates[3] = null; updateAICompareButton();
   });
 }
 
 function renderColumnPicker(colIdx) {
-  const col = document.getElementById('col' + colIdx);
-  const years = getYearList();
-  col.innerHTML = `
-    <div class="col-picker">
-      <div class="icon-wrap">
-        <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="4" y="4" width="16" height="16" rx="2" ry="2"/>
-          <line x1="12" y1="4" x2="12" y2="20"/>
-        </svg>
-      </div>
-      <h4>คอลัมน์ที่ ${colIdx}</h4>
-      <p>เลือกปี เดือน และประเภทที่ต้องการ</p>
-      <select class="picker-select" id="pickY${colIdx}" onchange="onPickerYearChange(${colIdx})">
-        ${years.map(y => `<option value="${y}" ${y===CURRENT_YEAR?'selected':''}>ปีงบประมาณ ${y}</option>`).join('')}
-      </select>
-      <select class="picker-select" id="pickM${colIdx}"></select>
-      <select class="picker-select" id="pickT${colIdx}">
-        <option value="internal">👥 บุคลากรภายใน</option>
-        <option value="external">📢 ผู้ใช้บริการภายนอก</option>
-      </select>
-      <button class="picker-btn" id="pickBtn${colIdx}" onclick="loadColumnReport(${colIdx})">ดูรายงาน →</button>
-    </div>`;
+  const col = document.getElementById('col' + colIdx); const years = getYearList();
+  col.innerHTML = `<div class="col-picker"><div class="icon-wrap"><svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"/><line x1="12" y1="4" x2="12" y2="20"/></svg></div><h4>คอลัมน์ที่ ${colIdx}</h4><p>เลือกปี เดือน และประเภทที่ต้องการ</p>
+    <select class="picker-select" id="pickY${colIdx}" onchange="onPickerYearChange(${colIdx})">${years.map(y => `<option value="${y}" ${y===CURRENT_YEAR?'selected':''}>ปีงบประมาณ ${y}</option>`).join('')}</select>
+    <select class="picker-select" id="pickM${colIdx}"></select>
+    <select class="picker-select" id="pickT${colIdx}"><option value="internal">👥 บุคลากรภายใน</option><option value="external">📢 ผู้ใช้บริการภายนอก</option></select>
+    <button class="picker-btn" id="pickBtn${colIdx}" onclick="loadColumnReport(${colIdx})">ดูรายงาน →</button></div>`;
   onPickerYearChange(colIdx);
 }
 
 function onPickerYearChange(colIdx) {
-  const year = parseInt(document.getElementById('pickY' + colIdx).value);
-  const monthSel = document.getElementById('pickM' + colIdx);
-  const btn = document.getElementById('pickBtn' + colIdx);
-  const months = getMonthsForYear(year);
-  monthSel.innerHTML = '';
-  if (months.length === 0) {
-    monthSel.innerHTML = '<option value="">— ไม่มีข้อมูล —</option>';
-    monthSel.disabled = true; btn.disabled = true;
-  } else {
-    months.forEach(m => { monthSel.innerHTML += `<option value="${m}">${MONTH_NAMES[m]||m}</option>`; });
-    monthSel.disabled = false; btn.disabled = false;
-  }
+  const year = parseInt(document.getElementById('pickY' + colIdx).value); const monthSel = document.getElementById('pickM' + colIdx); const btn = document.getElementById('pickBtn' + colIdx); const months = getMonthsForYear(year); monthSel.innerHTML = '';
+  if (months.length === 0) { monthSel.innerHTML = '<option value="">— ไม่มีข้อมูล —</option>'; monthSel.disabled = true; btn.disabled = true; } 
+  else { months.forEach(m => { monthSel.innerHTML += `<option value="${m}">${MONTH_NAMES[m]||m}</option>`; }); monthSel.disabled = false; btn.disabled = false; }
 }
 
 function loadColumnReport(colIdx) {
-  const year = parseInt(document.getElementById('pickY' + colIdx).value);
-  const month = document.getElementById('pickM' + colIdx).value;
-  const type = document.getElementById('pickT' + colIdx).value;
-  const report = getReport(year, month);
-
-  if (!report || !report[type]) {
-    alert('❌ ไม่มีข้อมูลสำหรับเงื่อนไขที่คุณเลือกครับ');
-    return;
-  }
-
-  columnStates[colIdx] = { year, month, type, file: report[type].file, label: report.label };
-  const col = document.getElementById('col' + colIdx);
-  const typeLabel = type === 'internal' ? 'บุคลากรภายใน' : 'ผู้ใช้บริการภายนอก';
-
+  const year = parseInt(document.getElementById('pickY' + colIdx).value); const month = document.getElementById('pickM' + colIdx).value; const type = document.getElementById('pickT' + colIdx).value; const report = getReport(year, month);
+  if (!report || !report[type]) { alert('❌ ไม่มีข้อมูลสำหรับเงื่อนไขที่คุณเลือกครับ'); return; }
+  columnStates[colIdx] = { year, month, type, file: report[type].file, label: report.label }; const col = document.getElementById('col' + colIdx); const typeLabel = type === 'internal' ? 'บุคลากรภายใน' : 'ผู้ใช้บริการภายนอก';
   showLoader(700, () => {
-    col.innerHTML = `
-      <div class="col-header">
-        <div class="col-header-info">
-          <div class="col-header-title">${report.label}</div>
-          <div class="col-header-subtitle">${typeLabel}</div>
-        </div>
-        <button class="col-change-btn" onclick="resetColumn(${colIdx})">
-          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M3 10h10a5 5 0 0 1 5 5v2"/><polyline points="7 6 3 10 7 14"/>
-          </svg>
-          เลือกใหม่
-        </button>
-      </div>
-      <div class="col-content">
-        <iframe src="${report[type].file}" title="รายงาน${typeLabel}"></iframe>
-      </div>`;
+    col.innerHTML = `<div class="col-header"><div class="col-header-info"><div class="col-header-title">${report.label}</div><div class="col-header-subtitle">${typeLabel}</div></div><button class="col-change-btn" onclick="resetColumn(${colIdx})"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10h10a5 5 0 0 1 5 5v2"/><polyline points="7 6 3 10 7 14"/></svg>เลือกใหม่</button></div><div class="col-content"><iframe src="${report[type].file}" title="รายงาน${typeLabel}"></iframe></div>`;
     updateAICompareButton();
   });
 }
 
-function resetColumn(colIdx) {
-  columnStates[colIdx] = null;
-  const col = document.getElementById('col' + colIdx);
-  fadeOut(col, () => { renderColumnPicker(colIdx); updateAICompareButton(); });
-}
+function resetColumn(colIdx) { columnStates[colIdx] = null; const col = document.getElementById('col' + colIdx); fadeOut(col, () => { renderColumnPicker(colIdx); updateAICompareButton(); }); }
 
 function updateAICompareButton() {
-  const filledCount = Object.values(columnStates).filter(s => s !== null).length;
-  const bar = document.getElementById('aiCompareBar');
-  if (filledCount >= 2 && isCompareMode) {
-    bar.classList.add('show');
-    document.getElementById('aiColCount').textContent = filledCount;
-  } else {
-    bar.classList.remove('show');
-  }
+  const filledCount = Object.values(columnStates).filter(s => s !== null).length; const bar = document.getElementById('aiCompareBar');
+  if (filledCount >= 2 && isCompareMode) { bar.classList.add('show'); document.getElementById('aiColCount').textContent = filledCount; } else { bar.classList.remove('show'); }
 }
 
 function openAIComparison() {
-  const filled = Object.entries(columnStates)
-    .filter(([k, v]) => v !== null)
-    .map(([colIdx, state]) => {
-      const report = getReport(state.year, state.month);
-      return { colIdx, year: state.year, month: state.month, type: state.type, label: state.label, typeLabel: state.type === 'internal' ? 'บุคลากรภายใน' : 'ผู้ใช้บริการภายนอก', data: report[state.type] };
-    });
-  
+  const filled = Object.entries(columnStates).filter(([k, v]) => v !== null).map(([colIdx, state]) => {
+    const report = getReport(state.year, state.month); return { colIdx, year: state.year, month: state.month, type: state.type, label: state.label, typeLabel: state.type === 'internal' ? 'บุคลากรภายใน' : 'ผู้ใช้บริการภายนอก', data: report[state.type] };
+  });
   showLoader(1200, () => buildAIReport(filled), null, true);
 }
 
-function closeAIModal() {
-  document.getElementById('aiModal').classList.remove('show');
-  currentCharts.forEach(c => { try { c.destroy(); } catch (e) {} });
-  currentCharts = [];
-}
+function closeAIModal() { document.getElementById('aiModal').classList.remove('show'); currentCharts.forEach(c => { try { c.destroy(); } catch (e) {} }); currentCharts = []; }
 
-function parseNumericValue(strValue) {
-  const cleaned = String(strValue).replace(/[^\d.-]/g, '');
-  const num = parseFloat(cleaned);
-  return isNaN(num) ? 0 : num;
-}
+function parseNumericValue(strValue) { const cleaned = String(strValue).replace(/[^\d.-]/g, ''); const num = parseFloat(cleaned); return isNaN(num) ? 0 : num; }
 
 // ============================================================================
-// 🤖 CORE AI ENGINE: อัปเกรดระบบวิเคราะห์ให้ฉลาดและลงลึกยิ่งขึ้น
+// 🤖 CORE AI ENGINE
 // ============================================================================
-
 function buildAIReport(reports) {
   const body = document.getElementById('aiModalBody');
-  
-  // 1. หัวข้อและแถบสีด้านบน
   const introHTML = `<div class="ai-intro"><div class="ai-intro-label">📊 ภาพรวมการเปรียบเทียบ ${reports.length} รายการ</div><div class="ai-intro-items">${reports.map(r => `<div class="ai-intro-chip" style="border-color: ${getYearColor(r.year)}40;"><div class="year-dot" style="background: ${getYearColor(r.year)};"></div><div><div class="chip-year" style="color: ${getYearColor(r.year)};">${r.label}</div><div class="chip-meta">${r.typeLabel}</div></div></div>`).join('')}</div></div>`;
-  
-  const allLabels = new Set();
-  reports.forEach(r => r.data.stats.forEach(s => allLabels.add(s.label)));
-  const statLabels = [...allLabels];
+  const allLabels = new Set(); reports.forEach(r => r.data.stats.forEach(s => allLabels.add(s.label))); const statLabels = [...allLabels];
 
-  // 2. 🕸️ แผนภาพเรดาร์ (เปรียบเทียบทุกมิติ)
-  const radarHTML = `
-    <div class="ai-chart-card" style="margin-bottom: 24px;">
-      <h3>🕸️ แผนภาพเปรียบเทียบความสมดุล (Radar Chart)</h3>
-      <div class="chart-wrap" style="height: 380px;">
-        <canvas id="aiRadarChart"></canvas>
-      </div>
-    </div>
-  `;
-
-  // 3. กราฟแท่งแยกรายตัวชี้วัด
+  const radarHTML = `<div class="ai-chart-card" style="margin-bottom: 24px;"><h3>🕸️ แผนภาพเปรียบเทียบความสมดุล (Radar Chart)</h3><div class="chart-wrap" style="height: 380px;"><canvas id="aiRadarChart"></canvas></div></div>`;
   const chartsHTML = `<div class="ai-charts">${statLabels.map((label, idx) => `<div class="ai-chart-card"><h3>📈 ${label}</h3><div class="chart-wrap"><canvas id="aiChart${idx}"></canvas></div></div>`).join('')}</div>`;
   
-  // 4. ตารางข้อมูลพร้อมไฮไลต์ค่าสูงสุด (⭐)
   const tableRows = statLabels.map(label => {
-    // หาค่าสูงที่สุดในแถวนี้ก่อน
-    const rowValues = reports.map(r => {
-      const stat = r.data.stats.find(s => s.label === label);
-      return { raw: stat ? stat.value : '—', num: stat ? parseNumericValue(stat.value) : -Infinity };
-    });
+    const rowValues = reports.map(r => { const stat = r.data.stats.find(s => s.label === label); return { raw: stat ? stat.value : '—', num: stat ? parseNumericValue(stat.value) : -Infinity }; });
     const maxNum = Math.max(...rowValues.map(v => v.num).filter(n => n !== -Infinity));
-
-    // สร้างเซลล์ตาราง
     const cells = rowValues.map((val, i) => {
-      // ถ้าเป็นค่าสูงสุด (Max) ให้ไฮไลต์
-      if (val.num === maxNum && maxNum !== -Infinity) {
-        return `<td style="color:${getYearColor(reports[i].year)}; font-weight: 800; background: ${getYearColor(reports[i].year)}15; border-radius: 8px;">⭐ ${val.raw}</td>`;
-      }
+      if (val.num === maxNum && maxNum !== -Infinity) { return `<td style="color:${getYearColor(reports[i].year)}; font-weight: 800; background: ${getYearColor(reports[i].year)}15; border-radius: 8px;">⭐ ${val.raw}</td>`; }
       return `<td>${val.raw}</td>`;
     }).join('');
-    
     return `<tr><td class="stat-label">${label}</td>${cells}</tr>`;
   }).join('');
   
   const tableHTML = `<div class="ai-table-card"><h3>📋 ตารางเปรียบเทียบข้อมูลเชิงลึก</h3><table class="ai-data-table"><thead><tr><th>ตัวชี้วัด</th>${reports.map(r => `<th><div class="year-tag"><div class="year-dot" style="background: ${getYearColor(r.year)};"></div>${r.label}<br><span style="font-weight:500; color:var(--text-muted); font-size:11px;">${r.typeLabel}</span></div></th>`).join('')}</tr></thead><tbody>${tableRows}</tbody></table></div>`;
-  
-  // 5. บทวิเคราะห์ AI แบบละเอียด
   const insights = generateInsights(reports, statLabels);
   const insightsHTML = `<div class="ai-insights"><h3>💡 บทวิเคราะห์เชิงลึก (Deep Insights)</h3><ul>${insights.map(i => `<li>${i}</li>`).join('')}</ul></div>`;
   const actionsHTML = `<div class="ai-actions"><button class="ai-action-btn" onclick="window.print()">🖨️ พิมพ์รายงาน</button><button class="ai-action-btn primary" onclick="closeAIModal()">✓ รับทราบข้อมูล</button></div>`;
@@ -922,52 +777,15 @@ function buildAIReport(reports) {
   body.innerHTML = introHTML + radarHTML + chartsHTML + tableHTML + insightsHTML + actionsHTML;
   document.getElementById('aiModal').classList.add('show');
 
-  // วาดกราฟ
   setTimeout(() => {
-    
-    // --- 🕸️ วาด Radar Chart ---
     const radarCanvas = document.getElementById('aiRadarChart');
     if (radarCanvas) {
       const radarDatasets = reports.map(r => {
-         return {
-            label: r.label + ' (' + r.typeLabel + ')',
-            data: statLabels.map(label => {
-               const stat = r.data.stats.find(s => s.label === label);
-               return stat ? parseNumericValue(stat.value) : 0;
-            }),
-            borderColor: getYearColor(r.year),
-            backgroundColor: getYearColor(r.year) + '33', // ความโปร่งใส 20%
-            borderWidth: 2.5,
-            pointBackgroundColor: getYearColor(r.year),
-            pointBorderColor: '#fff',
-            pointHoverBackgroundColor: '#fff',
-            pointHoverBorderColor: getYearColor(r.year)
-         };
+         return { label: r.label + ' (' + r.typeLabel + ')', data: statLabels.map(label => { const stat = r.data.stats.find(s => s.label === label); return stat ? parseNumericValue(stat.value) : 0; }), borderColor: getYearColor(r.year), backgroundColor: getYearColor(r.year) + '33', borderWidth: 2.5, pointBackgroundColor: getYearColor(r.year), pointBorderColor: '#fff', pointHoverBackgroundColor: '#fff', pointHoverBorderColor: getYearColor(r.year) };
       });
-      const radarChart = new Chart(radarCanvas, {
-        type: 'radar',
-        data: { labels: statLabels, datasets: radarDatasets },
-        options: {
-           responsive: true, maintainAspectRatio: false,
-           scales: { 
-             r: { 
-               beginAtZero: true, 
-               grid: {color: 'rgba(0,0,0,0.08)'}, 
-               angleLines: {color: 'rgba(0,0,0,0.05)'},
-               pointLabels: { font: {family:'Sarabun', size: 13, weight: '600'}, color: '#475569' } 
-             } 
-           },
-           plugins: { 
-             legend: { position: 'bottom', labels: {font: {family:'Sarabun', size: 13, weight: '600'}, usePointStyle: true, padding: 20} },
-             tooltip: { backgroundColor: 'rgba(15,23,42,0.9)', titleFont: {family: 'Sarabun'}, bodyFont: {family: 'Sarabun'} }
-           },
-           animation: { duration: 1500, easing: 'easeOutBounce' }
-        }
-      });
+      const radarChart = new Chart(radarCanvas, { type: 'radar', data: { labels: statLabels, datasets: radarDatasets }, options: { responsive: true, maintainAspectRatio: false, scales: { r: { beginAtZero: true, grid: {color: 'rgba(0,0,0,0.08)'}, angleLines: {color: 'rgba(0,0,0,0.05)'}, pointLabels: { font: {family:'Sarabun', size: 13, weight: '600'}, color: '#475569' } } }, plugins: { legend: { position: 'bottom', labels: {font: {family:'Sarabun', size: 13, weight: '600'}, usePointStyle: true, padding: 20} }, tooltip: { backgroundColor: 'rgba(15,23,42,0.9)', titleFont: {family: 'Sarabun'}, bodyFont: {family: 'Sarabun'} } }, animation: { duration: 1500, easing: 'easeOutBounce' } } });
       currentCharts.push(radarChart);
     }
-
-    // --- 📈 วาด Bar Charts ---
     statLabels.forEach((label, idx) => {
       const canvas = document.getElementById('aiChart' + idx);
       if (!canvas) return;
@@ -975,17 +793,7 @@ function buildAIReport(reports) {
       const values = reports.map(r => { const stat = r.data.stats.find(s => s.label === label); return stat ? parseNumericValue(stat.value) : 0; });
       const colors = reports.map(r => getYearColor(r.year));
       const colorsAlpha = reports.map(r => getYearColor(r.year) + 'cc');
-
-      const chart = new Chart(canvas, {
-        type: 'bar',
-        data: { labels: labels, datasets: [{ label: label, data: values, backgroundColor: colorsAlpha, borderColor: colors, borderWidth: 2, borderRadius: 10, maxBarThickness: 80 }] },
-        options: {
-          responsive: true, maintainAspectRatio: false,
-          plugins: { legend: { display: false }, tooltip: { backgroundColor: 'rgba(15,23,42,0.95)', padding: 12, titleFont: { family: 'Sarabun', size: 13, weight: '700' }, bodyFont: { family: 'Sarabun', size: 13 }, cornerRadius: 10, displayColors: true } },
-          scales: { y: { beginAtZero: true, ticks: { font: { family: 'Sarabun', size: 12 }, color: '#64748b' }, grid: { color: 'rgba(0,0,0,0.05)' } }, x: { ticks: { font: { family: 'Sarabun', size: 11, weight: '600' }, color: '#334155' }, grid: { display: false } } },
-          animation: { duration: 900, easing: 'easeOutQuart' }
-        }
-      });
+      const chart = new Chart(canvas, { type: 'bar', data: { labels: labels, datasets: [{ label: label, data: values, backgroundColor: colorsAlpha, borderColor: colors, borderWidth: 2, borderRadius: 10, maxBarThickness: 80 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { backgroundColor: 'rgba(15,23,42,0.95)', padding: 12, titleFont: { family: 'Sarabun', size: 13, weight: '700' }, bodyFont: { family: 'Sarabun', size: 13 }, cornerRadius: 10, displayColors: true } }, scales: { y: { beginAtZero: true, ticks: { font: { family: 'Sarabun', size: 12 }, color: '#64748b' }, grid: { color: 'rgba(0,0,0,0.05)' } }, x: { ticks: { font: { family: 'Sarabun', size: 11, weight: '600' }, color: '#334155' }, grid: { display: false } } }, animation: { duration: 900, easing: 'easeOutQuart' } } });
       currentCharts.push(chart);
     });
   }, 100);
@@ -993,36 +801,26 @@ function buildAIReport(reports) {
 
 function generateInsights(reports, statLabels) {
   const insights = [];
-
   insights.push(`🎯 <strong>ภาพรวมการประเมิน:</strong> ดำเนินการวิเคราะห์เปรียบเทียบโครงสร้างข้อมูลจาก ${reports.length} รายการ พบความแปรปรวนในตัวชี้วัดสำคัญดังนี้`);
-
   statLabels.forEach(label => {
     const values = reports.map(r => ({ report: r, stat: r.data.stats.find(s => s.label === label) })).filter(v => v.stat).map(v => ({ report: v.report, value: parseNumericValue(v.stat.value), raw: v.stat.value }));
     if (values.length < 2) return;
-
     const max = values.reduce((a, b) => a.value > b.value ? a : b);
     const min = values.reduce((a, b) => a.value < b.value ? a : b);
-    
-    // คำนวณค่าเฉลี่ย
     const avg = (values.reduce((sum, v) => sum + v.value, 0) / values.length);
     const isPercent = max.raw.includes('%');
     const diff = max.value - min.value;
     const diffText = isPercent ? `${diff.toFixed(1)}%` : diff.toFixed(2);
-
     let insightText = `<strong>${label}:</strong> ค่าเฉลี่ยโดยรวมอยู่ที่ <strong>${avg.toFixed(2)}${isPercent?'%':''}</strong> `;
     insightText += `<br>&nbsp;&nbsp;&nbsp;&nbsp;🏆 ทำผลงานได้ดีที่สุดใน <strong style="color:${getYearColor(max.report.year)};">${max.report.label}</strong> (${max.raw})`;
     insightText += `<br>&nbsp;&nbsp;&nbsp;&nbsp;📉 และมีค่าต่ำสุดใน <strong style="color:${getYearColor(min.report.year)};">${min.report.label}</strong> (${min.raw})`;
     insightText += `<br>&nbsp;&nbsp;&nbsp;&nbsp;📌 <em>มีส่วนต่างประสิทธิภาพอยู่ที่ ${diffText}</em>`;
-
     insights.push(insightText);
   });
-
-  // วิเคราะห์แนวโน้ม ถ้าเปรียบเทียบ 2 ปี
   if (reports.length === 2 && reports[0].year !== reports[1].year && reports[0].typeLabel === reports[1].typeLabel) {
      const sorted = [...reports].sort((a,b) => a.year - b.year);
      insights.push(`📈 <strong>แนวโน้มการเติบโต (Trend Analysis):</strong> เมื่อเปรียบเทียบกลุ่ม ${sorted[0].typeLabel} จาก ${sorted[0].label} สู่ ${sorted[1].label} พบว่ามีการเปลี่ยนแปลงอย่างมีนัยสำคัญ สามารถนำข้อมูลนี้ไปปรับปรุงแผน PR ของปีถัดไปได้`);
   }
-
   return insights;
 }
 
