@@ -1,25 +1,23 @@
 // ═══════════════════════════════════════════════════════════════════════════
-// 🔐 auth.js - ระบบยืนยันตัวตน + โปรไฟล์ผู้ใช้
+// 🔐 auth.js - ระบบยืนยันตัวตน + โปรไฟล์ผู้ใช้ (ลอยมุมขวาบน)
 // ═══════════════════════════════════════════════════════════════════════════
-// ไฟล์นี้ต้องใส่ใน <script src="auth.js"></script> ที่ dashboard.html
-// และหน้าอื่นๆ ที่ต้องการให้มีการเช็คการล็อกอิน
-// (ยกเว้นหน้า index.html ที่เป็นหน้า login)
+// วิธีใช้: ใส่ <script src="auth.js"></script> ไว้ก่อน </body> ในทุกหน้า
+// ที่ต้องการให้ login ก่อนเข้าได้ (ยกเว้น index.html)
 // ═══════════════════════════════════════════════════════════════════════════
 
 (function() {
-    // ⭐ ต้องตรงกับใน index.html และ dashboard.html
+    // ⭐ ต้องตรงกับใน index.html
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzmzYhYYfJoshKHGW5U-APtmvTQMqlf9L3lzTlXfgDSE2WbU7-Oa9ZiI2nCrti6E60h/exec";
 
     // ตรวจสอบว่าอยู่หน้า login หรือเปล่า
     const path = window.location.pathname.toLowerCase();
     const isLoginPage = path.endsWith('index.html') || path === '/' || path.endsWith('/') || path === '';
 
-    // ถ้าเป็นหน้า login → ไม่ต้องทำอะไร (ให้ index.html จัดการเอง)
-    if (isLoginPage) return;
+    if (isLoginPage) return; // หน้า login ไม่ต้องทำอะไร
 
     const userRaw = sessionStorage.getItem("cc_pr_user");
 
-    // ถ้ายังไม่ได้ login → เด้งกลับ index.html
+    // ไม่ได้ login → เด้งกลับ index.html
     if (!userRaw) {
         alert("⚠️ Access denied: โปรดลงชื่อเข้าใช้ก่อน");
         window.location.href = "index.html";
@@ -29,28 +27,32 @@
     const user = JSON.parse(userRaw);
 
     // ═══════════════════════════════════════════════════════════════════════
-    // 🎨 CSS STYLES
+    // 🎨 CSS
     // ═══════════════════════════════════════════════════════════════════════
     const style = document.createElement('style');
     style.textContent = `
         .user-profile-wrap {
-            position: relative;
+            position: fixed !important;
+            top: 15px !important;
+            right: 20px !important;
+            z-index: 9998 !important;
             font-family: 'Sarabun', sans-serif;
         }
         .user-profile-btn {
-            background: rgba(255,255,255,0.9);
+            background: rgba(255,255,255,0.95);
             backdrop-filter: blur(10px);
-            padding: 6px 14px 6px 18px;
+            padding: 8px 14px 8px 18px;
             border-radius: 100px;
-            border: 1px solid rgba(8,145,178,0.15);
+            border: 1px solid rgba(8,145,178,0.2);
             display: flex; align-items: center; gap: 10px;
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.25,1,0.5,1);
             user-select: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
         }
         .user-profile-btn:hover {
-            border-color: rgba(8,145,178,0.35);
-            box-shadow: 0 4px 14px rgba(8,145,178,0.12);
+            border-color: rgba(8,145,178,0.4);
+            box-shadow: 0 6px 20px rgba(8,145,178,0.15);
             transform: translateY(-1px);
         }
         .user-profile-btn .u-info { text-align: right; line-height: 1.2; }
@@ -73,13 +75,12 @@
         .user-profile-menu {
             position: absolute; top: calc(100% + 10px); right: 0;
             background: white; border-radius: 16px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1), 0 2px 8px rgba(0,0,0,0.04);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.04);
             min-width: 220px; overflow: hidden;
             opacity: 0; pointer-events: none;
             transform: translateY(-8px) scale(0.97);
             transition: 0.25s cubic-bezier(0.25,1,0.5,1);
             border: 1px solid rgba(0,0,0,0.05);
-            z-index: 1000;
         }
         .user-profile-menu.show {
             opacity: 1; pointer-events: auto;
@@ -107,22 +108,22 @@
         /* === Modal เปลี่ยนรหัสผ่าน === */
         .pw-modal-bg {
             position: fixed; inset: 0; background: rgba(15,23,42,0.4);
-            z-index: 9998; display: none;
+            z-index: 9999; display: none;
             align-items: center; justify-content: center;
             backdrop-filter: blur(8px);
-            animation: modalFadeIn 0.3s ease;
+            animation: pwModalFadeIn 0.3s ease;
         }
         .pw-modal-bg.show { display: flex; }
-        @keyframes modalFadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes pwModalFadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         .pw-modal {
             background: white; border-radius: 28px; padding: 38px;
             width: 92%; max-width: 440px;
             box-shadow: 0 30px 80px rgba(0,0,0,0.25);
             font-family: 'Sarabun', sans-serif;
-            animation: modalSlideIn 0.4s cubic-bezier(0.25,1,0.5,1);
+            animation: pwModalSlideIn 0.4s cubic-bezier(0.25,1,0.5,1);
         }
-        @keyframes modalSlideIn {
+        @keyframes pwModalSlideIn {
             from { opacity: 0; transform: translateY(20px) scale(0.95); }
             to { opacity: 1; transform: translateY(0) scale(1); }
         }
@@ -171,7 +172,7 @@
     document.head.appendChild(style);
 
     // ═══════════════════════════════════════════════════════════════════════
-    // 👤 สร้างปุ่มโปรไฟล์
+    // 👤 สร้างโปรไฟล์ลอยมุมขวาบน
     // ═══════════════════════════════════════════════════════════════════════
     const profileWrap = document.createElement('div');
     profileWrap.className = 'user-profile-wrap';
@@ -201,15 +202,7 @@
             </button>
         </div>
     `;
-
-    // Inject: ถ้ามี .topbar-right → ใส่เข้าไป, ไม่งั้น → float มุมขวาบน
-    const topbarRight = document.querySelector('.topbar-right');
-    if (topbarRight) {
-        topbarRight.appendChild(profileWrap);
-    } else {
-        profileWrap.style.cssText = 'position:fixed; top:15px; right:20px; z-index:1000;';
-        document.body.appendChild(profileWrap);
-    }
+    document.body.appendChild(profileWrap);
 
     // ═══════════════════════════════════════════════════════════════════════
     // 🪟 สร้าง Modal เปลี่ยนรหัสผ่าน
@@ -304,10 +297,7 @@
         msg.innerText = 'กำลังอัปเดต...';
 
         try {
-            // ใช้ username ที่เก็บไว้ใน sessionStorage (เก็บตอน login)
             let username = user.username;
-            
-            // ถ้าไม่มี username (เช่นคนที่ login ก่อนอัปเดต) → หาจาก displayName
             if (!username) {
                 const accRes = await fetch(SCRIPT_URL + "?action=getAccounts");
                 const accData = await accRes.json();
@@ -363,9 +353,7 @@
         }
     });
 
-    // ═══════════════════════════════════════════════════════════════════════
-    // Helper: escape HTML
-    // ═══════════════════════════════════════════════════════════════════════
+    // Helper
     function escapeHtml(text) {
         if (text == null) return '';
         const div = document.createElement('div');
