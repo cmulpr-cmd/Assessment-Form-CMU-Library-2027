@@ -513,13 +513,11 @@ function initAdvancedSecurity() {
 function triggerSecurityModal() { document.getElementById('securityModal').classList.add('show'); }
 function closeSecModal() { document.getElementById('securityModal').classList.remove('show'); }
 
-// === 4. Export & Send to Email System ===
+// === 4. Export & Send to Email System (ยิง API จริง 100%) ===
 async function exportAndSendEmail() {
     const btn = document.getElementById('btnSendEmail');
-    const btnText = document.getElementById('btnEmailText');
-    const btnSpin = document.getElementById('btnEmailSpin');
+    const originalHTML = btn.innerHTML; 
 
-    // ดึงชื่อผู้ใช้ที่กำลังล็อกอินอยู่
     let userName = "คุณผู้ใช้งาน";
     let userId = "";
     try {
@@ -528,18 +526,65 @@ async function exportAndSendEmail() {
         if(u.username) userId = u.username;
     } catch(e){}
 
-    if (!userId) {
-        alert("กรุณาเข้าสู่ระบบก่อนทำการขอไฟล์รายงาน");
-        return;
-    }
+    if (!userId) { alert("กรุณาเข้าสู่ระบบก่อนทำการขอไฟล์รายงาน"); return; }
 
-    // เปลี่ยนปุ่มเป็นสถานะกำลังโหลด
+    // 🌟 เปลี่ยนปุ่มเป็นโหมดกำลังโหลด 🌟
     btn.disabled = true;
-    btnText.innerText = 'กำลังจัดเตรียมไฟล์...';
-    btnSpin.style.display = 'block';
+    btn.innerHTML = `
+      <div class="mini-spin-inline" style="display:block;"></div>
+      <span>กำลังเข้ารหัสและส่งอีเมล...</span>
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+    `;
 
     // --- กระบวนการทำความสะอาดโค้ด HTML ---
     const htmlClone = document.documentElement.cloneNode(true);
+    const elementsToRemove = htmlClone.querySelectorAll('script, #entryLoader, #exitLoader, #securityModal, #emailSuccessModal, #mainNavBar');
+    elementsToRemove.forEach(el => el.remove());
+
+    const styles = htmlClone.querySelectorAll('style');
+    styles.forEach(s => { s.innerHTML = s.innerHTML.replace(/@media print\s*{[^}]+}/g, ''); });
+
+    // ฝังลายน้ำ
+    const watermark = document.createElement('div');
+    watermark.style.cssText = "position: fixed; bottom: 20px; right: 20px; color: rgba(0,0,0,0.15); font-size: 13px; font-weight: 600; z-index: 9999; pointer-events: none; font-family: sans-serif; text-align:right;";
+    watermark.innerHTML = `เอกสารนี้ถูกดาวน์โหลดอย่างเป็นทางการโดย: คุณ ${userName}<br>เมื่อวันที่: ${new Date().toLocaleString('th-TH')}`;
+    htmlClone.querySelector('body').appendChild(watermark);
+
+    const cleanHtmlString = htmlClone.outerHTML;
+
+    try {
+        // 🚀 ยิงข้อมูลจริงผ่าน POST Request ไปยัง Apps Script 🚀
+        const response = await fetch(SCRIPT_URL_POST, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'text/plain;charset=utf-8', // ใช้ text/plain เลี่ยงการโดนบล็อก CORS
+            },
+            body: JSON.stringify({ 
+                action: 'sendHtmlEmail', 
+                username: userId, 
+                htmlData: cleanHtmlString 
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            // 🌟 ส่งสำเร็จ! เปิด Popup แจ้งเตือน 🌟
+            btn.innerHTML = originalHTML;
+            btn.disabled = false;
+            document.getElementById('emailSuccessModal').classList.add('show');
+        } else {
+            alert("ส่งอีเมลไม่สำเร็จ: " + data.message + "\n(โปรดเช็คว่ามีอีเมลในคอลัมน์ E หรือไม่)");
+            btn.innerHTML = originalHTML;
+            btn.disabled = false;
+        }
+
+    } catch (err) {
+        btn.innerHTML = originalHTML;
+        btn.disabled = false;
+        alert("เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์");
+    }
+}
     
     // ลบส่วนความปลอดภัยแถบเมนู และหน้าโหลดออกให้หมด
     const elementsToRemove = htmlClone.querySelectorAll('script, #entryLoader, #exitLoader, #securityModal, .back-bar, .full-overlay');
