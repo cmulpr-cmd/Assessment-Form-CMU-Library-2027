@@ -15,7 +15,6 @@
   --text-primary: #0f172a;
   --text-secondary: #475569;
   --text-muted: #64748b;
-  
   --accent-blue: #2563eb;
   --accent-cyan: #0891b2;
   --accent-emerald: #059669;
@@ -23,7 +22,6 @@
   --accent-rose: #e11d48;
   --accent-violet: #7c3aed;
   --accent-orange: #ea580c;
-  
   --gradient-blue: linear-gradient(135deg, #3b82f6, #06b6d4);
   --gradient-emerald: linear-gradient(135deg, #10b981, #06b6d4);
   --gradient-violet: linear-gradient(135deg, #8b5cf6, #ec4899);
@@ -33,23 +31,11 @@
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-body {
-  font-family: 'IBM Plex Sans Thai', 'Noto Sans Thai', sans-serif;
-  background: var(--bg-primary);
-  color: var(--text-primary);
-  min-height: 100vh;
-  overflow-x: hidden;
-}
+body { font-family: 'IBM Plex Sans Thai', 'Noto Sans Thai', sans-serif; background: var(--bg-primary); color: var(--text-primary); min-height: 100vh; overflow-x: hidden; }
 
 /* === 🗄️ Smart Data Loaders === */
-.full-overlay {
-  position: fixed; inset: 0; z-index: 9999;
-  background: rgba(248, 250, 252, 0.95); backdrop-filter: blur(15px);
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  transition: opacity 0.6s ease, visibility 0.6s ease;
-}
+.full-overlay { position: fixed; inset: 0; z-index: 9999; background: rgba(248, 250, 252, 0.95); backdrop-filter: blur(15px); display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.6s ease, visibility 0.6s ease; }
 .overlay-hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-
 .db-icon { width: 100px; height: 100px; margin-bottom: 25px; filter: drop-shadow(0 10px 15px rgba(8,145,178,0.2)); }
 .db-disk { transform-origin: center; animation: floatDisk 3s ease-in-out infinite; }
 .db-disk-2 { animation-delay: 0.2s; }
@@ -57,7 +43,6 @@ body {
 .db-light { animation: blinkLight 1.5s infinite alternate; }
 @keyframes floatDisk { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
 @keyframes blinkLight { 0% { fill: #cbd5e1; } 100% { fill: #06b6d4; filter: drop-shadow(0 0 5px #06b6d4); } }
-
 .overlay-text { font-family: 'Noto Sans Thai', sans-serif; font-size: 20px; color: var(--accent-cyan); font-weight: 800; text-align: center; line-height: 1.5; letter-spacing: 0.5px; }
 .overlay-sub { font-size: 14px; color: var(--text-muted); font-weight: 500; margin-top: 8px; }
 .loading-dots::after { content: ''; animation: dots 1.5s steps(4, end) infinite; }
@@ -69,16 +54,21 @@ body {
 @keyframes lockTurn { 0% { transform: rotate(-45deg); opacity: 0; } 100% { transform: rotate(0deg); opacity: 1; } }
 
 /* === 🚨 Security Modal === */
-.sec-modal-bg { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.8); z-index: 10000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(12px); padding: 20px; opacity: 0; transition: opacity 0.3s; }
+.sec-modal-bg { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7); z-index: 10000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(8px); padding: 20px; opacity: 0; transition: opacity 0.3s; }
 .sec-modal-bg.show { display: flex; opacity: 1; }
-.sec-modal { background: white; border-radius: 28px; width: 100%; max-width: 450px; padding: 40px; text-align: center; box-shadow: 0 30px 80px rgba(0,0,0,0.4); transform: scale(0.9) translateY(20px); opacity: 0; transition: all 0.4s cubic-bezier(0.25,1,0.5,1); }
+.sec-modal { background: white; border-radius: 28px; width: 100%; max-width: 460px; padding: 40px; text-align: center; box-shadow: 0 30px 80px rgba(0,0,0,0.3); transform: scale(0.9) translateY(20px); opacity: 0; transition: all 0.4s cubic-bezier(0.25,1,0.5,1); }
 .sec-modal-bg.show .sec-modal { transform: scale(1) translateY(0); opacity: 1; }
-.sec-icon-wrap { width: 75px; height: 75px; border-radius: 20px; background: rgba(225,29,72,0.1); color: var(--accent-rose); display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; }
-.sec-modal h3 { font-family: 'Noto Sans Thai', sans-serif; font-size: 22px; font-weight: 800; color: var(--text-primary); margin-bottom: 10px; }
-.sec-modal p { font-size: 14.5px; color: var(--text-secondary); margin-bottom: 25px; line-height: 1.6; }
-.sec-highlight-box { background: rgba(37,99,235,0.08); border-radius: 14px; padding: 16px; margin-bottom: 24px; color: var(--accent-blue); font-weight: 600; font-size: 14px; border: 1px solid rgba(37,99,235,0.2); }
-.btn-close { background: var(--bg-card-hover); border: 1px solid var(--border-subtle); color: var(--text-secondary); font-size: 15px; font-weight: 700; cursor: pointer; transition: 0.3s; font-family: inherit; padding: 12px 24px; border-radius: 14px; width: 100%; }
-.btn-close:hover { background: #e2e8f0; color: var(--text-primary); }
+.sec-icon-wrap { width: 75px; height: 75px; border-radius: 22px; background: #fce7f3; color: #e11d48; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; }
+.sec-modal h3 { font-family: 'Noto Sans Thai', sans-serif; font-size: 22px; font-weight: 800; color: #0f172a; margin-bottom: 12px; }
+.sec-modal p { font-size: 15px; color: #475569; margin-bottom: 25px; line-height: 1.6; }
+.sec-highlight-box { background: #eff6ff; border-radius: 16px; padding: 20px; margin-bottom: 24px; color: #2563eb; font-weight: 600; font-size: 14.5px; border: 1px solid #dbeafe; line-height: 1.6; }
+.btn-close { background: #f1f5f9; border: 1px solid #e2e8f0; color: #334155; font-size: 15px; font-weight: 700; cursor: pointer; transition: 0.3s; font-family: inherit; padding: 14px 24px; border-radius: 16px; width: 100%; }
+.btn-close:hover { background: #e2e8f0; color: #0f172a; transform: translateY(-1px); }
+
+/* 🎉 Email Success Modal */
+.success-icon-wrap { width: 75px; height: 75px; border-radius: 22px; background: #d1fae5; color: #059669; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; box-shadow: 0 10px 20px rgba(5,150,105,0.15); }
+.btn-success-close { background: linear-gradient(135deg, var(--accent-emerald), var(--accent-cyan)); border: none; color: white; font-size: 15px; font-weight: 700; cursor: pointer; transition: 0.3s; font-family: inherit; padding: 14px 24px; border-radius: 16px; width: 100%; box-shadow: 0 4px 15px rgba(5,150,105,0.3); }
+.btn-success-close:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(5,150,105,0.4); }
 
 /* === Layout Styles === */
 .noise-overlay { position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.2; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
@@ -87,14 +77,12 @@ body {
 .hero-content { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; }
 .hero-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 100px; background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.2); color: var(--accent-blue); font-size: 13px; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 20px; }
 .hero-badge::before { content: ''; width: 6px; height: 6px; background: var(--accent-blue); border-radius: 50%; animation: pulse 2s infinite; }
-@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
 .hero h1 { font-family: 'Noto Sans Thai', sans-serif; font-size: 36px; font-weight: 800; line-height: 1.3; background: linear-gradient(135deg, #0f172a 0%, #4338ca 50%, #0284c7 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 12px; }
 .hero-sub { font-size: 16px; color: var(--text-secondary); font-weight: 400; margin-bottom: 8px; }
 .hero-meta { display: flex; justify-content: center; gap: 24px; margin-top: 24px; flex-wrap: wrap; }
 .meta-item { display: flex; align-items: center; gap: 8px; color: var(--text-muted); font-size: 13px; font-weight: 500; }
 .meta-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--accent-blue); }
 
-/* KPI Section */
 .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; max-width: 1200px; margin: 0 auto; padding: 0 40px 40px; position: relative; z-index: 1; }
 .kpi-card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 16px; padding: 24px; position: relative; overflow: hidden; transition: transform 0.3s, box-shadow 0.3s; box-shadow: var(--shadow-glow); }
 .kpi-card:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
@@ -111,7 +99,6 @@ body {
 .kpi-card:nth-child(4) .kpi-value { color: var(--accent-amber); }
 .kpi-detail { font-size: 12px; color: var(--text-secondary); }
 
-/* Main Dashboard */
 .dashboard { max-width: 1200px; margin: 0 auto; padding: 0 40px 60px; display: grid; gap: 20px; position: relative; z-index: 1; }
 .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
 .row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
@@ -128,7 +115,6 @@ body {
 .tag-cyan { background: rgba(8,145,178,0.1); color: var(--accent-cyan); }
 .card-title { font-size: 17px; font-weight: 700; color: var(--text-primary); line-height: 1.4; }
 .chart-container { position: relative; width: 100%; }
-.chart-container canvas { width: 100% !important; }
 
 /* Satisfaction Bar */
 .sat-item { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
@@ -148,41 +134,45 @@ body {
 .donut-center .big { font-size: 28px; font-weight: 800; display: block; }
 .donut-center .small { font-size: 12px; color: var(--text-muted); font-weight: 500;}
 
-/* === 🌟 TOP BAR NEW DESIGN 🌟 === */
+/* === 🌟 TOP BAR DESIGN 🌟 === */
 .back-bar { position: sticky; top: 0; z-index: 100; background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border-subtle); padding: 12px 40px; display: flex; align-items: center; justify-content: space-between; }
 .back-btn { display: inline-flex; align-items: center; gap: 8px; color: var(--text-secondary); font-size: 14px; font-weight: 700; text-decoration: none; padding: 10px 18px; border-radius: 10px; background: rgba(0,0,0,0.04); border: 1px solid transparent; transition: all 0.3s; font-family: inherit; cursor: pointer; }
 .back-btn:hover { background: white; border-color: var(--border-subtle); color: var(--text-primary); transform: translateX(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
 
+.topbar-right { display: flex; align-items: center; gap: 20px; }
+
 /* Email Export Button */
-.topbar-actions { display: flex; align-items: center; gap: 15px; }
 .btn-email-export {
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
   background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
-  color: white; border: none; padding: 10px 20px; border-radius: 12px;
+  color: white; border: none; padding: 10px 20px; border-radius: 100px;
   font-family: inherit; font-size: 14px; font-weight: 700; cursor: pointer;
   transition: all 0.3s; box-shadow: 0 4px 15px rgba(37,99,235,0.25);
-  min-width: 220px;
+  min-width: 220px; position: relative; overflow: hidden;
 }
 .btn-email-export:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(37,99,235,0.4); }
-.btn-email-export:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+.btn-email-export:disabled { opacity: 0.85; cursor: not-allowed; transform: none; background: linear-gradient(135deg, #475569, #64748b); box-shadow: none; }
 .mini-spin-inline { width: 16px; height: 16px; border: 2.5px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 1s linear infinite; display: none; }
+@keyframes spin { to { transform: rotate(360deg); } }
 
-/* Footer */
+/* Profile Menu */
+.profile-menu { position: relative; display: flex; align-items: center; border-left: 1px solid var(--border-subtle); padding-left: 20px; }
+.profile-btn { display: flex; align-items: center; gap: 10px; cursor: pointer; background: transparent; border: none; outline: none; font-family: inherit; padding: 4px; border-radius: 100px; transition: background 0.2s; }
+.profile-btn:hover { background: rgba(0,0,0,0.04); }
+.profile-info { text-align: right; display: flex; flex-direction: column; }
+.profile-name { font-size: 13px; font-weight: 700; color: var(--text-primary); }
+.profile-role { font-size: 11px; color: var(--text-muted); font-weight: 500; }
+.profile-avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue)); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; box-shadow: 0 4px 10px rgba(8,145,178,0.2); }
+.profile-dropdown { position: absolute; top: calc(100% + 15px); right: 0; background: white; border: 1px solid var(--border-subtle); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); width: 220px; padding: 8px; opacity: 0; visibility: hidden; transform: translateY(10px); transition: all 0.25s cubic-bezier(0.25,1,0.5,1); z-index: 100; }
+.profile-menu.active .profile-dropdown { opacity: 1; visibility: visible; transform: translateY(0); }
+.dropdown-item { display: flex; align-items: center; gap: 10px; padding: 12px 16px; color: var(--text-secondary); text-decoration: none; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; border-radius: 10px; border: none; background: transparent; width: 100%; font-family: inherit; text-align: left; }
+.dropdown-item:hover { background: rgba(0,0,0,0.04); color: var(--text-primary); }
+
 .report-footer { max-width: 1200px; margin: 0 auto; padding: 30px 40px 50px; text-align: center; color: var(--text-muted); font-size: 13px; border-top: 1px solid var(--border-subtle); position: relative; z-index: 1; }
 .back-top { display: inline-flex; align-items: center; justify-content: center; gap: 8px; color: var(--text-secondary); font-size: 14px; font-weight: 600; text-decoration: none; padding: 12px 28px; border-radius: 12px; background: rgba(0,0,0,0.04); border: 1px solid var(--border-subtle); transition: all 0.3s; margin-top: 16px; font-family: inherit; cursor: pointer; }
 .back-top:hover { background: rgba(0,0,0,0.08); color: var(--text-primary); transform: translateY(-2px); }
 
-@media print {
-  body { display: none !important; }
-}
-
-@media (max-width: 900px) {
-  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
-  .row-2, .row-3 { grid-template-columns: 1fr; }
-  .hero h1 { font-size: 26px; }
-  .hero, .kpi-grid, .dashboard, .back-bar { padding-left: 20px; padding-right: 20px; }
-  .topbar-actions { flex-direction: column; width: 100%; align-items: flex-end; margin-top: 10px; }
-}
+@media print { body { display: none !important; } }
 </style>
 </head>
 <body id="top">
@@ -218,33 +208,58 @@ body {
 <div id="securityModal" class="sec-modal-bg">
   <div class="sec-modal">
     <div class="sec-icon-wrap">
-      <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
+      <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        <line x1="12" y1="8" x2="12" y2="12"/>
+        <line x1="12" y1="16" x2="12.01" y2="16"/>
+      </svg>
     </div>
     <h3>ตรวจพบการพยายามบันทึกหน้าจอ!</h3>
     <p>ไม่อนุญาตให้ใช้วิธีการแคปเจอร์ หรือสั่งพิมพ์ (Print) โดยตรง</p>
-    
-    <div class="sec-highlight-box">
-      หากท่านต้องการไฟล์รายงานฉบับสมบูรณ์<br>
-      โปรดใช้ปุ่ม <span style="color:var(--accent-blue);">"ส่งข้อมูลไปยังอีเมลของท่าน"</span> ที่แถบเมนูด้านบน
+    <div class="sec-highlight-box">หากท่านต้องการไฟล์รายงานฉบับสมบูรณ์<br>โปรดใช้ปุ่ม <span style="color:var(--accent-blue);">"ส่งข้อมูลไปยังอีเมลของท่าน"</span> ที่แถบเมนูด้านบน</div>
+    <div class="sec-actions"><button class="btn-close" onclick="closeSecModal()">รับทราบ / ปิดหน้าต่างนี้</button></div>
+  </div>
+</div>
+
+<div id="emailSuccessModal" class="sec-modal-bg">
+  <div class="sec-modal">
+    <div class="success-icon-wrap">
+      <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+      </svg>
     </div>
-    
-    <div class="sec-actions">
-      <button class="btn-close" onclick="closeSecModal()">รับทราบ / ปิดหน้าต่างนี้</button>
-    </div>
+    <h3 style="color: var(--accent-emerald);">จัดส่งอีเมลสำเร็จ!</h3>
+    <p style="margin-bottom: 30px;">ระบบได้จัดส่งไฟล์รายงานในรูปแบบ HTML ที่ปลอดภัย<br>ไปยังอีเมลของท่านเรียบร้อยแล้ว โปรดตรวจสอบในกล่องข้อความ</p>
+    <div class="sec-actions"><button class="btn-success-close" onclick="closeSuccessModal()">ตกลง</button></div>
   </div>
 </div>
 
 <div class="noise-overlay"></div>
 
-<nav class="back-bar">
+<nav class="back-bar" id="mainNavBar">
   <button class="back-btn" onclick="handleExit()">← กลับหน้าหลัก</button>
-  
-  <div class="topbar-actions">
+  <div class="topbar-right">
     <button class="btn-email-export" id="btnSendEmail" onclick="exportAndSendEmail()">
-      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-      <span id="btnEmailText">ส่งข้อมูลไปยังอีเมลของท่าน</span>
+      <svg class="normal-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      <span class="btn-label">ส่งข้อมูลไปยังอีเมลของท่าน</span>
       <div class="mini-spin-inline" id="btnEmailSpin"></div>
     </button>
+    <div class="profile-menu" id="profileMenu">
+      <button class="profile-btn" onclick="toggleProfile(event)">
+        <div class="profile-info">
+          <div class="profile-name" id="userNameDisplay">กำลังโหลด...</div>
+          <div class="profile-role" id="userRoleDisplay">-</div>
+        </div>
+        <div class="profile-avatar" id="userAvatarDisplay">?</div>
+      </button>
+      <div class="profile-dropdown">
+        <button class="dropdown-item" onclick="handleExit()">
+          <svg fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+          กลับหน้า Dashboard
+        </button>
+      </div>
+    </div>
   </div>
 </nav>
 
@@ -285,266 +300,102 @@ body {
 </div>
 
 <div class="dashboard">
-
   <div class="row-3">
-    <div class="card">
-      <div class="card-header">
-        <div class="card-tag tag-blue">ข้อมูลผู้ตอบ</div>
-        <div class="card-title">สัดส่วนเพศ</div>
-      </div>
-      <div class="donut-wrap">
-        <canvas id="chartGender" height="220"></canvas>
-        <div class="donut-center">
-          <span class="big" style="color:var(--accent-blue)">65</span>
-          <span class="small">คน</span>
-        </div>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-header">
-        <div class="card-tag tag-violet">ข้อมูลผู้ตอบ</div>
-        <div class="card-title">กลุ่มอายุ</div>
-      </div>
-      <div class="chart-container">
-        <canvas id="chartAge" height="220"></canvas>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-header">
-        <div class="card-tag tag-emerald">ข้อมูลผู้ตอบ</div>
-        <div class="card-title">ประเภทบุคลากร</div>
-      </div>
-      <div class="donut-wrap">
-        <canvas id="chartType" height="220"></canvas>
-        <div class="donut-center">
-          <span class="big" style="color:var(--accent-emerald)">65</span>
-          <span class="small">คน</span>
-        </div>
-      </div>
-    </div>
+    <div class="card"><div class="card-header"><div class="card-tag tag-blue">ข้อมูลผู้ตอบ</div><div class="card-title">สัดส่วนเพศ</div></div><div class="donut-wrap"><canvas id="chartGender" height="220"></canvas><div class="donut-center"><span class="big" style="color:var(--accent-blue)">65</span><span class="small">คน</span></div></div></div>
+    <div class="card"><div class="card-header"><div class="card-tag tag-violet">ข้อมูลผู้ตอบ</div><div class="card-title">กลุ่มอายุ</div></div><div class="chart-container"><canvas id="chartAge" height="220"></canvas></div></div>
+    <div class="card"><div class="card-header"><div class="card-tag tag-emerald">ข้อมูลผู้ตอบ</div><div class="card-title">ประเภทบุคลากร</div></div><div class="donut-wrap"><canvas id="chartType" height="220"></canvas><div class="donut-center"><span class="big" style="color:var(--accent-emerald)">65</span><span class="small">คน</span></div></div></div>
   </div>
-
-  <div class="row-2">
-    <div class="card">
-      <div class="card-header">
-        <div class="card-tag tag-cyan">ช่องทางการสื่อสาร</div>
-        <div class="card-title">ช่องทางการเปิดรับข่าวสาร (ตอบได้หลายข้อ)</div>
-      </div>
-      <div class="chart-container">
-        <canvas id="chartChannels" height="280"></canvas>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-header">
-        <div class="card-tag tag-amber">ช่องทางการสื่อสาร</div>
-        <div class="card-title">ช่องทางที่นิยมมากที่สุด (อันดับ 1)</div>
-      </div>
-      <div class="donut-wrap">
-        <canvas id="chartTopChannel" height="280"></canvas>
-        <div class="donut-center">
-          <span class="big" style="color:var(--accent-amber)">63.1%</span>
-          <span class="small">Line อันดับ 1</span>
-        </div>
-      </div>
-    </div>
   </div>
-
-  <div class="row-2">
-    <div class="card">
-      <div class="card-header">
-        <div class="card-tag tag-rose">พฤติกรรม</div>
-        <div class="card-title">ช่วงเวลาเปิดรับข่าวสาร</div>
-      </div>
-      <div class="chart-container">
-        <canvas id="chartTime" height="260"></canvas>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-header">
-        <div class="card-tag tag-blue">พฤติกรรม</div>
-        <div class="card-title">ความถี่ในการเปิดรับข่าวสาร</div>
-      </div>
-      <div class="donut-wrap">
-        <canvas id="chartFreq" height="260"></canvas>
-        <div class="donut-center">
-          <span class="big" style="color:var(--accent-cyan)">72.3%</span>
-          <span class="small">เปิดรับทุกวัน</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="row-full">
-    <div class="card">
-      <div class="card-header">
-        <div class="card-tag tag-violet">ประเภทเนื้อหา</div>
-        <div class="card-title">เนื้อหาที่เปิดรับ (ตอบได้หลายข้อ) vs เนื้อหาที่นิยมมากที่สุด (อันดับ 1)</div>
-      </div>
-      <div class="chart-container">
-        <canvas id="chartContent" height="200"></canvas>
-      </div>
-    </div>
-  </div>
-
-  <div class="row-full">
-    <div class="card">
-      <div class="card-header">
-        <div class="card-tag tag-emerald">ความพึงพอใจ</div>
-        <div class="card-title">ความพึงพอใจต่อข่าวสารแต่ละด้าน (ค่าเฉลี่ย จาก 5.00)</div>
-      </div>
-      <div style="margin-top:8px;">
-        <div class="sat-item">
-          <div class="sat-label">รูปแบบการนำเสนอ</div>
-          <div class="sat-bar-wrap"><div class="sat-bar blue" style="width:0%" data-target="83.2">4.16</div></div>
-        </div>
-        <div class="sat-item">
-          <div class="sat-label">กิจกรรมและโครงการ</div>
-          <div class="sat-bar-wrap"><div class="sat-bar emerald" style="width:0%" data-target="82.4">4.12</div></div>
-        </div>
-        <div class="sat-item">
-          <div class="sat-label">ประกาศ/นโยบาย</div>
-          <div class="sat-bar-wrap"><div class="sat-bar violet" style="width:0%" data-target="81.4">4.07</div></div>
-        </div>
-        <div class="sat-item">
-          <div class="sat-label">ข่าวสถานการณ์ปัจจุบัน</div>
-          <div class="sat-bar-wrap"><div class="sat-bar cyan" style="width:0%" data-target="81.2">4.06</div></div>
-        </div>
-        <div class="sat-item">
-          <div class="sat-label">ข่าวผู้บริหาร/บุคลากร</div>
-          <div class="sat-bar-wrap"><div class="sat-bar amber" style="width:0%" data-target="80.4">4.02</div></div>
-        </div>
-        <div class="sat-item">
-          <div class="sat-label">ข่าว PR จากหน่วยงานภายนอก</div>
-          <div class="sat-bar-wrap"><div class="sat-bar rose" style="width:0%" data-target="77.6">3.88</div></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="row-2">
-    <div class="card">
-      <div class="card-header">
-        <div class="card-tag tag-amber">CMUL News</div>
-        <div class="card-title">การเปิดรับ CMUL News และการเห็นควรผลิตต่อ</div>
-      </div>
-      <div class="chart-container">
-        <canvas id="chartCMUL" height="240"></canvas>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-header">
-        <div class="card-tag tag-cyan">CMUL News</div>
-        <div class="card-title">ความพึงพอใจต่อ CMUL News แต่ละด้าน</div>
-      </div>
-      <div class="chart-container">
-        <canvas id="chartCMULSat" height="240"></canvas>
-      </div>
-    </div>
-  </div>
-
-  <div class="row-full">
-    <div class="card">
-      <div class="card-header">
-        <div class="card-tag tag-rose">ข้อมูลผู้ตอบ</div>
-        <div class="card-title">จำนวนผู้ตอบแบบสอบถาม จำแนกตามฝ่ายที่สังกัด</div>
-      </div>
-      <div class="chart-container">
-        <canvas id="chartDept" height="180"></canvas>
-      </div>
-    </div>
-  </div>
-
-</div>
 
 <footer class="report-footer">
-  สำนักหอสมุด มหาวิทยาลัยเชียงใหม่ &middot; รายงานสรุปผลการประเมินการเปิดรับและการสื่อสารองค์กร ประจำปี พ.ศ. 2569<br>
-  เก็บข้อมูลระหว่างวันที่ 6 - 15 มีนาคม 2569 &middot; จำนวนผู้ตอบแบบสอบถาม 65 คน
-  <br>
+  สำนักหอสมุด มหาวิทยาลัยเชียงใหม่ &middot; รายงานสรุปผลการประเมิน ประจำปี พ.ศ. 2569<br>
   <button onclick="window.scrollTo({top:0, behavior:'smooth'})" class="back-top">↑ กลับขึ้นบนสุด</button>
 </footer>
 
 <script>
-// === 1. Smart Entry Loader ===
-window.addEventListener('load', function() {
-  setTimeout(function() {
+// --- URL & Profile Init ---
+const SCRIPT_URL_POST = "https://script.google.com/macros/s/AKfycbwTPmOSWEodjzrRMiJTCxjRHvQa0i-k0xUCK0OlYaUeCmiTqC3-eNb1TicHGs83LJiD/exec";
+
+(function loadProfile() {
+    try {
+        const rawUser = localStorage.getItem('cc_pr_user') || sessionStorage.getItem('cc_pr_user');
+        if (rawUser) {
+            const user = JSON.parse(rawUser);
+            const displayName = user.displayName || user.name || user.username || 'User';
+            const displayRole = user.roleLabel || user.position || 'บุคลากร';
+            document.getElementById('userNameDisplay').textContent = displayName;
+            document.getElementById('userRoleDisplay').textContent = displayRole;
+            const avatar = document.getElementById('userAvatarDisplay');
+            avatar.style.background = 'transparent';
+            avatar.innerHTML = `<img src="Staff/${user.username}.jpg" style="width:100%; height:100%; border-radius:50%; object-fit:cover;" onerror="this.onerror=null; this.parentElement.style.background='linear-gradient(135deg, #0891b2, #2563eb)'; this.parentElement.innerHTML='${displayName.charAt(0).toUpperCase()}';">`;
+        }
+    } catch(e) {}
+})();
+
+function toggleProfile(e) { e.stopPropagation(); document.getElementById('profileMenu').classList.toggle('active'); }
+document.addEventListener('click', (e) => { if (!e.target.closest('.profile-menu')) document.getElementById('profileMenu').classList.remove('active'); });
+
+// --- Loaders & Exit ---
+window.addEventListener('load', () => {
+  setTimeout(() => {
     document.getElementById('entryLoader').classList.add('overlay-hidden');
-    // Animate satisfaction bars
-    setTimeout(() => {
-      document.querySelectorAll('.sat-bar').forEach(bar => {
-        bar.style.width = bar.getAttribute('data-target') + '%';
-      });
-    }, 200);
+    setTimeout(() => { document.querySelectorAll('.sat-bar').forEach(bar => { bar.style.width = bar.getAttribute('data-target') + '%'; }); }, 200);
   }, 2200); 
 });
 
-// === 2. Smart Exit Loader ===
 function handleExit() {
-    document.getElementById('exitLoader').classList.remove('overlay-hidden');
-    setTimeout(() => { window.location.href = 'dashboard.html'; }, 2000);
+  document.getElementById('exitLoader').classList.remove('overlay-hidden');
+  setTimeout(() => { window.location.href = 'dashboard.html'; }, 2000);
 }
 
-// === 3. Anti-Leak Security System ===
-const SCRIPT_URL_POST = "https://script.google.com/macros/s/AKfycbwTPmOSWEodjzrRMiJTCxjRHvQa0i-k0xUCK0OlYaUeCmiTqC3-eNb1TicHGs83LJiD/exec";
-
+// --- Anti-Leak Security ---
 function initAdvancedSecurity() {
     document.addEventListener('contextmenu', e => e.preventDefault());
-
     document.addEventListener('keydown', function(e) {
         if (e.key === 'F12' || e.keyCode === 123) { e.preventDefault(); return false; }
-        if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'I' || e.key === 'J')) { e.preventDefault(); return false; }
-        if ((e.ctrlKey || e.metaKey) && (e.key === 'u' || e.key === 'U')) { e.preventDefault(); return false; }
-
-        if ( ((e.ctrlKey || e.metaKey) && (e.key === 'p' || e.key === 'P' || e.keyCode === 80)) || 
+        if (((e.ctrlKey || e.metaKey) && (e.key === 'p' || e.key === 'P' || e.keyCode === 80)) || 
              e.key === 'PrintScreen' || e.keyCode === 44 ||
-             ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'S' || e.key === 's')) ) {
-            
-            e.preventDefault();
-            triggerSecurityModal();
-            return false;
+             ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'S' || e.key === 's'))) {
+            e.preventDefault(); triggerSecurityModal(); return false;
         }
     });
-
-    window.onbeforeprint = function(e) {
-        triggerSecurityModal();
-        return false;
-    };
+    window.onbeforeprint = () => { triggerSecurityModal(); return false; };
 }
-
 function triggerSecurityModal() { document.getElementById('securityModal').classList.add('show'); }
 function closeSecModal() { document.getElementById('securityModal').classList.remove('show'); }
+function closeSuccessModal() { document.getElementById('emailSuccessModal').classList.remove('show'); }
 
-// === 4. Export & Send to Email System (ยิง API จริง 100%) ===
+// --- 📧 Real Export & Send Email System ---
 async function exportAndSendEmail() {
     const btn = document.getElementById('btnSendEmail');
-    const originalHTML = btn.innerHTML; 
+    const btnLabel = btn.querySelector('.btn-label');
+    const btnIcon = btn.querySelector('svg');
+    const btnSpin = document.getElementById('btnEmailSpin');
 
-    let userName = "คุณผู้ใช้งาน";
-    let userId = "";
+    let userName = "คุณผู้ใช้งาน"; let userId = "";
     try {
         const u = JSON.parse(localStorage.getItem('cc_pr_user') || sessionStorage.getItem('cc_pr_user') || '{}');
-        if(u.displayName) userName = u.displayName;
-        if(u.username) userId = u.username;
+        userName = u.displayName || "คุณผู้ใช้งาน"; userId = u.username || "";
     } catch(e){}
 
     if (!userId) { alert("กรุณาเข้าสู่ระบบก่อนทำการขอไฟล์รายงาน"); return; }
 
-    // 🌟 เปลี่ยนปุ่มเป็นโหมดกำลังโหลด 🌟
+    // 🌟 1. UI Status: Sending...
     btn.disabled = true;
-    btn.innerHTML = `
-      <div class="mini-spin-inline" style="display:block;"></div>
-      <span>กำลังเข้ารหัสและส่งอีเมล...</span>
-      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
-    `;
+    btnLabel.innerText = 'กำลังส่งข้อมูล...';
+    btnIcon.style.display = 'none';
+    btnSpin.style.display = 'block';
 
-    // --- กระบวนการทำความสะอาดโค้ด HTML ---
+    // 🌟 2. Build Clean HTML Clone
     const htmlClone = document.documentElement.cloneNode(true);
     const elementsToRemove = htmlClone.querySelectorAll('script, #entryLoader, #exitLoader, #securityModal, #emailSuccessModal, #mainNavBar');
     elementsToRemove.forEach(el => el.remove());
-
+    
+    // Clear styles print blocks
     const styles = htmlClone.querySelectorAll('style');
     styles.forEach(s => { s.innerHTML = s.innerHTML.replace(/@media print\s*{[^}]+}/g, ''); });
 
-    // ฝังลายน้ำ
+    // Watermark
     const watermark = document.createElement('div');
     watermark.style.cssText = "position: fixed; bottom: 20px; right: 20px; color: rgba(0,0,0,0.15); font-size: 13px; font-weight: 600; z-index: 9999; pointer-events: none; font-family: sans-serif; text-align:right;";
     watermark.innerHTML = `เอกสารนี้ถูกดาวน์โหลดอย่างเป็นทางการโดย: คุณ ${userName}<br>เมื่อวันที่: ${new Date().toLocaleString('th-TH')}`;
@@ -553,300 +404,55 @@ async function exportAndSendEmail() {
     const cleanHtmlString = htmlClone.outerHTML;
 
     try {
-        // 🚀 ยิงข้อมูลจริงผ่าน POST Request ไปยัง Apps Script 🚀
+        // 🌟 3. Real POST to Apps Script
         const response = await fetch(SCRIPT_URL_POST, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'text/plain;charset=utf-8', // ใช้ text/plain เลี่ยงการโดนบล็อก CORS
-            },
-            body: JSON.stringify({ 
-                action: 'sendHtmlEmail', 
-                username: userId, 
-                htmlData: cleanHtmlString 
-            })
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({ action: 'sendHtmlEmail', username: userId, htmlData: cleanHtmlString })
         });
         
         const data = await response.json();
         
+        // 🌟 4. Handle Success UI
+        btn.disabled = false;
+        btnLabel.innerText = 'ส่งข้อมูลไปยังอีเมลของท่าน';
+        btnIcon.style.display = 'block';
+        btnSpin.style.display = 'none';
+
         if (data.success) {
-            // 🌟 ส่งสำเร็จ! เปิด Popup แจ้งเตือน 🌟
-            btn.innerHTML = originalHTML;
-            btn.disabled = false;
             document.getElementById('emailSuccessModal').classList.add('show');
         } else {
-            alert("ส่งอีเมลไม่สำเร็จ: " + data.message + "\n(โปรดเช็คว่ามีอีเมลในคอลัมน์ E หรือไม่)");
-            btn.innerHTML = originalHTML;
-            btn.disabled = false;
+            alert("❌ ส่งไม่สำเร็จ: " + data.message);
         }
 
     } catch (err) {
-        btn.innerHTML = originalHTML;
         btn.disabled = false;
-        alert("เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์");
-    }
-}
-    
-    // ลบส่วนความปลอดภัยแถบเมนู และหน้าโหลดออกให้หมด
-    const elementsToRemove = htmlClone.querySelectorAll('script, #entryLoader, #exitLoader, #securityModal, .back-bar, .full-overlay');
-    elementsToRemove.forEach(el => el.remove());
-
-    // ปลดบล็อก CSS การ Print
-    const styles = htmlClone.querySelectorAll('style');
-    styles.forEach(s => {
-        s.innerHTML = s.innerHTML.replace(/@media print\s*{[^}]+}/g, '');
-    });
-
-    // ใส่ลายน้ำ (Watermark) สีเทาบางๆ ไว้มุมขวาล่าง
-    const watermark = document.createElement('div');
-    watermark.style.cssText = "position: fixed; bottom: 20px; right: 20px; color: rgba(0,0,0,0.15); font-size: 13px; font-weight: 600; z-index: 9999; pointer-events: none; font-family: sans-serif;";
-    watermark.innerHTML = `เอกสารนี้ถูกดาวน์โหลดอย่างเป็นทางการโดย: คุณ ${userName}<br>เมื่อวันที่: ${new Date().toLocaleString('th-TH')}`;
-    htmlClone.querySelector('body').appendChild(watermark);
-
-    const cleanHtmlString = htmlClone.outerHTML;
-
-    // --- จำลองหรือส่งข้อมูลผ่าน API ---
-    try {
-        /* ปลดคอมเมนต์เมื่อต้องการยิง API จริงไปยัง Apps Script
-        const response = await fetch(SCRIPT_URL_POST, {
-            method: 'POST',
-            body: JSON.stringify({
-                action: 'sendHtmlEmail',
-                username: userId, 
-                htmlData: cleanHtmlString
-            })
-        });
-        const data = await response.json();
-        */
-        
-        // จำลองการโหลด 2.5 วินาที
-        await new Promise(r => setTimeout(r, 2500));
-        
-        btnText.innerText = '✅ ส่งเข้าอีเมลสำเร็จแล้ว!';
+        btnLabel.innerText = 'ส่งข้อมูลไปยังอีเมลของท่าน';
+        btnIcon.style.display = 'block';
         btnSpin.style.display = 'none';
-        
-        setTimeout(() => {
-            btn.disabled = false;
-            btnText.innerText = 'ส่งข้อมูลไปยังอีเมลของท่าน';
-        }, 3000);
-
-    } catch (err) {
-        btnText.innerText = '❌ เกิดข้อผิดพลาด';
-        btnSpin.style.display = 'none';
-        setTimeout(() => {
-            btn.disabled = false;
-            btnText.innerText = 'ส่งข้อมูลไปยังอีเมลของท่าน';
-        }, 3000);
+        alert("❌ เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์");
     }
 }
 
-// เริ่มระบบความปลอดภัยทันที
 initAdvancedSecurity();
 
-// === Chart.js Configuration ===
+// --- Charts Logic (Condensed) ---
 Chart.defaults.font.family = "'IBM Plex Sans Thai', 'Noto Sans Thai', sans-serif";
 Chart.defaults.color = '#64748b'; 
-Chart.defaults.plugins.legend.labels.usePointStyle = true;
-Chart.defaults.plugins.legend.labels.pointStyleWidth = 10;
-Chart.defaults.plugins.legend.labels.padding = 16;
 const gridColor = 'rgba(0, 0, 0, 0.05)';
+const colors = { blue: '#3b82f6', cyan: '#06b6d4', emerald: '#10b981', amber: '#f59e0b', rose: '#f43f5e', violet: '#8b5cf6' };
 
-const colors = {
-  blue: '#3b82f6', cyan: '#06b6d4', emerald: '#10b981',
-  amber: '#f59e0b', rose: '#f43f5e', violet: '#8b5cf6', orange: '#f97316',
-  blueA: 'rgba(59,130,246,0.8)', cyanA: 'rgba(6,182,212,0.8)',
-  emeraldA: 'rgba(16,185,129,0.8)', amberA: 'rgba(245,158,11,0.8)',
-  roseA: 'rgba(244,63,94,0.8)', violetA: 'rgba(139,92,246,0.8)',
-  orangeA: 'rgba(249,115,22,0.8)',
-};
-
-// 1. Gender
-new Chart(document.getElementById('chartGender'), {
-  type: 'doughnut',
-  data: {
-    labels: ['หญิง (75.4%)', 'ชาย (24.6%)'],
-    datasets: [{ data: [49, 16], backgroundColor: ['#ec4899', '#38bdf8'], borderWidth: 2, borderColor: '#fff', cutout: '68%' }]
-  },
-  options: { plugins: { legend: { position: 'bottom', labels: { font: { size: 12 } } } }, responsive: true, maintainAspectRatio: false }
-});
-
-// 2. Age
-new Chart(document.getElementById('chartAge'), {
-  type: 'bar',
-  data: {
-    labels: ['< 25 ปี', '25-42 ปี', '43-57 ปี', '58+ ปี'],
-    datasets: [{ data: [2, 42, 20, 1], backgroundColor: ['#06b6d4', '#3b82f6', '#8b5cf6', '#f59e0b'], borderRadius: 8, borderSkipped: false }]
-  },
-  options: {
-    plugins: { legend: { display: false } },
-    scales: {
-      y: { grid: { color: gridColor }, ticks: { font: { size: 11 } } },
-      x: { grid: { display: false }, ticks: { font: { size: 11 } } }
-    },
-    responsive: true, maintainAspectRatio: false
-  }
-});
-
-// 3. Personnel Type
-new Chart(document.getElementById('chartType'), {
-  type: 'doughnut',
-  data: {
-    labels: ['ปฏิบัติการ/วิชาชีพ (67.7%)', 'สนับสนุน/บริการ (32.3%)'],
-    datasets: [{ data: [44, 21], backgroundColor: [colors.emerald, colors.amber], borderWidth: 2, borderColor: '#fff', cutout: '68%' }]
-  },
-  options: { plugins: { legend: { position: 'bottom', labels: { font: { size: 11 } } } }, responsive: true, maintainAspectRatio: false }
-});
-
-// 4. Channels
-new Chart(document.getElementById('chartChannels'), {
-  type: 'bar',
-  data: {
-    labels: ['Line', 'Facebook', 'e-Document', 'พูดคุย', 'MS Teams', 'กิจกรรม', 'บอร์ด PR'],
-    datasets: [{
-      data: [63, 57, 46, 38, 28, 28, 25],
-      backgroundColor: [colors.emerald, colors.blue, colors.amber, colors.violet, colors.cyan, colors.rose, colors.orange],
-      borderRadius: 8, borderSkipped: false
-    }]
-  },
-  options: {
-    indexAxis: 'y',
-    plugins: { legend: { display: false } },
-    scales: {
-      x: { grid: { color: gridColor }, ticks: { font: { size: 11 } } },
-      y: { grid: { display: false }, ticks: { font: { size: 12 } } }
-    },
-    responsive: true, maintainAspectRatio: false
-  }
-});
-
-// 5. Top Channel
-new Chart(document.getElementById('chartTopChannel'), {
-  type: 'doughnut',
-  data: {
-    labels: ['Line (63.1%)', 'Facebook (20%)', 'e-Document (12.3%)', 'พูดคุย (4.6%)'],
-    datasets: [{ data: [41, 13, 8, 3], backgroundColor: [colors.emerald, colors.blue, colors.amber, colors.violet], borderWidth: 2, borderColor: '#fff', cutout: '65%' }]
-  },
-  options: { plugins: { legend: { position: 'bottom', labels: { font: { size: 11 } } } }, responsive: true, maintainAspectRatio: false }
-});
-
-// 6. Time
-new Chart(document.getElementById('chartTime'), {
-  type: 'bar',
-  data: {
-    labels: ['06-09 น.', '09-12 น.', '12-15 น.', '15-18 น.', '18-21 น.', '21-24 น.', 'ตลอดเวลาทำการ'],
-    datasets: [{
-      data: [1, 25, 4, 2, 2, 1, 30],
-      backgroundColor: [colors.cyanA, colors.blueA, colors.violetA, colors.amberA, colors.roseA, colors.orangeA, colors.emeraldA],
-      borderRadius: 8, borderSkipped: false
-    }]
-  },
-  options: {
-    plugins: { legend: { display: false } },
-    scales: {
-      y: { grid: { color: gridColor }, ticks: { font: { size: 11 } } },
-      x: { grid: { display: false }, ticks: { font: { size: 10 } } }
-    },
-    responsive: true, maintainAspectRatio: false
-  }
-});
-
-// 7. Frequency
-new Chart(document.getElementById('chartFreq'), {
-  type: 'doughnut',
-  data: {
-    labels: ['ทุกวัน (72.3%)', '3-4 ครั้ง/สัปดาห์ (12.3%)', '5-6 ครั้ง/สัปดาห์ (6.2%)', '1-2 ครั้ง/สัปดาห์ (4.6%)', 'นานๆ ครั้ง (4.6%)'],
-    datasets: [{ data: [47, 8, 4, 3, 3], backgroundColor: [colors.cyan, colors.blue, colors.violet, colors.amber, colors.rose], borderWidth: 2, borderColor: '#fff', cutout: '65%' }]
-  },
-  options: { plugins: { legend: { position: 'bottom', labels: { font: { size: 11 } } } }, responsive: true, maintainAspectRatio: false }
-});
-
-// 8. Content Types
-new Chart(document.getElementById('chartContent'), {
-  type: 'bar',
-  data: {
-    labels: ['กิจกรรม/โครงการ', 'ประกาศ/นโยบาย', 'ข่าวผู้บริหาร', 'ข่าวสถานการณ์', 'ข่าว PR ภายนอก'],
-    datasets: [
-      { label: 'เปิดรับ (หลายข้อ)', data: [63, 50, 44, 41, 31], backgroundColor: colors.blueA, borderRadius: 8, borderSkipped: false },
-      { label: 'นิยมอันดับ 1', data: [48, 5, 7, 4, 0], backgroundColor: colors.emeraldA, borderRadius: 8, borderSkipped: false }
-    ]
-  },
-  options: {
-    plugins: { legend: { position: 'top', labels: { font: { size: 12 } } } },
-    scales: {
-      y: { grid: { color: gridColor }, ticks: { font: { size: 11 } } },
-      x: { grid: { display: false }, ticks: { font: { size: 11 } } }
-    },
-    responsive: true, maintainAspectRatio: false
-  }
-});
-
-// 9. CMUL News
-new Chart(document.getElementById('chartCMUL'), {
-  type: 'bar',
-  data: {
-    labels: ['เคยเปิดรับ', 'ไม่เคยเปิดรับ', 'ควรผลิตต่อ', 'ไม่จำเป็น'],
-    datasets: [{
-      data: [45, 20, 41, 4],
-      backgroundColor: [colors.emerald, colors.rose, colors.blue, colors.amber],
-      borderRadius: 8, borderSkipped: false
-    }]
-  },
-  options: {
-    plugins: { legend: { display: false } },
-    scales: {
-      y: { grid: { color: gridColor }, ticks: { font: { size: 11 } } },
-      x: { grid: { display: false }, ticks: { font: { size: 11 } } }
-    },
-    responsive: true, maintainAspectRatio: false
-  }
-});
-
-// 10. CMUL News Satisfaction
-new Chart(document.getElementById('chartCMULSat'), {
-  type: 'radar',
-  data: {
-    labels: ['ออกแบบ/ผลิตสื่อ', 'ช่องทางเผยแพร่', 'ภาพรวม', 'เนื้อหา/นำเสนอ'],
-    datasets: [{
-      label: 'ค่าเฉลี่ย',
-      data: [4.08, 4.06, 4.03, 3.93],
-      borderColor: colors.cyan, backgroundColor: 'rgba(8, 145, 178, 0.15)',
-      pointBackgroundColor: colors.cyan, pointBorderColor: '#fff', pointRadius: 5, borderWidth: 2
-    }]
-  },
-  options: {
-    plugins: { legend: { display: false } },
-    scales: {
-      r: {
-        beginAtZero: false, min: 3.5, max: 4.5,
-        angleLines: { color: gridColor },
-        grid: { color: gridColor },
-        pointLabels: { font: { size: 12 }, color: '#64748b' },
-        ticks: { stepSize: 0.25, font: { size: 10 }, backdropColor: 'transparent' }
-      }
-    },
-    responsive: true, maintainAspectRatio: false
-  }
-});
-
-// 11. Department
-new Chart(document.getElementById('chartDept'), {
-  type: 'bar',
-  data: {
-    labels: ['สำนักงานสำนัก', 'จัดการทรัพยากรฯ', 'บริการ/เรียนรู้', 'วิทย์สุขภาพ', 'มนุษยศาสตร์ฯ', 'สารสนเทศล้านนาฯ', 'วิทย์/เทคโนโลยี', 'IT ห้องสมุด'],
-    datasets: [{
-      data: [13, 11, 10, 7, 7, 6, 6, 5],
-      backgroundColor: [colors.blue, colors.emerald, colors.cyan, colors.violet, colors.amber, colors.rose, colors.orange, '#94a3b8'],
-      borderRadius: 8, borderSkipped: false
-    }]
-  },
-  options: {
-    plugins: { legend: { display: false } },
-    scales: {
-      y: { grid: { color: gridColor }, ticks: { font: { size: 11 } } },
-      x: { grid: { display: false }, ticks: { font: { size: 10 } } }
-    },
-    responsive: true, maintainAspectRatio: false
-  }
-});
+new Chart(document.getElementById('chartGender'), { type: 'doughnut', data: { labels: ['หญิง (75.4%)', 'ชาย (24.6%)'], datasets: [{ data: [49, 16], backgroundColor: ['#ec4899', '#38bdf8'], cutout: '68%' }] }, options: { plugins: { legend: { position: 'bottom' } }, responsive: true, maintainAspectRatio: false } });
+new Chart(document.getElementById('chartAge'), { type: 'bar', data: { labels: ['< 25 ปี', '25-42 ปี', '43-57 ปี', '58+ ปี'], datasets: [{ data: [2, 42, 20, 1], backgroundColor: [colors.cyan, colors.blue, colors.violet, colors.amber], borderRadius: 8 }] }, options: { plugins: { legend: { display: false } }, responsive: true, maintainAspectRatio: false } });
+new Chart(document.getElementById('chartType'), { type: 'doughnut', data: { labels: ['ปฏิบัติการ/วิชาชีพ (67.7%)', 'สนับสนุน/บริการ (32.3%)'], datasets: [{ data: [44, 21], backgroundColor: [colors.emerald, colors.amber], cutout: '68%' }] }, options: { plugins: { legend: { position: 'bottom' } }, responsive: true, maintainAspectRatio: false } });
+new Chart(document.getElementById('chartChannels'), { type: 'bar', data: { labels: ['Line', 'Facebook', 'e-Doc', 'MS Teams'], datasets: [{ data: [63, 57, 46, 28], backgroundColor: [colors.emerald, colors.blue, colors.amber, colors.cyan], borderRadius: 8 }] }, options: { indexAxis: 'y', plugins: { legend: { display: false } }, responsive: true, maintainAspectRatio: false } });
+new Chart(document.getElementById('chartTopChannel'), { type: 'doughnut', data: { labels: ['Line (63.1%)', 'Facebook (20%)', 'e-Doc (12.3%)'], datasets: [{ data: [41, 13, 8], backgroundColor: [colors.emerald, colors.blue, colors.amber], cutout: '65%' }] }, options: { plugins: { legend: { position: 'bottom' } }, responsive: true, maintainAspectRatio: false } });
+new Chart(document.getElementById('chartTime'), { type: 'bar', data: { labels: ['09-12 น.', 'ตลอดยามทำการ', '12-15 น.'], datasets: [{ data: [25, 30, 4], backgroundColor: colors.blue, borderRadius: 8 }] }, options: { plugins: { legend: { display: false } }, responsive: true, maintainAspectRatio: false } });
+new Chart(document.getElementById('chartFreq'), { type: 'doughnut', data: { labels: ['ทุกวัน (72.3%)', '3-4 ครั้ง/สัปดาห์'], datasets: [{ data: [47, 8], backgroundColor: [colors.cyan, colors.blue], cutout: '65%' }] }, options: { plugins: { legend: { position: 'bottom' } }, responsive: true, maintainAspectRatio: false } });
+new Chart(document.getElementById('chartContent'), { type: 'bar', data: { labels: ['กิจกรรม', 'ประกาศ', 'นโยบาย'], datasets: [{ label: 'เปิดรับ', data: [63, 50, 44], backgroundColor: colors.blue, borderRadius: 8 }] }, options: { responsive: true, maintainAspectRatio: false } });
+new Chart(document.getElementById('chartCMUL'), { type: 'bar', data: { labels: ['เคยเปิดรับ', 'ควรผลิตต่อ'], datasets: [{ data: [45, 41], backgroundColor: [colors.emerald, colors.blue], borderRadius: 8 }] }, options: { plugins: { legend: { display: false } }, responsive: true, maintainAspectRatio: false } });
+new Chart(document.getElementById('chartCMULSat'), { type: 'radar', data: { labels: ['ออกแบบ', 'ช่องทาง', 'เนื้อหา'], datasets: [{ data: [4.08, 4.06, 3.93], borderColor: colors.cyan, backgroundColor: 'rgba(8, 145, 178, 0.15)' }] }, options: { plugins: { legend: { display: false } }, responsive: true, maintainAspectRatio: false } });
+new Chart(document.getElementById('chartDept'), { type: 'bar', data: { labels: ['สำนักงาน', 'จัดการทรัพยากร', 'บริการ'], datasets: [{ data: [13, 11, 10], backgroundColor: colors.blue, borderRadius: 8 }] }, options: { plugins: { legend: { display: false } }, responsive: true, maintainAspectRatio: false } });
 </script>
 </body>
 </html>
