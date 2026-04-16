@@ -11,48 +11,113 @@
   scroll-behavior: smooth;
 }
 :root {
-  --bg-primary: #0a0e1a;
-  --bg-card: #111827;
-  --border-subtle: rgba(255,255,255,0.06);
-  --text-primary: #f0f4ff;
-  --text-secondary: #8b9cc7;
-  --text-muted: #5a6a8a;
-  --accent-blue: #3b82f6;
-  --accent-cyan: #06b6d4;
-  --accent-emerald: #10b981;
-  --accent-amber: #f59e0b;
-  --accent-rose: #f43f5e;
-  --accent-violet: #8b5cf6;
-  --accent-orange: #f97316;
-  --accent-pink: #ec4899;
-  --accent-sky: #38bdf8;
+  /* ปรับแต่งเป็นโทนสว่าง */
+  --bg-primary: #f8fafc;
+  --bg-card: #ffffff;
+  --border-subtle: rgba(0, 0, 0, 0.08);
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #64748b;
+  
+  --accent-blue: #2563eb;
+  --accent-cyan: #0891b2;
+  --accent-emerald: #059669;
+  --accent-amber: #d97706;
+  --accent-rose: #e11d48;
+  --accent-violet: #7c3aed;
+  --accent-orange: #ea580c;
+  --accent-pink: #db2777;
+  --accent-sky: #0284c7;
+  
+  --shadow-glow: 0 4px 20px rgba(0, 0, 0, 0.03);
 }
+
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font-family: 'IBM Plex Sans Thai', 'Noto Sans Thai', sans-serif; background: var(--bg-primary); color: var(--text-primary); min-height: 100vh; overflow-x: hidden; }
 
-.noise-overlay { position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.03; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+/* Preloader Styles */
+#preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: var(--bg-primary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.6s ease, visibility 0.6s ease;
+}
+
+.preloader-hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.penguin-loader {
+  width: 200px;
+  height: 200px;
+  margin-bottom: 24px;
+}
+
+.pen-arm {
+  transform-origin: 140px 85px;
+  animation: writing 0.4s ease-in-out infinite alternate;
+}
+
+@keyframes writing {
+  0% { transform: rotate(0deg) translate(0px, 0px); }
+  100% { transform: rotate(4deg) translate(-8px, 4px); }
+}
+
+.loading-text {
+  font-family: 'Noto Sans Thai', sans-serif;
+  font-size: 18px;
+  color: var(--text-primary);
+  font-weight: 600;
+  text-align: center;
+  max-width: 520px;
+  line-height: 1.5;
+  padding: 0 20px;
+}
+
+.loading-dots::after {
+  content: '';
+  display: inline-block;
+  width: 24px;
+  text-align: left;
+  animation: dots 1.5s steps(4, end) infinite;
+}
+
+@keyframes dots {
+  0%, 20% { content: ''; }
+  40% { content: '.'; }
+  60% { content: '..'; }
+  80%, 100% { content: '...'; }
+}
+
+.noise-overlay { position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.2; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
 
 .hero { position: relative; padding: 60px 40px 40px; text-align: center; overflow: hidden; }
-.hero::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(ellipse at 50% 0%, rgba(6,182,212,0.12) 0%, transparent 60%), radial-gradient(ellipse at 20% 50%, rgba(236,72,153,0.08) 0%, transparent 50%), radial-gradient(ellipse at 80% 50%, rgba(59,130,246,0.08) 0%, transparent 50%); z-index: 0; }
+.hero::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(ellipse at 50% 0%, rgba(6,182,212,0.06) 0%, transparent 60%), radial-gradient(ellipse at 20% 50%, rgba(236,72,153,0.04) 0%, transparent 50%), radial-gradient(ellipse at 80% 50%, rgba(59,130,246,0.04) 0%, transparent 50%); z-index: 0; }
 .hero-content { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; }
-.hero-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 100px; background: rgba(6,182,212,0.12); border: 1px solid rgba(6,182,212,0.2); color: var(--accent-cyan); font-size: 13px; font-weight: 500; letter-spacing: 0.5px; margin-bottom: 20px; }
+.hero-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 100px; background: rgba(6,182,212,0.1); border: 1px solid rgba(6,182,212,0.2); color: var(--accent-cyan); font-size: 13px; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 20px; }
 .hero-badge::before { content: ''; width: 6px; height: 6px; background: var(--accent-cyan); border-radius: 50%; animation: pulse 2s infinite; }
 @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
-.hero h1 { font-family: 'Noto Sans Thai', sans-serif; font-size: 34px; font-weight: 800; line-height: 1.3; background: linear-gradient(135deg, #fff 0%, #a5b4fc 50%, #06b6d4 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 12px; }
+.hero h1 { font-family: 'Noto Sans Thai', sans-serif; font-size: 34px; font-weight: 800; line-height: 1.3; background: linear-gradient(135deg, #0f172a 0%, #4338ca 50%, #0284c7 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 12px; }
 .hero-sub { font-size: 16px; color: var(--text-secondary); font-weight: 400; margin-bottom: 8px; }
 .hero-meta { display: flex; justify-content: center; gap: 24px; margin-top: 24px; flex-wrap: wrap; }
-.meta-item { display: flex; align-items: center; gap: 8px; color: var(--text-muted); font-size: 13px; }
+.meta-item { display: flex; align-items: center; gap: 8px; color: var(--text-muted); font-size: 13px; font-weight: 500;}
 .meta-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--accent-cyan); }
 
-.kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; max-width: 1200px; margin: 0 auto; padding: 0 40px 40px; }
-.kpi-card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 16px; padding: 24px; position: relative; overflow: hidden; transition: transform 0.3s; }
-.kpi-card:hover { transform: translateY(-2px); }
-.kpi-card::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; }
+.kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; max-width: 1200px; margin: 0 auto; padding: 0 40px 40px; position: relative; z-index: 1;}
+.kpi-card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 16px; padding: 24px; position: relative; overflow: hidden; transition: transform 0.3s, box-shadow 0.3s; box-shadow: var(--shadow-glow);}
+.kpi-card:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+.kpi-card::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
 .kpi-card:nth-child(1)::after { background: linear-gradient(135deg, #06b6d4, #3b82f6); }
 .kpi-card:nth-child(2)::after { background: linear-gradient(135deg, #10b981, #06b6d4); }
 .kpi-card:nth-child(3)::after { background: linear-gradient(135deg, #8b5cf6, #ec4899); }
 .kpi-card:nth-child(4)::after { background: linear-gradient(135deg, #f59e0b, #f97316); }
-.kpi-label { font-size: 13px; color: var(--text-muted); font-weight: 500; margin-bottom: 8px; }
+.kpi-label { font-size: 13px; color: var(--text-muted); font-weight: 600; margin-bottom: 8px; }
 .kpi-value { font-size: 36px; font-weight: 800; letter-spacing: -1px; line-height: 1; margin-bottom: 6px; }
 .kpi-card:nth-child(1) .kpi-value { color: var(--accent-cyan); }
 .kpi-card:nth-child(2) .kpi-value { color: var(--accent-emerald); }
@@ -60,61 +125,61 @@ body { font-family: 'IBM Plex Sans Thai', 'Noto Sans Thai', sans-serif; backgrou
 .kpi-card:nth-child(4) .kpi-value { color: var(--accent-amber); }
 .kpi-detail { font-size: 12px; color: var(--text-secondary); }
 
-.dashboard { max-width: 1200px; margin: 0 auto; padding: 0 40px 60px; display: grid; gap: 20px; }
+.dashboard { max-width: 1200px; margin: 0 auto; padding: 0 40px 60px; display: grid; gap: 20px; position: relative; z-index: 1;}
 .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
 .row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
 .row-full { display: grid; grid-template-columns: 1fr; }
-.card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 16px; padding: 28px; transition: border-color 0.3s; }
-.card:hover { border-color: rgba(255,255,255,0.1); }
+.card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 16px; padding: 28px; transition: box-shadow 0.3s; box-shadow: var(--shadow-glow);}
+.card:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.04); }
 .card-header { margin-bottom: 20px; }
-.card-tag { display: inline-block; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; padding: 3px 10px; border-radius: 6px; margin-bottom: 10px; }
-.tag-blue { background: rgba(59,130,246,0.12); color: var(--accent-blue); }
-.tag-emerald { background: rgba(16,185,129,0.12); color: var(--accent-emerald); }
-.tag-violet { background: rgba(139,92,246,0.12); color: var(--accent-violet); }
-.tag-amber { background: rgba(245,158,11,0.12); color: var(--accent-amber); }
-.tag-rose { background: rgba(244,63,94,0.12); color: var(--accent-rose); }
-.tag-cyan { background: rgba(6,182,212,0.12); color: var(--accent-cyan); }
-.tag-pink { background: rgba(236,72,153,0.12); color: var(--accent-pink); }
-.tag-orange { background: rgba(249,115,22,0.12); color: var(--accent-orange); }
+.card-tag { display: inline-block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; padding: 4px 12px; border-radius: 6px; margin-bottom: 12px; }
+.tag-blue { background: rgba(37,99,235,0.1); color: var(--accent-blue); }
+.tag-emerald { background: rgba(5,150,105,0.1); color: var(--accent-emerald); }
+.tag-violet { background: rgba(124,58,237,0.1); color: var(--accent-violet); }
+.tag-amber { background: rgba(217,119,6,0.1); color: var(--accent-amber); }
+.tag-rose { background: rgba(225,29,72,0.1); color: var(--accent-rose); }
+.tag-cyan { background: rgba(8,145,178,0.1); color: var(--accent-cyan); }
+.tag-pink { background: rgba(219,39,119,0.1); color: var(--accent-pink); }
+.tag-orange { background: rgba(234,88,12,0.1); color: var(--accent-orange); }
 .card-title { font-size: 17px; font-weight: 700; color: var(--text-primary); line-height: 1.4; }
 .chart-container { position: relative; width: 100%; }
 
 .donut-wrap { position: relative; display: flex; justify-content: center; }
 .donut-center { position: absolute; top: calc(50% - 18px); left: 50%; transform: translate(-50%, -50%); text-align: center; pointer-events: none; }
 .donut-center .big { font-size: 26px; font-weight: 800; display: block; }
-.donut-center .small { font-size: 11px; color: var(--text-muted); }
+.donut-center .small { font-size: 12px; font-weight: 500; color: var(--text-muted); }
 
 .sat-item { display: flex; align-items: center; gap: 14px; margin-bottom: 12px; }
-.sat-label { font-size: 12px; color: var(--text-secondary); min-width: 160px; line-height: 1.3; }
-.sat-bar-wrap { flex: 1; height: 26px; background: rgba(255,255,255,0.04); border-radius: 8px; overflow: hidden; }
-.sat-bar { height: 100%; border-radius: 8px; display: flex; align-items: center; justify-content: flex-end; padding-right: 10px; transition: width 1.2s cubic-bezier(0.25,1,0.5,1); font-size: 12px; font-weight: 700; color: #fff; }
-.sat-bar.blue { background: linear-gradient(90deg, rgba(59,130,246,0.7), var(--accent-blue)); }
-.sat-bar.emerald { background: linear-gradient(90deg, rgba(16,185,129,0.7), var(--accent-emerald)); }
-.sat-bar.violet { background: linear-gradient(90deg, rgba(139,92,246,0.7), var(--accent-violet)); }
-.sat-bar.cyan { background: linear-gradient(90deg, rgba(6,182,212,0.7), var(--accent-cyan)); }
-.sat-bar.amber { background: linear-gradient(90deg, rgba(245,158,11,0.7), var(--accent-amber)); }
-.sat-bar.rose { background: linear-gradient(90deg, rgba(244,63,94,0.7), var(--accent-rose)); }
-.sat-bar.pink { background: linear-gradient(90deg, rgba(236,72,153,0.7), var(--accent-pink)); }
+.sat-label { font-size: 14px; font-weight: 500; color: var(--text-secondary); min-width: 160px; line-height: 1.3; }
+.sat-bar-wrap { flex: 1; height: 26px; background: rgba(0,0,0,0.04); border-radius: 8px; overflow: hidden; }
+.sat-bar { height: 100%; border-radius: 8px; display: flex; align-items: center; justify-content: flex-end; padding-right: 12px; transition: width 1.2s cubic-bezier(0.25,1,0.5,1); font-size: 13px; font-weight: 700; color: #fff; }
+.sat-bar.blue { background: linear-gradient(90deg, #60a5fa, var(--accent-blue)); }
+.sat-bar.emerald { background: linear-gradient(90deg, #34d399, var(--accent-emerald)); }
+.sat-bar.violet { background: linear-gradient(90deg, #a78bfa, var(--accent-violet)); }
+.sat-bar.cyan { background: linear-gradient(90deg, #22d3ee, var(--accent-cyan)); }
+.sat-bar.amber { background: linear-gradient(90deg, #fbbf24, var(--accent-amber)); }
+.sat-bar.rose { background: linear-gradient(90deg, #fb7185, var(--accent-rose)); }
+.sat-bar.pink { background: linear-gradient(90deg, #f472b6, var(--accent-pink)); }
 
 .suggestion-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.suggestion-item { background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 14px; font-size: 12.5px; color: var(--text-secondary); line-height: 1.7; transition: background 0.3s; }
-.suggestion-item:hover { background: rgba(255,255,255,0.06); }
-.suggestion-num { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 6px; background: rgba(6,182,212,0.15); color: var(--accent-cyan); font-size: 11px; font-weight: 700; margin-right: 8px; }
+.suggestion-item { background: rgba(0,0,0,0.02); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 16px; font-size: 14px; color: var(--text-secondary); line-height: 1.6; transition: background 0.3s; }
+.suggestion-item:hover { background: rgba(0,0,0,0.04); }
+.suggestion-num { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 6px; background: rgba(8,145,178,0.1); color: var(--accent-cyan); font-size: 12px; font-weight: 700; margin-right: 10px; }
 
 /* Keyword cloud */
 .keyword-grid { display: flex; flex-wrap: wrap; gap: 10px; }
-.kw-tag { display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 100px; font-size: 13px; font-weight: 500; border: 1px solid var(--border-subtle); transition: all 0.3s; }
+.kw-tag { display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 100px; font-size: 13px; font-weight: 600; border: 1px solid var(--border-subtle); transition: all 0.3s; }
 .kw-tag:hover { transform: scale(1.05); }
 .kw-tag .kw-count { font-size: 11px; font-weight: 700; opacity: 0.7; }
 
-.section-divider { border: none; border-top: 1px solid rgba(255,255,255,0.04); margin: 10px 0; }
+.section-divider { border: none; border-top: 1px solid rgba(0,0,0,0.08); margin: 10px 0; }
 
-.report-footer { max-width: 1200px; margin: 0 auto; padding: 30px 40px 50px; text-align: center; color: var(--text-muted); font-size: 12px; border-top: 1px solid var(--border-subtle); }
+.report-footer { max-width: 1200px; margin: 0 auto; padding: 30px 40px 50px; text-align: center; color: var(--text-muted); font-size: 13px; border-top: 1px solid var(--border-subtle); position: relative; z-index: 1;}
 
 /* Back to home bar */
 .back-bar {
   position: sticky; top: 0; z-index: 100;
-  background: rgba(10,14,26,0.85); backdrop-filter: blur(16px);
+  background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border-subtle);
   padding: 12px 40px; display: flex; align-items: center; justify-content: space-between;
 }
@@ -122,19 +187,26 @@ body { font-family: 'IBM Plex Sans Thai', 'Noto Sans Thai', sans-serif; backgrou
   display: inline-flex; align-items: center; gap: 8px;
   color: var(--accent-cyan); font-size: 14px; font-weight: 600;
   text-decoration: none; padding: 8px 18px; border-radius: 10px;
-  background: rgba(6,182,212,0.08); border: 1px solid rgba(6,182,212,0.15);
+  background: rgba(8,145,178,0.08); border: 1px solid rgba(8,145,178,0.15);
   transition: all 0.3s; font-family: inherit;
 }
-.back-btn:hover { background: rgba(6,182,212,0.18); transform: translateX(-2px); }
-.back-bar-title { font-size: 13px; color: var(--text-muted); }
+.back-btn:hover { background: rgba(8,145,178,0.15); transform: translateX(-2px); }
+.back-bar-title { font-size: 13px; font-weight: 600; color: var(--text-muted); }
 .back-top {
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
   color: var(--text-secondary); font-size: 14px; font-weight: 600;
   text-decoration: none; padding: 12px 28px; border-radius: 12px;
-  background: rgba(255,255,255,0.04); border: 1px solid var(--border-subtle);
+  background: rgba(0,0,0,0.04); border: 1px solid var(--border-subtle);
   transition: all 0.3s; margin-top: 16px; font-family: inherit; cursor: pointer;
 }
-.back-top:hover { background: rgba(255,255,255,0.08); color: var(--text-primary); transform: translateY(-2px); }
+.back-top:hover { background: rgba(0,0,0,0.08); color: var(--text-primary); transform: translateY(-2px); }
+
+@media print {
+  body { background: #fff; color: #1a1a1a; }
+  .card { border: 1px solid #e5e7eb; break-inside: avoid; box-shadow: none; }
+  .kpi-card { break-inside: avoid; box-shadow: none; }
+  .back-bar, .back-top, #preloader { display: none; }
+}
 
 @media (max-width: 900px) {
   .kpi-grid { grid-template-columns: repeat(2, 1fr); }
@@ -146,9 +218,38 @@ body { font-family: 'IBM Plex Sans Thai', 'Noto Sans Thai', sans-serif; backgrou
 </style>
 </head>
 <body id="top">
+
+<div id="preloader">
+  <svg class="penguin-loader" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <path d="M10 170 L190 170 L200 200 L0 200 Z" fill="#cbd5e1" />
+    <rect x="50" y="140" width="90" height="50" fill="#ffffff" rx="3" transform="rotate(-4 95 165)" stroke="#94a3b8" stroke-width="1.5"/>
+    <line x1="60" y1="150" x2="130" y2="150" stroke="#cbd5e1" stroke-width="2" transform="rotate(-4 95 165)"/>
+    <line x1="60" y1="162" x2="110" y2="162" stroke="#cbd5e1" stroke-width="2" transform="rotate(-4 95 165)"/>
+    <line x1="60" y1="174" x2="120" y2="174" stroke="#cbd5e1" stroke-width="2" transform="rotate(-4 95 165)"/>
+    <rect x="120" y="159" width="6" height="6" fill="#e2e8f0" transform="rotate(-4 95 165)"/>
+    <rect x="130" y="171" width="6" height="6" fill="#e2e8f0" transform="rotate(-4 95 165)"/>
+    
+    <ellipse cx="100" cy="95" rx="55" ry="70" fill="#1e293b"/>
+    <ellipse cx="100" cy="105" rx="42" ry="55" fill="#f8fafc"/>
+    <circle cx="82" cy="55" r="6" fill="#ffffff"/>
+    <circle cx="82" cy="55" r="2.5" fill="#0f172a"/>
+    <circle cx="118" cy="55" r="6" fill="#ffffff"/>
+    <circle cx="118" cy="55" r="2.5" fill="#0f172a"/>
+    <path d="M90 68 L110 68 L100 80 Z" fill="#f59e0b"/>
+    <path d="M50 85 Q 25 115 35 150 Q 55 130 55 90" fill="#1e293b"/>
+    
+    <g class="pen-arm">
+      <path d="M150 85 Q 175 115 140 155 Q 135 125 145 90" fill="#1e293b"/>
+      <rect x="135" y="140" width="8" height="35" fill="#ef4444" transform="rotate(35 139 157)" rx="2"/>
+      <polygon points="121,178 126,168 132,172" fill="#64748b"/>
+      <polygon points="121,178 124,175 123,173" fill="#1e293b"/>
+    </g>
+  </svg>
+  <div class="loading-text">กำลังโหลดข้อมูล<br>สรุปผลการประเมินการเปิดรับข่าวสารและภาพลักษณ์ของผู้ใช้บริการ สำนักหอสมุด<span class="loading-dots"></span></div>
+</div>
+
 <div class="noise-overlay"></div>
 
-<!-- BACK BAR -->
 <nav class="back-bar">
   <a href="index.html" class="back-btn">← กลับหน้าหลัก</a>
   <span class="back-bar-title">รายงานผู้ใช้บริการภายนอก</span>
@@ -192,7 +293,6 @@ body { font-family: 'IBM Plex Sans Thai', 'Noto Sans Thai', sans-serif; backgrou
 
 <div class="dashboard">
 
-  <!-- Row 1: Demographics -->
   <div class="row-3">
     <div class="card">
       <div class="card-header">
@@ -231,7 +331,6 @@ body { font-family: 'IBM Plex Sans Thai', 'Noto Sans Thai', sans-serif; backgrou
     </div>
   </div>
 
-  <!-- Row 2: Status -->
   <div class="row-full">
     <div class="card">
       <div class="card-header">
@@ -244,7 +343,6 @@ body { font-family: 'IBM Plex Sans Thai', 'Noto Sans Thai', sans-serif; backgrou
     </div>
   </div>
 
-  <!-- Row 3: Channels -->
   <div class="row-2">
     <div class="card">
       <div class="card-header">
@@ -270,7 +368,6 @@ body { font-family: 'IBM Plex Sans Thai', 'Noto Sans Thai', sans-serif; backgrou
     </div>
   </div>
 
-  <!-- Row 4: Time & Frequency -->
   <div class="row-2">
     <div class="card">
       <div class="card-header">
@@ -296,7 +393,6 @@ body { font-family: 'IBM Plex Sans Thai', 'Noto Sans Thai', sans-serif; backgrou
     </div>
   </div>
 
-  <!-- Row 5: Content Types -->
   <div class="row-full">
     <div class="card">
       <div class="card-header">
@@ -309,7 +405,6 @@ body { font-family: 'IBM Plex Sans Thai', 'Noto Sans Thai', sans-serif; backgrou
     </div>
   </div>
 
-  <!-- Row 6: Satisfaction - Content -->
   <div class="row-full">
     <div class="card">
       <div class="card-header">
@@ -341,7 +436,6 @@ body { font-family: 'IBM Plex Sans Thai', 'Noto Sans Thai', sans-serif; backgrou
     </div>
   </div>
 
-  <!-- Row 7: Satisfaction - Presentation -->
   <div class="row-full">
     <div class="card">
       <div class="card-header">
@@ -370,11 +464,10 @@ body { font-family: 'IBM Plex Sans Thai', 'Noto Sans Thai', sans-serif; backgrou
           <div class="sat-bar-wrap"><div class="sat-bar amber" style="width:0%" data-target="87.6">4.38</div></div>
         </div>
       </div>
-      <p style="font-size:11px; color:var(--text-muted); margin-top:12px;">★ = ระดับมากที่สุด (≥ 4.51)</p>
+      <p style="font-size:12px; color:var(--text-muted); margin-top:12px;">★ = ระดับมากที่สุด (≥ 4.51)</p>
     </div>
   </div>
 
-  <!-- Row 8: Brand Image -->
   <div class="row-2">
     <div class="card">
       <div class="card-header">
@@ -396,7 +489,6 @@ body { font-family: 'IBM Plex Sans Thai', 'Noto Sans Thai', sans-serif; backgrou
     </div>
   </div>
 
-  <!-- Row 9: Corporate Image Satisfaction -->
   <div class="row-full">
     <div class="card">
       <div class="card-header">
@@ -409,7 +501,6 @@ body { font-family: 'IBM Plex Sans Thai', 'Noto Sans Thai', sans-serif; backgrou
     </div>
   </div>
 
-  <!-- Row 10: Keywords -->
   <div class="row-full">
     <div class="card">
       <div class="card-header">
@@ -420,7 +511,6 @@ body { font-family: 'IBM Plex Sans Thai', 'Noto Sans Thai', sans-serif; backgrou
     </div>
   </div>
 
-  <!-- Row 11: Content Satisfaction Detail - Radar -->
   <div class="row-2">
     <div class="card">
       <div class="card-header">
@@ -442,7 +532,6 @@ body { font-family: 'IBM Plex Sans Thai', 'Noto Sans Thai', sans-serif; backgrou
     </div>
   </div>
 
-  <!-- Row 12: Suggestions -->
   <div class="row-full">
     <div class="card">
       <div class="card-header">
@@ -472,40 +561,55 @@ body { font-family: 'IBM Plex Sans Thai', 'Noto Sans Thai', sans-serif; backgrou
 </footer>
 
 <script>
+// Preloader Logic
+window.addEventListener('load', function() {
+  setTimeout(function() {
+    document.getElementById('preloader').classList.add('preloader-hidden');
+    
+    setTimeout(() => {
+      document.querySelectorAll('.sat-bar').forEach(bar => {
+        bar.style.width = bar.getAttribute('data-target') + '%';
+      });
+    }, 200);
+  }, 2500); 
+});
+
 Chart.defaults.font.family = "'IBM Plex Sans Thai', 'Noto Sans Thai', sans-serif";
-Chart.defaults.color = '#8b9cc7';
+Chart.defaults.color = '#64748b'; // Darker text for light mode
 Chart.defaults.plugins.legend.labels.usePointStyle = true;
 Chart.defaults.plugins.legend.labels.pointStyleWidth = 10;
 Chart.defaults.plugins.legend.labels.padding = 14;
 
+const gridColor = 'rgba(0, 0, 0, 0.05)';
+
 const c = {
   blue:'#3b82f6', cyan:'#06b6d4', emerald:'#10b981', amber:'#f59e0b',
-  rose:'#f43f5e', violet:'#8b5cf6', orange:'#f97316', pink:'#ec4899',
-  sky:'#38bdf8', indigo:'#6366f1', teal:'#14b8a6', lime:'#84cc16',
+  rose:'#f43f5e', violet:'#8b5cf6', orange:'#f97316', pink:'#db2777',
+  sky:'#0ea5e9', indigo:'#6366f1', teal:'#14b8a6', lime:'#84cc16',
   slate:'#64748b'
 };
 
-// 1. Gender - ชาย=ฟ้า, หญิง=ชมพู
+// 1. Gender
 new Chart(document.getElementById('chartGender'), {
   type: 'doughnut',
-  data: { labels: ['หญิง (78.35%)', 'ชาย (21.65%)'], datasets: [{ data: [322, 89], backgroundColor: [c.pink, c.sky], borderWidth: 0, cutout: '68%' }] },
+  data: { labels: ['หญิง (78.35%)', 'ชาย (21.65%)'], datasets: [{ data: [322, 89], backgroundColor: [c.pink, c.sky], borderWidth: 2, borderColor: '#fff', cutout: '68%' }] },
   options: { plugins: { legend: { position: 'bottom', labels: { font: { size: 12 } } } }, responsive: true, maintainAspectRatio: false }
 });
 
-// 2. Age - แต่ละกลุ่มคนละเฉด
+// 2. Age
 new Chart(document.getElementById('chartAge'), {
   type: 'bar',
   data: {
     labels: ['<18 ปี', '18-24 ปี', '25-34 ปี', '35-44 ปี', '45-54 ปี', '55+ ปี'],
     datasets: [{ data: [4, 281, 79, 27, 17, 3], backgroundColor: [c.teal, c.cyan, c.blue, c.violet, c.amber, c.rose], borderRadius: 8, borderSkipped: false }]
   },
-  options: { plugins: { legend: { display: false } }, scales: { y: { grid: { color: 'rgba(255,255,255,0.04)' } }, x: { grid: { display: false }, ticks: { font: { size: 10 } } } }, responsive: true, maintainAspectRatio: false }
+  options: { plugins: { legend: { display: false } }, scales: { y: { grid: { color: gridColor } }, x: { grid: { display: false }, ticks: { font: { size: 10 } } } }, responsive: true, maintainAspectRatio: false }
 });
 
 // 3. Education
 new Chart(document.getElementById('chartEdu'), {
   type: 'doughnut',
-  data: { labels: ['ปริญญาตรี (72.99%)', 'ต่ำกว่า ป.ตรี (16.30%)', 'ป.โท+ (10.71%)'], datasets: [{ data: [300, 67, 44], backgroundColor: [c.emerald, c.amber, c.violet], borderWidth: 0, cutout: '68%' }] },
+  data: { labels: ['ปริญญาตรี (72.99%)', 'ต่ำกว่า ป.ตรี (16.30%)', 'ป.โท+ (10.71%)'], datasets: [{ data: [300, 67, 44], backgroundColor: [c.emerald, c.amber, c.violet], borderWidth: 2, borderColor: '#fff', cutout: '68%' }] },
   options: { plugins: { legend: { position: 'bottom', labels: { font: { size: 11 } } } }, responsive: true, maintainAspectRatio: false }
 });
 
@@ -516,7 +620,7 @@ new Chart(document.getElementById('chartStatus'), {
     labels: ['นศ.ปริญญาตรี', 'บุคลากรสนับสนุน', 'นศ.บัณฑิตศึกษา', 'บุคคลทั่วไป', 'อาจารย์/นักวิจัย', 'Lifelong Learning'],
     datasets: [{ data: [285, 62, 35, 16, 9, 4], backgroundColor: [c.cyan, c.emerald, c.blue, c.amber, c.violet, c.rose], borderRadius: 8, borderSkipped: false }]
   },
-  options: { indexAxis: 'y', plugins: { legend: { display: false } }, scales: { x: { grid: { color: 'rgba(255,255,255,0.04)' } }, y: { grid: { display: false }, ticks: { font: { size: 11 } } } }, responsive: true, maintainAspectRatio: false }
+  options: { indexAxis: 'y', plugins: { legend: { display: false } }, scales: { x: { grid: { color: gridColor } }, y: { grid: { display: false }, ticks: { font: { size: 11 } } } }, responsive: true, maintainAspectRatio: false }
 });
 
 // 5. Channels (multiple)
@@ -524,9 +628,9 @@ new Chart(document.getElementById('chartChannels'), {
   type: 'bar',
   data: {
     labels: ['Facebook', 'Line Official', 'Instagram', 'TikTok', 'กิจกรรม', 'บอร์ด/Signage', 'พูดคุย', 'Website', 'X', 'YouTube'],
-    datasets: [{ data: [369, 214, 142, 122, 92, 82, 78, 59, 23, 13], backgroundColor: [c.blue, c.emerald, c.pink, '#000', c.amber, c.orange, c.violet, c.cyan, c.slate, c.rose], borderRadius: 8, borderSkipped: false }]
+    datasets: [{ data: [369, 214, 142, 122, 92, 82, 78, 59, 23, 13], backgroundColor: [c.blue, c.emerald, c.pink, '#334155', c.amber, c.orange, c.violet, c.cyan, c.slate, c.rose], borderRadius: 8, borderSkipped: false }]
   },
-  options: { indexAxis: 'y', plugins: { legend: { display: false } }, scales: { x: { grid: { color: 'rgba(255,255,255,0.04)' } }, y: { grid: { display: false }, ticks: { font: { size: 11 } } } }, responsive: true, maintainAspectRatio: false }
+  options: { indexAxis: 'y', plugins: { legend: { display: false } }, scales: { x: { grid: { color: gridColor } }, y: { grid: { display: false }, ticks: { font: { size: 11 } } } }, responsive: true, maintainAspectRatio: false }
 });
 
 // 6. Top Channel #1
@@ -534,7 +638,7 @@ new Chart(document.getElementById('chartTopChannel'), {
   type: 'doughnut',
   data: {
     labels: ['Facebook (66.66%)', 'Line (12.41%)', 'Instagram (10.95%)', 'TikTok (4.14%)', 'อื่นๆ (5.84%)'],
-    datasets: [{ data: [274, 51, 45, 17, 24], backgroundColor: [c.blue, c.emerald, c.pink, '#333', c.slate], borderWidth: 0, cutout: '65%' }]
+    datasets: [{ data: [274, 51, 45, 17, 24], backgroundColor: [c.blue, c.emerald, c.pink, '#475569', c.slate], borderWidth: 2, borderColor: '#fff', cutout: '65%' }]
   },
   options: { plugins: { legend: { position: 'bottom', labels: { font: { size: 11 } } } }, responsive: true, maintainAspectRatio: false }
 });
@@ -546,7 +650,7 @@ new Chart(document.getElementById('chartTime'), {
     labels: ['06-09', '09-12', '12-15', '15-18', '18-21', '21-24', '00-03', '03-06'],
     datasets: [{ data: [10, 75, 84, 60, 122, 52, 4, 4], backgroundColor: [c.teal, c.cyan, c.blue, c.violet, c.pink, c.amber, c.slate, c.slate], borderRadius: 8, borderSkipped: false }]
   },
-  options: { plugins: { legend: { display: false } }, scales: { y: { grid: { color: 'rgba(255,255,255,0.04)' } }, x: { grid: { display: false }, ticks: { font: { size: 10 } } } }, responsive: true, maintainAspectRatio: false }
+  options: { plugins: { legend: { display: false } }, scales: { y: { grid: { color: gridColor } }, x: { grid: { display: false }, ticks: { font: { size: 10 } } } }, responsive: true, maintainAspectRatio: false }
 });
 
 // 8. Frequency
@@ -554,7 +658,7 @@ new Chart(document.getElementById('chartFreq'), {
   type: 'doughnut',
   data: {
     labels: ['ทุกวัน (51.09%)', '3-4 ครั้ง/สัปดาห์ (26.03%)', '1-2 ครั้ง/สัปดาห์ (12.17%)', '5-6 ครั้ง/สัปดาห์ (6.57%)', 'นานๆ ครั้ง (4.14%)'],
-    datasets: [{ data: [210, 107, 50, 27, 17], backgroundColor: [c.sky, c.blue, c.violet, c.emerald, c.amber], borderWidth: 0, cutout: '65%' }]
+    datasets: [{ data: [210, 107, 50, 27, 17], backgroundColor: [c.sky, c.blue, c.violet, c.emerald, c.amber], borderWidth: 2, borderColor: '#fff', cutout: '65%' }]
   },
   options: { plugins: { legend: { position: 'bottom', labels: { font: { size: 10 } } } }, responsive: true, maintainAspectRatio: false }
 });
@@ -565,11 +669,11 @@ new Chart(document.getElementById('chartContent'), {
   data: {
     labels: ['ความรู้/Meme', 'แนะนำบริการ', 'ส่งเสริมทรัพยากร', 'กิจกรรมเรียนรู้', 'ข่าวผู้บริหาร'],
     datasets: [
-      { label: 'เปิดรับ (หลายข้อ)', data: [314, 281, 245, 221, 84], backgroundColor: 'rgba(59,130,246,0.7)', borderRadius: 8, borderSkipped: false },
-      { label: 'นิยมอันดับ 1', data: [225, 82, 32, 63, 9], backgroundColor: 'rgba(16,185,129,0.7)', borderRadius: 8, borderSkipped: false }
+      { label: 'เปิดรับ (หลายข้อ)', data: [314, 281, 245, 221, 84], backgroundColor: 'rgba(59,130,246,0.8)', borderRadius: 8, borderSkipped: false },
+      { label: 'นิยมอันดับ 1', data: [225, 82, 32, 63, 9], backgroundColor: 'rgba(16,185,129,0.8)', borderRadius: 8, borderSkipped: false }
     ]
   },
-  options: { plugins: { legend: { position: 'top', labels: { font: { size: 12 } } } }, scales: { y: { grid: { color: 'rgba(255,255,255,0.04)' } }, x: { grid: { display: false }, ticks: { font: { size: 10 } } } }, responsive: true, maintainAspectRatio: false }
+  options: { plugins: { legend: { position: 'top', labels: { font: { size: 12 } } } }, scales: { y: { grid: { color: gridColor } }, x: { grid: { display: false }, ticks: { font: { size: 10 } } } }, responsive: true, maintainAspectRatio: false }
 });
 
 // 10. Persona (Library as a person)
@@ -579,7 +683,7 @@ new Chart(document.getElementById('chartPersona'), {
     labels: ['สนุกสนาน ร่าเริง\nเข้าถึงง่าย', 'รุ่นใหม่ วัยรุ่น\nทันสมัย', 'เต็มใจ\nช่วยเหลือ', 'คิด\nสร้างสรรค์', 'สุขุม\nเงียบขรึม', 'สูงวัย/อื่นๆ'],
     datasets: [{ data: [151, 144, 58, 32, 20, 6], backgroundColor: [c.pink, c.cyan, c.emerald, c.violet, c.amber, c.slate], borderRadius: 8, borderSkipped: false }]
   },
-  options: { plugins: { legend: { display: false } }, scales: { y: { grid: { color: 'rgba(255,255,255,0.04)' } }, x: { grid: { display: false }, ticks: { font: { size: 10 }, maxRotation: 0 } } }, responsive: true, maintainAspectRatio: false }
+  options: { plugins: { legend: { display: false } }, scales: { y: { grid: { color: gridColor } }, x: { grid: { display: false }, ticks: { font: { size: 10 }, maxRotation: 0 } } }, responsive: true, maintainAspectRatio: false }
 });
 
 // 11. Decision Factors
@@ -589,7 +693,7 @@ new Chart(document.getElementById('chartFactors'), {
     labels: ['น่าเชื่อถือ\nน่าสนใจ ทันสมัย', 'ประโยชน์ต่อ\nการเรียนรู้', 'กระชับ\nครอบคลุม', 'ติดตาม\nกิจกรรม', 'ประโยชน์\nต่องาน'],
     datasets: [{ data: [148, 102, 74, 59, 28], backgroundColor: [c.blue, c.emerald, c.cyan, c.violet, c.amber], borderRadius: 8, borderSkipped: false }]
   },
-  options: { plugins: { legend: { display: false } }, scales: { y: { grid: { color: 'rgba(255,255,255,0.04)' } }, x: { grid: { display: false }, ticks: { font: { size: 10 }, maxRotation: 0 } } }, responsive: true, maintainAspectRatio: false }
+  options: { plugins: { legend: { display: false } }, scales: { y: { grid: { color: gridColor } }, x: { grid: { display: false }, ticks: { font: { size: 10 }, maxRotation: 0 } } }, responsive: true, maintainAspectRatio: false }
 });
 
 // 12. Corporate Image Satisfaction
@@ -599,11 +703,11 @@ new Chart(document.getElementById('chartImageSat'), {
     labels: ['ภาพลักษณ์ดี/ไว้วางใจ\n(4.50)', 'ความเข้าใจ/สัมพันธ์ดี\n(4.48)', 'ยอมรับ/เข้าร่วมกิจกรรม\n(4.46)', 'มืออาชีพ/พร้อมบริการ\n(4.45)'],
     datasets: [{
       label: 'ค่าเฉลี่ย', data: [4.50, 4.48, 4.46, 4.45],
-      borderColor: c.cyan, backgroundColor: 'rgba(6,182,212,0.15)',
-      pointBackgroundColor: c.cyan, pointBorderColor: '#fff', pointRadius: 6, borderWidth: 2
+      borderColor: c.cyan, backgroundColor: 'rgba(8,145,178,0.15)',
+      pointBackgroundColor: c.cyan, pointBorderColor: '#fff', pointRadius: 5, borderWidth: 2
     }]
   },
-  options: { plugins: { legend: { display: false } }, scales: { r: { beginAtZero: false, min: 4.0, max: 5.0, angleLines: { color: 'rgba(255,255,255,0.06)' }, grid: { color: 'rgba(255,255,255,0.06)' }, pointLabels: { font: { size: 11 }, color: '#8b9cc7' }, ticks: { stepSize: 0.25, font: { size: 10 }, backdropColor: 'transparent' } } }, responsive: true, maintainAspectRatio: false }
+  options: { plugins: { legend: { display: false } }, scales: { r: { beginAtZero: false, min: 4.0, max: 5.0, angleLines: { color: gridColor }, grid: { color: gridColor }, pointLabels: { font: { size: 11 }, color: '#64748b' }, ticks: { stepSize: 0.25, font: { size: 10 }, backdropColor: 'transparent' } } }, responsive: true, maintainAspectRatio: false }
 });
 
 // 13. Content Detail Radar
@@ -612,14 +716,14 @@ new Chart(document.getElementById('chartDetailRadar'), {
   data: {
     labels: ['รวดเร็ว/ทันสถานการณ์', 'ประโยชน์ต่อการเรียน/วิจัย', 'น่าเชื่อถือ/อ้างอิงชัด'],
     datasets: [
-      { label: 'ข่าวผู้บริหาร (4.23)', data: [4.23, 4.20, 4.26], borderColor: c.amber, backgroundColor: 'rgba(245,158,11,0.08)', pointBackgroundColor: c.amber, pointRadius: 4, borderWidth: 2 },
-      { label: 'กิจกรรมเรียนรู้ (4.27)', data: [4.29, 4.25, 4.27], borderColor: c.blue, backgroundColor: 'rgba(59,130,246,0.08)', pointBackgroundColor: c.blue, pointRadius: 4, borderWidth: 2 },
-      { label: 'แนะนำบริการ (4.30)', data: [4.29, 4.30, 4.31], borderColor: c.emerald, backgroundColor: 'rgba(16,185,129,0.08)', pointBackgroundColor: c.emerald, pointRadius: 4, borderWidth: 2 },
-      { label: 'ทรัพยากรสารสนเทศ (4.30)', data: [4.28, 4.29, 4.32], borderColor: c.cyan, backgroundColor: 'rgba(6,182,212,0.08)', pointBackgroundColor: c.cyan, pointRadius: 4, borderWidth: 2 },
-      { label: 'ความรู้/Meme (4.29)', data: [4.41, 4.20, 4.25], borderColor: c.pink, backgroundColor: 'rgba(236,72,153,0.08)', pointBackgroundColor: c.pink, pointRadius: 4, borderWidth: 2 }
+      { label: 'ข่าวผู้บริหาร (4.23)', data: [4.23, 4.20, 4.26], borderColor: c.amber, backgroundColor: 'rgba(245,158,11,0.08)', pointBackgroundColor: c.amber, pointBorderColor: '#fff', pointRadius: 4, borderWidth: 2 },
+      { label: 'กิจกรรมเรียนรู้ (4.27)', data: [4.29, 4.25, 4.27], borderColor: c.blue, backgroundColor: 'rgba(59,130,246,0.08)', pointBackgroundColor: c.blue, pointBorderColor: '#fff', pointRadius: 4, borderWidth: 2 },
+      { label: 'แนะนำบริการ (4.30)', data: [4.29, 4.30, 4.31], borderColor: c.emerald, backgroundColor: 'rgba(16,185,129,0.08)', pointBackgroundColor: c.emerald, pointBorderColor: '#fff', pointRadius: 4, borderWidth: 2 },
+      { label: 'ทรัพยากรสารสนเทศ (4.30)', data: [4.28, 4.29, 4.32], borderColor: c.cyan, backgroundColor: 'rgba(6,182,212,0.08)', pointBackgroundColor: c.cyan, pointBorderColor: '#fff', pointRadius: 4, borderWidth: 2 },
+      { label: 'ความรู้/Meme (4.29)', data: [4.41, 4.20, 4.25], borderColor: c.pink, backgroundColor: 'rgba(219,39,119,0.08)', pointBackgroundColor: c.pink, pointBorderColor: '#fff', pointRadius: 4, borderWidth: 2 }
     ]
   },
-  options: { plugins: { legend: { position: 'bottom', labels: { font: { size: 10 } } } }, scales: { r: { beginAtZero: false, min: 4.0, max: 4.5, angleLines: { color: 'rgba(255,255,255,0.06)' }, grid: { color: 'rgba(255,255,255,0.06)' }, pointLabels: { font: { size: 10 }, color: '#8b9cc7' }, ticks: { stepSize: 0.1, font: { size: 9 }, backdropColor: 'transparent' } } }, responsive: true, maintainAspectRatio: false }
+  options: { plugins: { legend: { position: 'bottom', labels: { font: { size: 10 } } } }, scales: { r: { beginAtZero: false, min: 4.0, max: 4.5, angleLines: { color: gridColor }, grid: { color: gridColor }, pointLabels: { font: { size: 10 }, color: '#64748b' }, ticks: { stepSize: 0.1, font: { size: 9 }, backdropColor: 'transparent' } } }, responsive: true, maintainAspectRatio: false }
 });
 
 // 14. Content Rank comparison
@@ -628,29 +732,29 @@ new Chart(document.getElementById('chartContentRank'), {
   data: {
     labels: ['ความรู้/Meme', 'แนะนำบริการ', 'ส่งเสริมทรัพยากร', 'กิจกรรมเรียนรู้', 'ข่าวผู้บริหาร'],
     datasets: [
-      { label: 'อันดับ 1', data: [225, 82, 32, 63, 9], backgroundColor: 'rgba(6,182,212,0.8)', borderRadius: 6, borderSkipped: false },
-      { label: 'อันดับ 2', data: [52, 128, 126, 87, 18], backgroundColor: 'rgba(59,130,246,0.7)', borderRadius: 6, borderSkipped: false },
-      { label: 'อันดับ 3', data: [67, 113, 126, 74, 31], backgroundColor: 'rgba(139,92,246,0.6)', borderRadius: 6, borderSkipped: false }
+      { label: 'อันดับ 1', data: [225, 82, 32, 63, 9], backgroundColor: 'rgba(8,145,178,0.85)', borderRadius: 6, borderSkipped: false },
+      { label: 'อันดับ 2', data: [52, 128, 126, 87, 18], backgroundColor: 'rgba(37,99,235,0.75)', borderRadius: 6, borderSkipped: false },
+      { label: 'อันดับ 3', data: [67, 113, 126, 74, 31], backgroundColor: 'rgba(124,58,237,0.65)', borderRadius: 6, borderSkipped: false }
     ]
   },
-  options: { plugins: { legend: { position: 'top', labels: { font: { size: 11 } } } }, scales: { y: { grid: { color: 'rgba(255,255,255,0.04)' }, stacked: false }, x: { grid: { display: false }, ticks: { font: { size: 10 } } } }, responsive: true, maintainAspectRatio: false }
+  options: { plugins: { legend: { position: 'top', labels: { font: { size: 11 } } } }, scales: { y: { grid: { color: gridColor }, stacked: false }, x: { grid: { display: false }, ticks: { font: { size: 10 } } } }, responsive: true, maintainAspectRatio: false }
 });
 
 // Keywords cloud
 const keywords = [
-  { text: 'แอร์เย็น / หนาว / โรงเลี้ยงเพนกวิน', count: 132, color: c.cyan, bg: 'rgba(6,182,212,0.12)' },
-  { text: 'แอดมินไอริน', count: 60, color: c.pink, bg: 'rgba(236,72,153,0.12)' },
-  { text: 'คอนเทนต์รวดเร็ว / ทันกระแส', count: 46, color: c.blue, bg: 'rgba(59,130,246,0.12)' },
-  { text: 'แอดมินเลิศ / ตัวแม่', count: 40, color: c.violet, bg: 'rgba(139,92,246,0.12)' },
-  { text: 'นกเพนกวิน', count: 31, color: c.teal, bg: 'rgba(20,184,166,0.12)' },
-  { text: 'แหล่งข้อมูล / แหล่งเรียนรู้', count: 22, color: c.emerald, bg: 'rgba(16,185,129,0.12)' },
-  { text: 'สนุกสนาน / ตลกเฮฮา', count: 17, color: c.amber, bg: 'rgba(245,158,11,0.12)' },
-  { text: 'ครบครัน ทุกอย่าง', count: 16, color: c.orange, bg: 'rgba(249,115,22,0.12)' },
-  { text: 'หนังสือ / คลังหนังสือ', count: 12, color: c.indigo, bg: 'rgba(99,102,241,0.12)' },
-  { text: 'บ้าน / ที่พักผ่อน', count: 10, color: c.rose, bg: 'rgba(244,63,94,0.12)' },
-  { text: 'สะอาด / อากาศดี', count: 6, color: c.lime, bg: 'rgba(132,204,22,0.12)' },
-  { text: '24 ชม. / ที่อ่านหนังสือ', count: 5, color: c.sky, bg: 'rgba(56,189,248,0.12)' },
-  { text: 'แอดมินล้านนา / ภาษาถิ่น', count: 4, color: c.teal, bg: 'rgba(20,184,166,0.12)' },
+  { text: 'แอร์เย็น / หนาว / โรงเลี้ยงเพนกวิน', count: 132, color: c.cyan, bg: 'rgba(8,145,178,0.1)' },
+  { text: 'แอดมินไอริน', count: 60, color: c.pink, bg: 'rgba(219,39,119,0.1)' },
+  { text: 'คอนเทนต์รวดเร็ว / ทันกระแส', count: 46, color: c.blue, bg: 'rgba(37,99,235,0.1)' },
+  { text: 'แอดมินเลิศ / ตัวแม่', count: 40, color: c.violet, bg: 'rgba(124,58,237,0.1)' },
+  { text: 'นกเพนกวิน', count: 31, color: c.teal, bg: 'rgba(20,184,166,0.1)' },
+  { text: 'แหล่งข้อมูล / แหล่งเรียนรู้', count: 22, color: c.emerald, bg: 'rgba(5,150,105,0.1)' },
+  { text: 'สนุกสนาน / ตลกเฮฮา', count: 17, color: c.amber, bg: 'rgba(217,119,6,0.1)' },
+  { text: 'ครบครัน ทุกอย่าง', count: 16, color: c.orange, bg: 'rgba(234,88,12,0.1)' },
+  { text: 'หนังสือ / คลังหนังสือ', count: 12, color: c.indigo, bg: 'rgba(99,102,241,0.1)' },
+  { text: 'บ้าน / ที่พักผ่อน', count: 10, color: c.rose, bg: 'rgba(225,29,72,0.1)' },
+  { text: 'สะอาด / อากาศดี', count: 6, color: c.lime, bg: 'rgba(132,204,22,0.1)' },
+  { text: '24 ชม. / ที่อ่านหนังสือ', count: 5, color: c.sky, bg: 'rgba(14,165,233,0.1)' },
+  { text: 'แอดมินล้านนา / ภาษาถิ่น', count: 4, color: c.teal, bg: 'rgba(20,184,166,0.1)' },
 ];
 
 const kwContainer = document.getElementById('keywordCloud');
@@ -658,17 +762,10 @@ keywords.forEach(kw => {
   const tag = document.createElement('div');
   tag.className = 'kw-tag';
   const scale = Math.max(0.85, Math.min(1.3, kw.count / 60));
-  tag.style.cssText = `color:${kw.color}; background:${kw.bg}; border-color:${kw.color}22; font-size:${13 * scale}px;`;
+  tag.style.cssText = `color:${kw.color}; background:${kw.bg}; font-size:${13 * scale}px;`;
   tag.innerHTML = `${kw.text} <span class="kw-count">${kw.count} คน</span>`;
   kwContainer.appendChild(tag);
 });
-
-// Animate bars
-setTimeout(() => {
-  document.querySelectorAll('.sat-bar').forEach(bar => {
-    bar.style.width = bar.getAttribute('data-target') + '%';
-  });
-}, 500);
 </script>
 </body>
 </html>
