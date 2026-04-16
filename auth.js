@@ -1,6 +1,10 @@
 (function() {
-    // ⭐ URL ใหม่ (จาก Deploy ล่าสุด - ไฟล์ assessment_backup_backend)
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxr0sOK9Vc5KqJWKBvQ66NTuTHBYhA8PIsacQQ1V-yy2HLTqp5Lwvdjyd9T79xl2JuHHg/exec";
+    // ============================================
+    // ⭐ แก้ตรงนี้: วาง URL ที่ได้จาก Apps Script Deploy
+    // (ต้องเป็น URL เดียวกับใน index.html และ dashboard.html)
+    // ============================================
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby15LzDt9gWKk1Vg4ejtvXIGXy4Z7bd7inq-aZPlBiG0KjHbfsfzvzwDDbQaYYGYNMX/exec";
+    // ============================================
 
     // 1. ตรวจสอบการเข้าถึง
     const userRaw = sessionStorage.getItem("cc_pr_user");
@@ -33,7 +37,9 @@
         if ((e.ctrlKey || e.metaKey) && (e.key === 'p' || e.key === 'P')) {
             e.preventDefault();
             const user = userRaw ? JSON.parse(userRaw).displayName : "Unknown";
-            fetch(`${SCRIPT_URL}?action=sendAlertEmail&user=${encodeURIComponent(user)}`, {mode:'no-cors'});
+            if (SCRIPT_URL.indexOf("วาง_URL") === -1) {
+                fetch(`${SCRIPT_URL}?action=sendAlertEmail&user=${encodeURIComponent(user)}`, {mode:'no-cors'});
+            }
             alert("🔒 ระบบความปลอดภัย: ไม่อนุญาตให้พิมพ์หรือบันทึกหน้าจอนี้\nระบบได้ส่งแจ้งเตือนไปยังผู้ดูแลเรียบร้อยแล้ว");
         }
     });
