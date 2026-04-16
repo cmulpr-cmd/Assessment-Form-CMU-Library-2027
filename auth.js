@@ -3,7 +3,7 @@
     // ⭐ แก้ตรงนี้: วาง URL ที่ได้จาก Apps Script Deploy
     // (ต้องเป็น URL เดียวกับใน index.html และ dashboard.html)
     // ============================================
-    const SCRIPT_URL = "function myFunction() {
+    const SCRIPT_URL = ""https://script.google.com/macros/s/AKfycbzmzYhYYfJoshKHGW5U-APtmvTQMqlf9L3lzTlXfgDSE2WbU7-Oa9ZiI2nCrti6E60h/exec"
  // ============================================================
 // 🎯 Apps Script สำหรับ CMUL PR Dashboard
 // สร้างขึ้นใหม่ - พร้อมใช้งานทันที
