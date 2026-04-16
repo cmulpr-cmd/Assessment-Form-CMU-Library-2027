@@ -40,50 +40,63 @@
 
     <script src="auth.js"></script>
     <script>
-        // ⭐ URL ใหม่ (จาก Deploy ล่าสุด - ไฟล์ assessment_backup_backend)
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxr0sOK9Vc5KqJWKBvQ66NTuTHBYhA8PIsacQQ1V-yy2HLTqp5Lwvdjyd9T79xl2JuHHg/exec";
+        // ============================================
+        // ⭐ แก้ตรงนี้: วาง URL ที่ได้จาก Apps Script Deploy
+        // ============================================
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby15LzDt9gWKk1Vg4ejtvXIGXy4Z7bd7inq-aZPlBiG0KjHbfsfzvzwDDbQaYYGYNMX/exec";
+        
+        // ตัวอย่าง:
+        // const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxxxxxxxxxxxxxxx/exec";
+        // ============================================
+        
         let accounts = {};
         let isReady = false;
 
         const statusEl = document.getElementById('status');
         const btnEl = document.getElementById('btnTxt');
 
-        fetch(SCRIPT_URL + "?action=getAccounts")
-            .then(r => {
-                if (!r.ok) throw new Error("HTTP " + r.status);
-                return r.text();
-            })
-            .then(text => {
-                try {
-                    return JSON.parse(text);
-                } catch (e) {
-                    console.error("Response ไม่ใช่ JSON:", text.substring(0, 200));
-                    throw new Error("Apps Script ส่งข้อมูลกลับมาไม่ถูกต้อง (อาจเป็นปัญหาสิทธิ์การเข้าถึง)");
-                }
-            })
-            .then(d => {
-                if (d.success === false) {
-                    throw new Error(d.message || "ไม่สามารถโหลดข้อมูลได้");
-                }
-                accounts = d.accounts || {};
-                const count = Object.keys(accounts).length;
-                if (count === 0) {
+        if (SCRIPT_URL.indexOf("วาง_URL") !== -1 || SCRIPT_URL === "") {
+            statusEl.style.color = "#ef4444";
+            statusEl.innerText = "⚠️ โปรดตั้งค่า SCRIPT_URL ในไฟล์ก่อน";
+            btnEl.innerText = "ยังไม่ได้ตั้งค่า";
+        } else {
+            fetch(SCRIPT_URL + "?action=getAccounts")
+                .then(r => {
+                    if (!r.ok) throw new Error("HTTP " + r.status);
+                    return r.text();
+                })
+                .then(text => {
+                    try {
+                        return JSON.parse(text);
+                    } catch (e) {
+                        console.error("Response ไม่ใช่ JSON:", text.substring(0, 200));
+                        throw new Error("Apps Script ส่งข้อมูลกลับมาไม่ถูกต้อง (ตรวจสอบสิทธิ์การเข้าถึง = Anyone)");
+                    }
+                })
+                .then(d => {
+                    if (d.success === false) {
+                        throw new Error(d.message || "ไม่สามารถโหลดข้อมูลได้");
+                    }
+                    accounts = d.accounts || {};
+                    const count = Object.keys(accounts).length;
+                    if (count === 0) {
+                        statusEl.style.color = "#ef4444";
+                        statusEl.innerText = "❌ ไม่พบข้อมูลบัญชีใน Sheet";
+                        return;
+                    }
+                    isReady = true;
+                    btnEl.disabled = false;
+                    btnEl.innerText = "เข้าสู่ระบบ";
+                    statusEl.style.color = "#059669";
+                    statusEl.innerText = "✅ ระบบพร้อมใช้งาน (" + count + " บัญชี)";
+                })
+                .catch(err => {
+                    console.error("โหลดบัญชีล้มเหลว:", err);
                     statusEl.style.color = "#ef4444";
-                    statusEl.innerText = "❌ ไม่พบข้อมูลบัญชีใน Sheet";
-                    return;
-                }
-                isReady = true;
-                btnEl.disabled = false;
-                btnEl.innerText = "เข้าสู่ระบบ";
-                statusEl.style.color = "#059669";
-                statusEl.innerText = "✅ ระบบพร้อมใช้งาน (" + count + " บัญชี)";
-            })
-            .catch(err => {
-                console.error("โหลดบัญชีล้มเหลว:", err);
-                statusEl.style.color = "#ef4444";
-                statusEl.innerText = "❌ เชื่อมต่อระบบไม่ได้: " + err.message;
-                btnEl.innerText = "ระบบไม่พร้อม";
-            });
+                    statusEl.innerText = "❌ เชื่อมต่อระบบไม่ได้: " + err.message;
+                    btnEl.innerText = "ระบบไม่พร้อม";
+                });
+        }
 
         document.getElementById('loginForm').onsubmit = (e) => {
             e.preventDefault();
