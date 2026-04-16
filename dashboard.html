@@ -51,20 +51,15 @@ body {
 /* === Top Bar === */
 .topbar {
   padding: 18px 40px;
-  display: flex; align-items: center; justify-content: space-between;
+  padding-right: 260px; /* เว้นที่ให้โปรไฟล์ลอยมุมขวาบน */
+  display: flex; align-items: center;
   border-bottom: 1px solid var(--border);
   background: rgba(255,255,255,0.7); backdrop-filter: blur(12px);
-  position: sticky; top: 0; z-index: 100;
+  position: sticky; top: 0; z-index: 50;
 }
 .topbar-brand { display: flex; align-items: center; gap: 12px; }
 .brand-text { font-size: 14px; font-weight: 600; color: var(--text-dim); }
 .brand-text span { color: var(--text); font-weight: 700; }
-.topbar-right { display: flex; align-items: center; gap: 14px; }
-.topbar-year {
-  font-size: 13px; color: var(--text-muted); font-weight: 600;
-  padding: 5px 16px; border-radius: 100px;
-  border: 1px solid var(--border); background: rgba(255,255,255,0.6);
-}
 
 /* === Hero === */
 .hero { padding: 60px 40px 35px; text-align: center; }
@@ -290,7 +285,7 @@ body {
 /* === Penguin Loader === */
 .loader-overlay {
   position: fixed; inset: 0; background: rgba(240,244,255,0.85);
-  backdrop-filter: blur(8px); z-index: 9999;
+  backdrop-filter: blur(8px); z-index: 9997;
   display: none; align-items: center; justify-content: center;
   flex-direction: column; gap: 20px;
 }
@@ -332,7 +327,8 @@ body {
 
 @media (max-width: 768px) {
   .hero h1 { font-size: 30px; }
-  .topbar, .hero, .content-area { padding-left: 20px; padding-right: 20px; }
+  .topbar { padding-right: 40px; padding-bottom: 70px; }
+  .hero, .content-area { padding-left: 20px; padding-right: 20px; }
   .hero { padding-top: 40px; padding-bottom: 20px; }
   .controls-bar { flex-direction: column; align-items: stretch; }
 }
@@ -354,14 +350,11 @@ body {
 <div class="page">
 
   <!-- ========== TOP BAR ========== -->
+  <!-- หมายเหตุ: โปรไฟล์ผู้ใช้จะลอยอยู่มุมขวาบน (สร้างโดย auth.js) -->
   <header class="topbar fade-up delay-1">
     <div class="topbar-brand">
       <img src="logo web.png" alt="โลโก้สำนักหอสมุด มช." style="height: 50px; width: auto; margin-right: 10px;">
       <div class="brand-text"><span>หน่วยสื่อสารองค์กร</span><br>สำนักหอสมุด มหาวิทยาลัยเชียงใหม่</div>
-    </div>
-    <!-- auth.js จะ inject โปรไฟล์ผู้ใช้ตรงนี้ -->
-    <div class="topbar-right">
-      <div class="topbar-year" id="topbarYear">ปีงบประมาณ 2569</div>
     </div>
   </header>
 
@@ -504,31 +497,14 @@ const REPORT_CONFIG = {
       }
     }
 
-    // 💡 ตัวอย่างเพิ่มเดือนใหม่ (ลบ // ออกแล้วแก้ข้อมูล)
+    // 💡 ตัวอย่างเพิ่มเดือนใหม่
     // ,'APR': {
     //   label: 'เมษายน 2569',
     //   updatedAt: '1 พฤษภาคม 2569',
-    //   internal: {
-    //     file: 'apr-internal-2569.html',
-    //     stats: [
-    //       { value: '70',   label: 'ผู้ตอบ (คน)' },
-    //       { value: '4.10', label: 'ความพึงพอใจ' },
-    //       { value: '92%',  label: 'อื่นๆ' }
-    //     ]
-    //   },
+    //   internal: { file: 'apr-internal-2569.html', stats: [...] },
     //   external: null
     // }
   }
-
-  // 💡 ตัวอย่างเพิ่มปีใหม่
-  // ,2568: {
-  //   'MAR': {
-  //     label: 'มีนาคม 2568',
-  //     updatedAt: '1 เมษายน 2568',
-  //     internal: { file: 'mar-internal-2568.html', stats: [...] },
-  //     external: { file: 'mar-external-2568.html', stats: [...] }
-  //   }
-  // }
 
 };
 // ═══════════════════════════════════════════════════════════════════════════
@@ -603,13 +579,11 @@ function updateMonthSelect() {
   }
 }
 
-// Render Normal Mode
 function renderCards() {
   const grid = document.getElementById('cardsGrid');
   const report = currentMonth ? getReport(currentYear, currentMonth) : null;
 
   document.getElementById('footerYear').textContent = currentYear;
-  document.getElementById('topbarYear').textContent = 'ปีงบประมาณ ' + currentYear;
 
   if (!report) {
     grid.innerHTML = `
@@ -671,15 +645,11 @@ function createCardHTML(type, data, periodLabel) {
   `;
 }
 
-// Controls
 function onMainYearChange() {
   currentYear = parseInt(document.getElementById('mainYear').value);
   const grid = document.getElementById('cardsGrid');
   showLoader(800, () => {
-    fadeOut(grid, () => {
-      updateMonthSelect();
-      renderCards();
-    });
+    fadeOut(grid, () => { updateMonthSelect(); renderCards(); });
   });
 }
 function onMainMonthChange() {
@@ -688,7 +658,6 @@ function onMainMonthChange() {
   showLoader(600, () => fadeOut(grid, renderCards));
 }
 
-// Compare Mode
 function enterCompareMode() {
   isCompareMode = true;
   showLoader(900, () => {
