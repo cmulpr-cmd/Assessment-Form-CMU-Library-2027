@@ -27,12 +27,9 @@
   --amber: #f59e0b;
 }
 
-body {
-  font-family: 'Sarabun', 'Noto Sans Thai', sans-serif;
-  background: var(--bg); color: var(--text);
-  min-height: 100vh; overflow-x: hidden;
-}
+body { font-family: 'Sarabun', 'Noto Sans Thai', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
 
+/* === Background === */
 .bg-scene { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
 .bg-scene::before { content: ''; position: absolute; top: -20%; left: -15%; width: 60%; height: 60%; background: radial-gradient(ellipse, rgba(8,145,178,0.08) 0%, transparent 70%); animation: drift1 20s ease-in-out infinite; }
 .bg-scene::after { content: ''; position: absolute; bottom: -15%; right: -10%; width: 55%; height: 55%; background: radial-gradient(ellipse, rgba(124,58,237,0.06) 0%, transparent 70%); animation: drift2 25s ease-in-out infinite; }
@@ -92,7 +89,7 @@ body {
 .hero h1 .line2 { background: linear-gradient(90deg, var(--cyan), var(--blue), var(--violet)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 .hero-desc { font-size: 16px; color: var(--text-dim); max-width: 600px; margin: 0 auto; line-height: 1.7; }
 
-/* === 🎛️ Controls Bar & Beautiful Selects === */
+/* === Controls Bar === */
 .controls-bar { max-width: 1020px; margin: 0 auto 30px; padding: 0 40px; display: flex; gap: 14px; align-items: center; flex-wrap: wrap; justify-content: center; }
 .filter-group { display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.8); backdrop-filter: blur(10px); padding: 6px; border-radius: 100px; border: 1px solid rgba(8,145,178,0.15); box-shadow: 0 4px 15px rgba(0,0,0,0.03); transition: all 0.3s; }
 .filter-group:hover { border-color: rgba(8,145,178,0.3); box-shadow: 0 6px 20px rgba(8,145,178,0.08); transform: translateY(-1px); }
@@ -109,7 +106,6 @@ body {
 }
 .filter-select:hover, .picker-select:hover { background-color: white; border-color: var(--cyan); box-shadow: 0 4px 12px rgba(8, 145, 178, 0.1); }
 .filter-select:focus, .picker-select:focus { border-color: var(--cyan); box-shadow: 0 0 0 4px rgba(8,145,178,0.15); background-color: white; }
-
 .picker-select { width: 100%; max-width: 320px; border-radius: 14px; border: 1.5px solid var(--border); box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
 
 .btn-compare { display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; border-radius: 100px; border: none; font-family: inherit; font-size: 14px; font-weight: 700; background: linear-gradient(135deg, #1e293b, #0f172a); color: white; cursor: pointer; transition: all 0.3s cubic-bezier(0.25,1,0.5,1); box-shadow: 0 4px 14px rgba(26,29,46,0.2); }
@@ -178,7 +174,6 @@ body {
 .compare-col { background: var(--surface); border: 1px solid var(--border); border-radius: 24px; overflow: hidden; display: flex; flex-direction: column; transition: all 0.4s cubic-bezier(0.25,1,0.5,1); box-shadow: 0 4px 20px rgba(0,0,0,0.03); }
 .compare-col:hover { box-shadow: 0 12px 36px rgba(0,0,0,0.08); border-color: rgba(8,145,178,0.2); transform: translateY(-4px); }
 
-/* Stagger Animation for Compare Cols */
 .animate-col { opacity: 0; animation: fadeUpCol 0.6s cubic-bezier(0.25,1,0.5,1) forwards; }
 @keyframes fadeUpCol { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
 .col-delay-1 { animation-delay: 0.1s; }
@@ -211,55 +206,57 @@ body {
 .ai-compare-bar .ai-info { display: flex; flex-direction: column; gap: 2px; }
 .ai-compare-bar .ai-title { font-size: 13px; font-weight: 700; }
 .ai-compare-bar .ai-sub { font-size: 11px; opacity: 0.7; }
-.ai-compare-bar .ai-btn { background: linear-gradient(135deg, var(--amber), var(--pink), var(--violet)); color: white; border: none; padding: 11px 22px; border-radius: 100px; cursor: pointer; font-family: inherit; font-weight: 700; font-size: 14px; display: inline-flex; align-items: center; gap: 8px; transition: all 0.25s; box-shadow: 0 4px 16px rgba(236,72,153,0.3); }
-.ai-compare-bar .ai-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(236,72,153,0.5); }
 
-/* === 🎯 AI Report Modal === */
-.ai-modal-bg { position: fixed; inset: 0; background: rgba(15,23,42,0.5); z-index: 9999; display: none; align-items: center; justify-content: center; backdrop-filter: blur(10px); padding: 20px; }
+/* 🌟 อัปเดตปุ่มเรียก AI ให้เหมือนรูปเป๊ะ 🌟 */
+.ai-btn { 
+  background: transparent; color: var(--text); border: none; cursor: pointer; 
+  font-family: 'Noto Sans Thai', inherit; font-weight: 800; font-size: 16px; 
+  display: inline-flex; align-items: center; gap: 10px; transition: all 0.25s; 
+  background-color: white; border-radius: 100px; padding: 8px 12px 8px 16px;
+}
+.ai-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(236,72,153,0.3); }
+.ai-btn-badge {
+  background: linear-gradient(90deg, #ea580c, #db2777, #8b5cf6);
+  color: white; padding: 6px 14px; border-radius: 100px; font-size: 12px; font-weight: 800;
+  letter-spacing: 1px; text-transform: uppercase; box-shadow: inset 0 -2px 0 rgba(0,0,0,0.1);
+}
+
+@keyframes sparkle { 0%,100% { transform: scale(1) rotate(0deg); } 50% { transform: scale(1.3) rotate(180deg); } }
+.ai-compare-bar .sparkle { display: inline-block; animation: sparkle 2s ease-in-out infinite; }
+
+/* === 🎯 AI Report Modal (โฉมใหม่) === */
+.ai-modal-bg { position: fixed; inset: 0; background: rgba(15,23,42,0.7); z-index: 9999; display: none; align-items: center; justify-content: center; backdrop-filter: blur(12px); padding: 20px; }
 .ai-modal-bg.show { display: flex; animation: aiFadeIn 0.3s ease; }
 @keyframes aiFadeIn { from { opacity: 0; } to { opacity: 1; } }
-.ai-modal { background: var(--bg); border-radius: 28px; width: 100%; max-width: 1200px; max-height: 92vh; overflow-y: auto; overflow-x: hidden; box-shadow: 0 30px 80px rgba(0,0,0,0.3); animation: aiSlideIn 0.5s cubic-bezier(0.25,1,0.5,1); border: 1px solid rgba(255,255,255,0.5); }
-@keyframes aiSlideIn { from { opacity: 0; transform: translateY(30px) scale(0.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
-.ai-modal-header { position: sticky; top: 0; z-index: 10; padding: 24px 36px; background: rgba(255,255,255,0.95); backdrop-filter: blur(15px); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
-.ai-modal-header h2 { font-family: 'Noto Sans Thai', sans-serif; font-size: 22px; font-weight: 900; color: var(--text); display: flex; align-items: center; gap: 12px; }
-.ai-badge-top { background: linear-gradient(135deg, var(--amber), var(--pink), var(--violet)); color: white; padding: 4px 12px; border-radius: 8px; font-size: 11px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; }
-.ai-close-btn { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--border); background: white; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text-dim); transition: all 0.25s; }
+.ai-modal { background: var(--bg); border-radius: 28px; width: 100%; max-width: 1200px; height: 90vh; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 30px 80px rgba(0,0,0,0.4); animation: aiSlideIn 0.5s cubic-bezier(0.25,1,0.5,1); border: 1px solid rgba(255,255,255,0.2); }
+@keyframes aiSlideIn { from { opacity: 0; transform: translateY(40px) scale(0.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
+
+/* 🌟 Header ใหม่ เหมือนในรูป 🌟 */
+.ai-modal-header { position: relative; z-index: 10; padding: 24px 36px; background: rgba(255,255,255,0.95); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+.ai-modal-header h2 { font-family: 'Noto Sans Thai', sans-serif; font-size: 24px; font-weight: 900; color: var(--text); display: flex; align-items: center; }
+.ai-badge-top { background: linear-gradient(90deg, #ea580c, #db2777, #8b5cf6); color: white; padding: 4px 12px; border-radius: 100px; font-size: 13px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; margin-left: 14px; box-shadow: 0 4px 10px rgba(219,39,119,0.3); }
+
+.ai-close-btn { width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--border); background: white; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text-dim); transition: all 0.25s; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
 .ai-close-btn:hover { color: var(--rose); border-color: var(--rose); transform: rotate(90deg); background: rgba(225,29,72,0.05); }
-.ai-modal-body { padding: 36px; }
+.ai-modal-body { flex: 1; overflow-y: auto; padding: 36px; background: #f8fafc; }
 
-/* === 📝 Animated Survey Loader (No External Images) === */
-.loader-overlay {
-  position: fixed; inset: 0; background: rgba(248,250,252,0.85);
-  backdrop-filter: blur(8px); z-index: 9997;
-  display: none; align-items: center; justify-content: center;
-  flex-direction: column; gap: 5px;
-}
+/* 📝 Animated Survey Loader (Pure Code) */
+.loader-overlay { position: fixed; inset: 0; background: rgba(248,250,252,0.85); backdrop-filter: blur(8px); z-index: 9997; display: none; align-items: center; justify-content: center; flex-direction: column; gap: 5px; }
 .loader-overlay.show { display: flex; animation: fadeIn 0.3s ease; }
-
 .survey-loader { position: relative; width: 120px; height: 120px; display: flex; justify-content: center; align-items: flex-end; margin-bottom: 10px; }
 .survey-svg { width: 90px; height: auto; animation: surveyFloat 2.5s ease-in-out infinite; z-index: 2; filter: drop-shadow(0 15px 15px rgba(8,145,178,0.2)); }
 .survey-shadow { position: absolute; bottom: -5px; width: 70px; height: 8px; background: rgba(0,0,0,0.1); border-radius: 50%; animation: surveyShadow 2.5s ease-in-out infinite; z-index: 1; }
-
 @keyframes surveyFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
 @keyframes surveyShadow { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(0.6); opacity: 0.3; } }
-
-/* Checkmarks Animation */
 .chk-path { stroke-dasharray: 40; stroke-dashoffset: 40; animation: drawCheck 3s ease-in-out infinite; }
-.chk-1 { animation-delay: 0.2s; }
-.chk-2 { animation-delay: 0.8s; }
-.chk-3 { animation-delay: 1.4s; }
+.chk-1 { animation-delay: 0.2s; } .chk-2 { animation-delay: 0.8s; } .chk-3 { animation-delay: 1.4s; }
 @keyframes drawCheck { 0%, 10% { stroke-dashoffset: 40; } 30%, 100% { stroke-dashoffset: 0; } }
-
-/* Line Animation */
 .line-path { animation: pulseLine 3s ease-in-out infinite; transform-origin: left; }
-.ln-1 { animation-delay: 0s; }
-.ln-2 { animation-delay: 0.6s; }
-.ln-3 { animation-delay: 1.2s; }
+.ln-1 { animation-delay: 0s; } .ln-2 { animation-delay: 0.6s; } .ln-3 { animation-delay: 1.2s; }
 @keyframes pulseLine { 0%, 5% { transform: scaleX(0.2); opacity: 0; } 20%, 100% { transform: scaleX(1); opacity: 1; } }
-
 .loader-text { font-family: 'Noto Sans Thai', sans-serif; font-size: 17px; font-weight: 800; color: var(--cyan); letter-spacing: 0.5px; margin-top: 15px; }
 
-/* === Footer === */
+/* Footer */
 .page-footer { padding: 30px 40px; text-align: center; font-size: 13px; font-weight: 500; color: var(--text-muted); border-top: 1px solid var(--border); background: rgba(255,255,255,0.5); }
 
 /* General Animations */
@@ -269,50 +266,50 @@ body {
 @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
 .delay-1{animation-delay:.1s} .delay-2{animation-delay:.2s} .delay-3{animation-delay:.3s} .delay-4{animation-delay:.4s} .delay-5{animation-delay:.5s}
 
-/* AI Charts & Tables elements */
-.ai-intro { background: white; border-radius: 20px; padding: 28px; margin-bottom: 24px; border: 1px solid var(--border); box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
-.ai-intro-label { font-size: 11px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 16px; }
-.ai-intro-items { display: flex; flex-wrap: wrap; gap: 14px; }
-.ai-intro-chip { display: flex; align-items: center; gap: 10px; padding: 10px 16px 10px 12px; background: var(--surface); border: 1.5px solid; border-radius: 14px; font-size: 13px; font-weight: 600; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
-.ai-intro-chip .year-dot { width: 12px; height: 12px; border-radius: 50%; }
-.ai-intro-chip .chip-year { font-weight: 800; font-size: 14px; }
-.ai-intro-chip .chip-meta { color: var(--text-muted); font-size: 12px; }
-.ai-charts { display: grid; grid-template-columns: 1fr; gap: 24px; margin-bottom: 24px; }
-.ai-chart-card { background: white; border-radius: 24px; padding: 30px; border: 1px solid var(--border); box-shadow: 0 4px 20px rgba(0,0,0,0.03); transition: transform 0.3s; }
-.ai-chart-card:hover { transform: translateY(-4px); box-shadow: 0 8px 25px rgba(0,0,0,0.06); }
-.ai-chart-card h3 { font-family: 'Noto Sans Thai', sans-serif; font-size: 18px; font-weight: 800; color: var(--text); margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
-.ai-chart-card .chart-wrap { position: relative; height: 280px; }
+/* === AI Layout Elements === */
+.ai-section-title { font-family: 'Noto Sans Thai'; font-size: 20px; font-weight: 800; color: var(--text); margin-bottom: 16px; display: flex; align-items: center; gap: 10px; border-bottom: 2px solid var(--border); padding-bottom: 10px; }
 
-/* ตารางข้อมูล */
-.ai-table-card { background: white; border-radius: 24px; padding: 30px; border: 1px solid var(--border); box-shadow: 0 4px 20px rgba(0,0,0,0.03); margin-bottom: 24px; overflow-x: auto; }
-.ai-table-card h3 { font-family: 'Noto Sans Thai', sans-serif; font-size: 18px; font-weight: 800; color: var(--text); margin-bottom: 20px; }
+/* Summary Dashboard */
+.ai-summary-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; margin-bottom: 30px; }
+@media(max-width: 900px) { .ai-summary-grid { grid-template-columns: 1fr; } }
+
+.ai-exec-summary { background: linear-gradient(145deg, #ffffff, #f8fafc); border: 1px solid var(--border); border-radius: 20px; padding: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); }
+.ai-exec-summary p { font-size: 15px; line-height: 1.8; color: var(--text-dim); margin-bottom: 15px; }
+.ai-highlight-box { background: rgba(8,145,178,0.05); border-left: 4px solid var(--cyan); padding: 16px 20px; border-radius: 0 12px 12px 0; margin-top: 20px; }
+.ai-highlight-box ul { list-style: none; }
+.ai-highlight-box li { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 8px; display: flex; align-items: flex-start; gap: 10px; }
+.ai-highlight-box li::before { content: '🎯'; }
+
+.ai-info-card { background: white; border-radius: 20px; padding: 24px; border: 1px solid var(--border); display: flex; flex-direction: column; justify-content: center; box-shadow: 0 4px 20px rgba(0,0,0,0.03); }
+.ai-info-chip { display: flex; align-items: center; gap: 12px; padding: 12px; background: var(--bg); border-radius: 12px; margin-bottom: 10px; font-size: 14px; font-weight: 700; }
+.ai-info-chip .year-dot { width: 14px; height: 14px; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+
+/* Charts */
+.ai-charts-main { background: white; border-radius: 24px; padding: 30px; border: 1px solid var(--border); box-shadow: 0 4px 20px rgba(0,0,0,0.03); margin-bottom: 30px; }
+.ai-chart-wrap { position: relative; height: 350px; width: 100%; margin-top: 20px;}
+
+.ai-charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 30px; }
+@media(max-width: 900px) { .ai-charts-grid { grid-template-columns: 1fr; } }
+
+/* Table */
+.ai-table-card { background: white; border-radius: 24px; padding: 30px; border: 1px solid var(--border); box-shadow: 0 4px 20px rgba(0,0,0,0.03); margin-bottom: 30px; overflow-x: auto; }
 .ai-data-table { width: 100%; border-collapse: collapse; }
 .ai-data-table th, .ai-data-table td { padding: 16px 18px; text-align: center; font-size: 14px; border-bottom: 1px solid var(--border); }
-.ai-data-table th { font-weight: 800; font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; background: rgba(248,250,252,0.5); }
+.ai-data-table th { font-weight: 800; font-size: 13px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; background: #f8fafc; }
+.ai-data-table th:first-child { text-align: left; border-top-left-radius: 12px; }
+.ai-data-table th:last-child { border-top-right-radius: 12px; }
 .ai-data-table td { color: var(--text); font-weight: 600; }
-.ai-data-table td.stat-label { color: var(--text-dim); font-weight: 600; text-align: left; }
-.ai-data-table .year-tag { display: inline-flex; align-items: center; justify-content: center; gap: 8px; flex-direction: column; }
-.ai-data-table .year-tag .year-dot { width: 12px; height: 12px; border-radius: 50%; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+.ai-data-table td.stat-label { color: var(--text-dim); font-weight: 700; text-align: left; }
+.td-highlight { background: rgba(16,185,129,0.08); color: var(--emerald) !important; font-weight: 800 !important; border-radius: 8px; position: relative; }
+.td-highlight::before { content: '⭐'; position: absolute; left: 8px; font-size: 10px; }
 
-.ai-insights { background: linear-gradient(135deg, rgba(245,158,11,0.05), rgba(219,39,119,0.05), rgba(124,58,237,0.05)); border-radius: 24px; padding: 32px; border: 1px solid rgba(124,58,237,0.15); margin-bottom: 24px; box-shadow: inset 0 0 0 1px white; }
-.ai-insights h3 { font-family: 'Noto Sans Thai', sans-serif; font-size: 18px; font-weight: 800; color: var(--text); margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
-.ai-insights ul { list-style: none; padding: 0; }
-.ai-insights li { padding: 14px 0; border-bottom: 1px solid rgba(124,58,237,0.1); font-size: 15px; line-height: 1.7; color: var(--text); display: flex; gap: 14px; align-items: flex-start; }
-.ai-insights li:last-child { border-bottom: none; }
-.ai-insights li::before { content: '✨'; flex-shrink: 0; font-size: 16px; margin-top: 2px; }
-.ai-actions { display: flex; gap: 14px; justify-content: flex-end; padding-top: 24px; border-top: 1px solid var(--border); }
+/* Actions */
+.ai-actions { display: flex; gap: 14px; justify-content: flex-end; padding-top: 20px; }
 .ai-action-btn { padding: 14px 26px; border-radius: 14px; border: 1px solid var(--border); font-family: inherit; font-size: 15px; font-weight: 700; background: white; color: var(--text-dim); cursor: pointer; transition: all 0.25s; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
-.ai-action-btn:hover { color: var(--text); border-color: var(--border-hover); transform: translateY(-2px); box-shadow: 0 6px 15px rgba(0,0,0,0.05); }
+.ai-action-btn:hover { color: var(--text); border-color: var(--border-hover); transform: translateY(-2px); }
 .ai-action-btn.primary { background: linear-gradient(135deg, var(--cyan), var(--blue)); color: white; border-color: transparent; box-shadow: 0 4px 14px rgba(8,145,178,0.25); }
-.ai-action-btn.primary:hover { box-shadow: 0 10px 25px rgba(8,145,178,0.4); transform: translateY(-2px); color: white; }
+.ai-action-btn.primary:hover { box-shadow: 0 10px 25px rgba(8,145,178,0.4); color: white; }
 
-@media (max-width: 768px) {
-  .hero h1 { font-size: 32px; }
-  .topbar { padding-right: 40px; }
-  .hero, .content-area { padding-left: 20px; padding-right: 20px; }
-  .controls-bar { flex-direction: column; align-items: stretch; }
-  .ai-modal-body { padding: 24px; }
-}
 </style>
 </head>
 <body>
@@ -340,10 +337,11 @@ body {
 <div class="ai-compare-bar" id="aiCompareBar">
   <div class="ai-info">
     <div class="ai-title"><span class="sparkle">✨</span> เลือกแล้ว <span id="aiColCount">0</span> รายการ</div>
-    <div class="ai-sub">พร้อมสร้างรายงานเปรียบเทียบ</div>
+    <div class="ai-sub">พร้อมสร้างรายงานเปรียบเทียบเชิงลึก</div>
   </div>
   <button class="ai-btn" onclick="openAIComparison()">
-    🤖 สร้างรายงานเปรียบเทียบโดย AI
+    🤖 รายงานเปรียบเทียบโดย AI
+    <span class="ai-btn-badge">SMART ANALYSIS</span>
   </button>
 </div>
 
@@ -351,7 +349,8 @@ body {
   <div class="ai-modal">
     <div class="ai-modal-header">
       <h2>
-        🤖 รายงานเปรียบเทียบโดย AI
+        <img src="https://img.icons8.com/color/48/bot.png" alt="AI Robot" style="width: 32px; height: 32px; margin-right: 8px; transform: translateY(-2px);">
+        รายงานเปรียบเทียบโดย AI
         <span class="ai-badge-top">SMART ANALYSIS</span>
       </h2>
       <button class="ai-close-btn" onclick="closeAIModal()">
@@ -374,18 +373,9 @@ body {
     </div>
     <div class="pass-body">
       <form id="changePassForm">
-        <div class="pass-group">
-          <label>รหัสผ่านเดิม</label>
-          <input type="password" id="oldPass" required placeholder="กรอกรหัสผ่านปัจจุบัน">
-        </div>
-        <div class="pass-group">
-          <label>รหัสผ่านใหม่</label>
-          <input type="password" id="newPass" required placeholder="ตั้งรหัสผ่านใหม่" minlength="4">
-        </div>
-        <div class="pass-group">
-          <label>ยืนยันรหัสผ่านใหม่</label>
-          <input type="password" id="confirmPass" required placeholder="กรอกรหัสผ่านใหม่อีกครั้ง">
-        </div>
+        <div class="pass-group"><label>รหัสผ่านเดิม</label><input type="password" id="oldPass" required placeholder="กรอกรหัสผ่านปัจจุบัน"></div>
+        <div class="pass-group"><label>รหัสผ่านใหม่</label><input type="password" id="newPass" required placeholder="ตั้งรหัสผ่านใหม่" minlength="4"></div>
+        <div class="pass-group"><label>ยืนยันรหัสผ่านใหม่</label><input type="password" id="confirmPass" required placeholder="กรอกรหัสผ่านใหม่อีกครั้ง"></div>
         <button type="submit" class="pass-btn-submit" id="passSubmitBtn">บันทึกการเปลี่ยนแปลง</button>
       </form>
       <div id="passStatus" class="pass-status"></div>
@@ -607,16 +597,22 @@ const YEARS_FORWARD = 3;
 
 const MONTH_NAMES = { 'JAN': 'มกราคม',  'FEB': 'กุมภาพันธ์', 'MAR': 'มีนาคม', 'APR': 'เมษายน', 'MAY': 'พฤษภาคม', 'JUN': 'มิถุนายน', 'JUL': 'กรกฎาคม', 'AUG': 'สิงหาคม', 'SEP': 'กันยายน', 'OCT': 'ตุลาคม', 'NOV': 'พฤศจิกายน', 'DEC': 'ธันวาคม' };
 
+// 🎨 สีประจำแต่ละปี (โดดเด่นและเป็น Corporate Tone)
 const YEAR_COLORS = { 
-  2566: '#ef4444', 2567: '#f59e0b', 2568: '#10b981', 
-  2569: '#06b6d4', 2570: '#3b82f6', 2571: '#8b5cf6', 2572: '#ec4899'  
+  2566: '#ef4444', // Red
+  2567: '#f59e0b', // Amber 
+  2568: '#10b981', // Emerald 
+  2569: '#0ea5e9', // Sky Blue 
+  2570: '#6366f1', // Indigo 
+  2571: '#d946ef', // Pink 
+  2572: '#8b5cf6'  // Violet 
 };
 function getYearColor(year) { return YEAR_COLORS[year] || '#64748b'; }
 
 const REPORT_CONFIG = {
   2566: { 'MAR': { label: 'มีนาคม 2566', updatedAt: '1 เมษายน 2566 | เวลา 10.30 น.', internal: { file: 'cmul-communication-report.html', stats: [ { value: '65', label: 'ผู้ตอบ (คน)' }, { value: '4.03', label: 'ความพึงพอใจรวม' }, { value: '91.1%', label: 'ควรผลิต CMUL News ต่อ' } ] }, external: { file: 'cmul-user-survey-report.html', stats: [ { value: '411', label: 'ผู้ตอบ (คน)' }, { value: '4.28', label: 'ความพึงพอใจเนื้อหา' }, { value: '4.47', label: 'ภาพลักษณ์องค์กร' } ] } } },
-  2567: { 'MAR': { label: 'มีนาคม 2567', updatedAt: '1 เมษายน 2567 | เวลา 10.30 น.', internal: { file: 'cmul-communication-report.html', stats: [ { value: '65', label: 'ผู้ตอบ (คน)' }, { value: '4.03', label: 'ความพึงพอใจรวม' }, { value: '91.1%', label: 'ควรผลิต CMUL News ต่อ' } ] }, external: { file: 'cmul-user-survey-report.html', stats: [ { value: '411', label: 'ผู้ตอบ (คน)' }, { value: '4.28', label: 'ความพึงพอใจเนื้อหา' }, { value: '4.47', label: 'ภาพลักษณ์องค์กร' } ] } } },
-  2568: { 'MAR': { label: 'มีนาคม 2568', updatedAt: '1 เมษายน 2568 | เวลา 10.30 น.', internal: { file: 'cmul-communication-report.html', stats: [ { value: '65', label: 'ผู้ตอบ (คน)' }, { value: '4.03', label: 'ความพึงพอใจรวม' }, { value: '91.1%', label: 'ควรผลิต CMUL News ต่อ' } ] }, external: { file: 'cmul-user-survey-report.html', stats: [ { value: '411', label: 'ผู้ตอบ (คน)' }, { value: '4.28', label: 'ความพึงพอใจเนื้อหา' }, { value: '4.47', label: 'ภาพลักษณ์องค์กร' } ] } } },
+  2567: { 'MAR': { label: 'มีนาคม 2567', updatedAt: '1 เมษายน 2567 | เวลา 10.30 น.', internal: { file: 'cmul-communication-report.html', stats: [ { value: '72', label: 'ผู้ตอบ (คน)' }, { value: '4.15', label: 'ความพึงพอใจรวม' }, { value: '93.5%', label: 'ควรผลิต CMUL News ต่อ' } ] }, external: { file: 'cmul-user-survey-report.html', stats: [ { value: '450', label: 'ผู้ตอบ (คน)' }, { value: '4.35', label: 'ความพึงพอใจเนื้อหา' }, { value: '4.52', label: 'ภาพลักษณ์องค์กร' } ] } } },
+  2568: { 'MAR': { label: 'มีนาคม 2568', updatedAt: '1 เมษายน 2568 | เวลา 10.30 น.', internal: { file: 'cmul-communication-report.html', stats: [ { value: '80', label: 'ผู้ตอบ (คน)' }, { value: '4.22', label: 'ความพึงพอใจรวม' }, { value: '95.0%', label: 'ควรผลิต CMUL News ต่อ' } ] }, external: { file: 'cmul-user-survey-report.html', stats: [ { value: '485', label: 'ผู้ตอบ (คน)' }, { value: '4.41', label: 'ความพึงพอใจเนื้อหา' }, { value: '4.60', label: 'ภาพลักษณ์องค์กร' } ] } } },
   2569: { 'MAR': { label: 'มีนาคม 2569', updatedAt: '1 เมษายน 2569 | เวลา 10.30 น.', internal: { file: 'cmul-communication-report.html', stats: [ { value: '65', label: 'ผู้ตอบ (คน)' }, { value: '4.03', label: 'ความพึงพอใจรวม' }, { value: '91.1%', label: 'ควรผลิต CMUL News ต่อ' } ] }, external: { file: 'cmul-user-survey-report.html', stats: [ { value: '411', label: 'ผู้ตอบ (คน)' }, { value: '4.28', label: 'ความพึงพอใจเนื้อหา' }, { value: '4.47', label: 'ภาพลักษณ์องค์กร' } ] } } },
   2570: { 'MAR': { label: 'มีนาคม 2570', updatedAt: '1 เมษายน 2570 | เวลา 10.30 น.', internal: { file: 'cmul-communication-report.html', stats: [ { value: '65', label: 'ผู้ตอบ (คน)' }, { value: '4.03', label: 'ความพึงพอใจรวม' }, { value: '91.1%', label: 'ควรผลิต CMUL News ต่อ' } ] }, external: { file: 'cmul-user-survey-report.html', stats: [ { value: '411', label: 'ผู้ตอบ (คน)' }, { value: '4.28', label: 'ความพึงพอใจเนื้อหา' }, { value: '4.47', label: 'ภาพลักษณ์องค์กร' } ] } } },
   2571: { 'MAR': { label: 'มีนาคม 2571', updatedAt: '1 เมษายน 2571 | เวลา 10.30 น.', internal: { file: 'cmul-communication-report.html', stats: [ { value: '65', label: 'ผู้ตอบ (คน)' }, { value: '4.03', label: 'ความพึงพอใจรวม' }, { value: '91.1%', label: 'ควรผลิต CMUL News ต่อ' } ] }, external: { file: 'cmul-user-survey-report.html', stats: [ { value: '411', label: 'ผู้ตอบ (คน)' }, { value: '4.28', label: 'ความพึงพอใจเนื้อหา' }, { value: '4.47', label: 'ภาพลักษณ์องค์กร' } ] } } },
@@ -638,13 +634,13 @@ function showLoader(duration, callback, text, isAI = false) {
   const loaderText = document.getElementById('loaderText');
   
   if (isAI) {
-    loaderText.innerHTML = '🤖 AI กำลังวิเคราะห์ข้อมูลเชิงลึก..';
+    loaderText.innerHTML = '🤖 AI กำลังประมวลผลข้อมูลเชิงลึก..';
     loaderText.style.color = '#0284c7';
   } else if (text) {
     loaderText.innerHTML = text;
     loaderText.style.color = 'var(--cyan)';
   } else {
-    loaderText.innerHTML = 'กำลังประมวลผลข้อมูล..';
+    loaderText.innerHTML = 'กำลังเตรียมข้อมูลรายงาน..';
     loaderText.style.color = 'var(--cyan)';
   }
   
@@ -699,17 +695,13 @@ function enterCompareMode() {
   showLoader(900, () => {
     document.getElementById('contentArea').classList.add('wide'); document.getElementById('heroSection').style.display = 'none'; document.getElementById('controlsBar').style.display = 'none'; document.getElementById('normalMode').style.display = 'none'; document.getElementById('compareMode').style.display = 'block';
     
-    // Reset animations for Stagger effect
     [1, 2, 3].forEach(i => {
        const col = document.getElementById('col' + i);
-       col.style.animation = 'none';
-       col.offsetHeight; 
-       col.style.animation = null; 
+       col.style.animation = 'none'; col.offsetHeight; col.style.animation = null; 
        renderColumnPicker(i);
     });
-    
     updateAICompareButton(); window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, "กำลังเข้าสู่โหมดเปรียบเทียบข้อมูล");
+  }, "กำลังเปิดโหมดเปรียบเทียบ");
 }
 function exitCompareMode() {
   isCompareMode = false;
@@ -744,7 +736,7 @@ function loadColumnReport(colIdx) {
   showLoader(800, () => {
     col.innerHTML = `<div class="col-header"><div class="col-header-info"><div class="col-header-title">${report.label}</div><div class="col-header-subtitle">${typeLabel}</div></div><button class="col-change-btn" onclick="resetColumn(${colIdx})"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10h10a5 5 0 0 1 5 5v2"/><polyline points="7 6 3 10 7 14"/></svg>เปลี่ยนข้อมูล</button></div><div class="col-content"><iframe src="${report[type].file}" title="รายงาน${typeLabel}"></iframe></div>`;
     updateAICompareButton();
-  }, `กำลังดึงข้อมูลคอลัมน์ที่ ${colIdx}`);
+  }, `ดึงข้อมูลคอลัมน์ที่ ${colIdx}`);
 }
 
 function resetColumn(colIdx) { columnStates[colIdx] = null; const col = document.getElementById('col' + colIdx); fadeOut(col, () => { renderColumnPicker(colIdx); updateAICompareButton(); }); }
@@ -766,79 +758,195 @@ function closeAIModal() { document.getElementById('aiModal').classList.remove('s
 function parseNumericValue(strValue) { const cleaned = String(strValue).replace(/[^\d.-]/g, ''); const num = parseFloat(cleaned); return isNaN(num) ? 0 : num; }
 
 // ============================================================================
-// 🤖 CORE AI ENGINE
+// 🤖 🌟 ADVANCED AI ENGINE (PROFESSIONAL TIER) 🌟
 // ============================================================================
 function buildAIReport(reports) {
   const body = document.getElementById('aiModalBody');
-  const introHTML = `<div class="ai-intro"><div class="ai-intro-label">📊 ภาพรวมการเปรียบเทียบ ${reports.length} รายการ</div><div class="ai-intro-items">${reports.map(r => `<div class="ai-intro-chip" style="border-color: ${getYearColor(r.year)}40;"><div class="year-dot" style="background: ${getYearColor(r.year)};"></div><div><div class="chip-year" style="color: ${getYearColor(r.year)};">${r.label}</div><div class="chip-meta">${r.typeLabel}</div></div></div>`).join('')}</div></div>`;
-  const allLabels = new Set(); reports.forEach(r => r.data.stats.forEach(s => allLabels.add(s.label))); const statLabels = [...allLabels];
-
-  const radarHTML = `<div class="ai-chart-card" style="margin-bottom: 24px;"><h3>🕸️ แผนภาพเปรียบเทียบความสมดุล (Radar Chart)</h3><div class="chart-wrap" style="height: 380px;"><canvas id="aiRadarChart"></canvas></div></div>`;
-  const chartsHTML = `<div class="ai-charts">${statLabels.map((label, idx) => `<div class="ai-chart-card"><h3>📈 ${label}</h3><div class="chart-wrap"><canvas id="aiChart${idx}"></canvas></div></div>`).join('')}</div>`;
   
+  // เรียงปีจากน้อยไปมาก เพื่อให้กราฟเทรนด์แสดงถูกต้อง
+  reports.sort((a, b) => a.year - b.year);
+  
+  const allLabels = new Set(); reports.forEach(r => r.data.stats.forEach(s => allLabels.add(s.label))); const statLabels = [...allLabels];
+  const insights = generateInsights(reports, statLabels);
+
+  const isSameType = reports.every(r => r.type === reports[0].type); // ตรวจสอบว่าเปรียบเทียบประเภทเดียวกัน (เช่น ภายในเทียบกับภายใน) หรือไม่
+
+  // --- 1. Executive Summary ---
+  const summaryHTML = `
+    <div class="ai-section-title">✨ บทสรุปสำหรับผู้บริหาร (Executive Summary)</div>
+    <div class="ai-summary-grid">
+      <div class="ai-exec-summary">
+        <p>${insights.summaryText}</p>
+        <div class="ai-highlight-box">
+          <ul>${insights.highlights.map(h => `<li>${h}</li>`).join('')}</ul>
+        </div>
+      </div>
+      <div style="display:flex; flex-direction: column; gap:16px;">
+        <div class="ai-info-card">
+          <div style="font-size: 13px; color: var(--text-muted); font-weight: 700; margin-bottom: 12px; text-transform: uppercase;">ข้อมูลที่นำมาวิเคราะห์</div>
+          ${reports.map(r => `<div class="ai-info-chip" style="border-left: 4px solid ${getYearColor(r.year)};"><div class="year-dot" style="background: ${getYearColor(r.year)};"></div>${r.label} <span style="color:var(--text-muted); font-weight: 500; font-size:12px;">(${r.typeLabel})</span></div>`).join('')}
+        </div>
+      </div>
+    </div>
+  `;
+
+  // --- 2. Dynamic Charts ---
+  let chartsHTML = `<div class="ai-section-title">📊 การแสดงผลแนวโน้ม (Trend Visualization)</div>`;
+  
+  // ถ้าเป็นการเปรียบเทียบปีที่ต่างกันของประเภทเดียวกัน -> แสดงกราฟเส้น (Line Chart) คู่กับ กราฟแท่งรวม (Grouped Bar)
+  if (isSameType && reports.length > 1) {
+    chartsHTML += `
+      <div class="ai-charts-main">
+        <h3 style="font-size: 16px; font-weight: 800; color: var(--text); margin-bottom: 20px;">เปรียบเทียบการเติบโตตามปีงบประมาณ (YoY Trend)</h3>
+        <div class="ai-chart-wrap"><canvas id="aiTrendChart"></canvas></div>
+      </div>
+    `;
+  } else {
+    // ถ้าเทียบข้ามประเภท (ภายใน vs ภายนอก) -> แสดง Grouped Bar
+    chartsHTML += `
+      <div class="ai-charts-main">
+        <h3 style="font-size: 16px; font-weight: 800; color: var(--text); margin-bottom: 20px;">เปรียบเทียบตัวชี้วัด (Grouped Comparison)</h3>
+        <div class="ai-chart-wrap"><canvas id="aiGroupedBarChart"></canvas></div>
+      </div>
+    `;
+  }
+
+  // Radar Chart สำหรับดูสมดุล
+  chartsHTML += `
+    <div class="ai-charts-grid">
+      <div class="ai-charts-main" style="margin-bottom:0;">
+        <h3 style="font-size: 16px; font-weight: 800; color: var(--text); margin-bottom: 20px;">ความสมดุลของตัวชี้วัด (Radar Analysis)</h3>
+        <div class="ai-chart-wrap" style="height: 320px;"><canvas id="aiRadarChart"></canvas></div>
+      </div>
+      <div class="ai-charts-main" style="margin-bottom:0; display:flex; flex-direction:column; justify-content:center;">
+         <h3 style="font-size: 16px; font-weight: 800; color: var(--text); margin-bottom: 20px;">ข้อเสนอแนะเชิงกลยุทธ์ (Strategic Recommendations)</h3>
+         <ul style="list-style:none; padding:0; display:flex; flex-direction:column; gap:16px;">
+            ${insights.recommendations.map(r => `<li style="font-size: 15px; line-height: 1.6; color: var(--text); display: flex; gap: 10px;"><span style="font-size:18px;">💡</span> <span>${r}</span></li>`).join('')}
+         </ul>
+      </div>
+    </div>
+  `;
+  
+  // --- 3. Data Table ---
   const tableRows = statLabels.map(label => {
     const rowValues = reports.map(r => { const stat = r.data.stats.find(s => s.label === label); return { raw: stat ? stat.value : '—', num: stat ? parseNumericValue(stat.value) : -Infinity }; });
     const maxNum = Math.max(...rowValues.map(v => v.num).filter(n => n !== -Infinity));
     const cells = rowValues.map((val, i) => {
-      if (val.num === maxNum && maxNum !== -Infinity) { return `<td style="color:${getYearColor(reports[i].year)}; font-weight: 800; background: ${getYearColor(reports[i].year)}15; border-radius: 8px;">⭐ ${val.raw}</td>`; }
+      if (val.num === maxNum && maxNum !== -Infinity) { return `<td class="td-highlight" style="color:${getYearColor(reports[i].year)} !important; background: ${getYearColor(reports[i].year)}15;">${val.raw}</td>`; }
       return `<td>${val.raw}</td>`;
     }).join('');
     return `<tr><td class="stat-label">${label}</td>${cells}</tr>`;
   }).join('');
   
-  const tableHTML = `<div class="ai-table-card"><h3>📋 ตารางเปรียบเทียบข้อมูลเชิงลึก</h3><table class="ai-data-table"><thead><tr><th>ตัวชี้วัด</th>${reports.map(r => `<th><div class="year-tag"><div class="year-dot" style="background: ${getYearColor(r.year)};"></div>${r.label}<br><span style="font-weight:500; color:var(--text-muted); font-size:11px;">${r.typeLabel}</span></div></th>`).join('')}</tr></thead><tbody>${tableRows}</tbody></table></div>`;
-  const insights = generateInsights(reports, statLabels);
-  const insightsHTML = `<div class="ai-insights"><h3>💡 บทวิเคราะห์เชิงลึก (Deep Insights)</h3><ul>${insights.map(i => `<li>${i}</li>`).join('')}</ul></div>`;
-  const actionsHTML = `<div class="ai-actions"><button class="ai-action-btn" onclick="window.print()">🖨️ พิมพ์รายงาน</button><button class="ai-action-btn primary" onclick="closeAIModal()">✓ รับทราบข้อมูล</button></div>`;
+  const tableHTML = `
+    <div class="ai-section-title">ตารางข้อมูลเชิงลึก (Detailed Metrics)</div>
+    <div class="ai-table-card"><table class="ai-data-table"><thead><tr><th>ตัวชี้วัด</th>${reports.map(r => `<th><div style="color:${getYearColor(r.year)}; font-size:14px;">${r.label}</div><div style="font-weight:500; font-size:11px; margin-top:2px;">${r.typeLabel}</div></th>`).join('')}</tr></thead><tbody>${tableRows}</tbody></table></div>
+  `;
 
-  body.innerHTML = introHTML + radarHTML + chartsHTML + tableHTML + insightsHTML + actionsHTML;
+  // Actions
+  const actionsHTML = `<div class="ai-actions"><button class="ai-action-btn" onclick="window.print()"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg> พิมพ์รายงาน</button><button class="ai-action-btn primary" onclick="closeAIModal()">ตกลง</button></div>`;
+
+  body.innerHTML = summaryHTML + chartsHTML + tableHTML + actionsHTML;
   document.getElementById('aiModal').classList.add('show');
 
+  // --- Render Charts ---
   setTimeout(() => {
+    Chart.defaults.font.family = "'Sarabun', sans-serif";
+    
+    // 1. Grouped Bar / Line Chart (Trend)
+    const trendCanvas = document.getElementById('aiTrendChart') || document.getElementById('aiGroupedBarChart');
+    if (trendCanvas) {
+      const isLineChart = isSameType && reports.length > 1;
+      
+      const datasets = reports.map(r => {
+        return {
+          label: `${r.label} (${r.typeLabel})`,
+          data: statLabels.map(label => { const stat = r.data.stats.find(s => s.label === label); return stat ? parseNumericValue(stat.value) : 0; }),
+          backgroundColor: isLineChart ? getYearColor(r.year) + '22' : getYearColor(r.year) + 'dd',
+          borderColor: getYearColor(r.year),
+          borderWidth: 2,
+          borderRadius: isLineChart ? 0 : 6,
+          fill: isLineChart,
+          tension: 0.3, // ทำให้เส้นโค้งสวย
+          pointBackgroundColor: getYearColor(r.year),
+          pointRadius: isLineChart ? 5 : 0,
+          pointHoverRadius: 7
+        };
+      });
+
+      const trendChart = new Chart(trendCanvas, {
+        type: isLineChart ? 'line' : 'bar',
+        data: { labels: statLabels, datasets: datasets },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { position: 'top', labels: { usePointStyle: true, padding: 20, font: {weight: '700', size: 13} } }, tooltip: { backgroundColor: 'rgba(15,23,42,0.9)', padding: 12, titleFont: { size: 14, weight: '700' }, bodyFont: { size: 13 }, cornerRadius: 8 } },
+          scales: { y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' } }, x: { grid: { display: false }, ticks: { font: { weight: '600' } } } },
+          animation: { duration: 1200, easing: 'easeOutQuart' }
+        }
+      });
+      currentCharts.push(trendChart);
+    }
+
+    // 2. Radar Chart
     const radarCanvas = document.getElementById('aiRadarChart');
     if (radarCanvas) {
       const radarDatasets = reports.map(r => {
-         return { label: r.label + ' (' + r.typeLabel + ')', data: statLabels.map(label => { const stat = r.data.stats.find(s => s.label === label); return stat ? parseNumericValue(stat.value) : 0; }), borderColor: getYearColor(r.year), backgroundColor: getYearColor(r.year) + '33', borderWidth: 2.5, pointBackgroundColor: getYearColor(r.year), pointBorderColor: '#fff', pointHoverBackgroundColor: '#fff', pointHoverBorderColor: getYearColor(r.year) };
+         return { label: r.label, data: statLabels.map(label => { const stat = r.data.stats.find(s => s.label === label); return stat ? parseNumericValue(stat.value) : 0; }), borderColor: getYearColor(r.year), backgroundColor: getYearColor(r.year) + '33', borderWidth: 2, pointBackgroundColor: getYearColor(r.year) };
       });
-      const radarChart = new Chart(radarCanvas, { type: 'radar', data: { labels: statLabels, datasets: radarDatasets }, options: { responsive: true, maintainAspectRatio: false, scales: { r: { beginAtZero: true, grid: {color: 'rgba(0,0,0,0.08)'}, angleLines: {color: 'rgba(0,0,0,0.05)'}, pointLabels: { font: {family:'Sarabun', size: 13, weight: '600'}, color: '#475569' } } }, plugins: { legend: { position: 'bottom', labels: {font: {family:'Sarabun', size: 13, weight: '600'}, usePointStyle: true, padding: 20} }, tooltip: { backgroundColor: 'rgba(15,23,42,0.9)', titleFont: {family: 'Sarabun'}, bodyFont: {family: 'Sarabun'} } }, animation: { duration: 1500, easing: 'easeOutBounce' } } });
+      const radarChart = new Chart(radarCanvas, { type: 'radar', data: { labels: statLabels, datasets: radarDatasets }, options: { responsive: true, maintainAspectRatio: false, scales: { r: { beginAtZero: true, grid: {color: 'rgba(0,0,0,0.06)'}, pointLabels: { font: {size: 12, weight: '600'}, color: '#475569' } } }, plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, padding: 15, font: {weight: '700'} } } } } });
       currentCharts.push(radarChart);
     }
-    statLabels.forEach((label, idx) => {
-      const canvas = document.getElementById('aiChart' + idx);
-      if (!canvas) return;
-      const labels = reports.map(r => r.label + '\\n(' + r.typeLabel + ')');
-      const values = reports.map(r => { const stat = r.data.stats.find(s => s.label === label); return stat ? parseNumericValue(stat.value) : 0; });
-      const colors = reports.map(r => getYearColor(r.year));
-      const colorsAlpha = reports.map(r => getYearColor(r.year) + 'cc');
-      const chart = new Chart(canvas, { type: 'bar', data: { labels: labels, datasets: [{ label: label, data: values, backgroundColor: colorsAlpha, borderColor: colors, borderWidth: 2, borderRadius: 10, maxBarThickness: 80 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { backgroundColor: 'rgba(15,23,42,0.95)', padding: 12, titleFont: { family: 'Sarabun', size: 13, weight: '700' }, bodyFont: { family: 'Sarabun', size: 13 }, cornerRadius: 10, displayColors: true } }, scales: { y: { beginAtZero: true, ticks: { font: { family: 'Sarabun', size: 12 }, color: '#64748b' }, grid: { color: 'rgba(0,0,0,0.05)' } }, x: { ticks: { font: { family: 'Sarabun', size: 11, weight: '600' }, color: '#334155' }, grid: { display: false } } }, animation: { duration: 900, easing: 'easeOutQuart' } } });
-      currentCharts.push(chart);
-    });
   }, 100);
 }
 
+// ระบบ AI สร้างข้อความวิเคราะห์
 function generateInsights(reports, statLabels) {
-  const insights = [];
-  insights.push(`🎯 <strong>ภาพรวมการประเมิน:</strong> ดำเนินการวิเคราะห์เปรียบเทียบโครงสร้างข้อมูลจาก ${reports.length} รายการ พบความแปรปรวนในตัวชี้วัดสำคัญดังนี้`);
-  statLabels.forEach(label => {
-    const values = reports.map(r => ({ report: r, stat: r.data.stats.find(s => s.label === label) })).filter(v => v.stat).map(v => ({ report: v.report, value: parseNumericValue(v.stat.value), raw: v.stat.value }));
-    if (values.length < 2) return;
-    const max = values.reduce((a, b) => a.value > b.value ? a : b);
-    const min = values.reduce((a, b) => a.value < b.value ? a : b);
-    const avg = (values.reduce((sum, v) => sum + v.value, 0) / values.length);
-    const isPercent = max.raw.includes('%');
-    const diff = max.value - min.value;
-    const diffText = isPercent ? `${diff.toFixed(1)}%` : diff.toFixed(2);
-    let insightText = `<strong>${label}:</strong> ค่าเฉลี่ยโดยรวมอยู่ที่ <strong>${avg.toFixed(2)}${isPercent?'%':''}</strong> `;
-    insightText += `<br>&nbsp;&nbsp;&nbsp;&nbsp;🏆 ทำผลงานได้ดีที่สุดใน <strong style="color:${getYearColor(max.report.year)};">${max.report.label}</strong> (${max.raw})`;
-    insightText += `<br>&nbsp;&nbsp;&nbsp;&nbsp;📉 และมีค่าต่ำสุดใน <strong style="color:${getYearColor(min.report.year)};">${min.report.label}</strong> (${min.raw})`;
-    insightText += `<br>&nbsp;&nbsp;&nbsp;&nbsp;📌 <em>มีส่วนต่างประสิทธิภาพอยู่ที่ ${diffText}</em>`;
-    insights.push(insightText);
-  });
-  if (reports.length === 2 && reports[0].year !== reports[1].year && reports[0].typeLabel === reports[1].typeLabel) {
-     const sorted = [...reports].sort((a,b) => a.year - b.year);
-     insights.push(`📈 <strong>แนวโน้มการเติบโต (Trend Analysis):</strong> เมื่อเปรียบเทียบกลุ่ม ${sorted[0].typeLabel} จาก ${sorted[0].label} สู่ ${sorted[1].label} พบว่ามีการเปลี่ยนแปลงอย่างมีนัยสำคัญ สามารถนำข้อมูลนี้ไปปรับปรุงแผน PR ของปีถัดไปได้`);
+  let summaryText = `ระบบ AI ได้ทำการประมวลผลข้อมูลโครงสร้างจาก <strong>${reports.length} แหล่งข้อมูล</strong> `;
+  let highlights = [];
+  let recommendations = [];
+
+  const isSameType = reports.every(r => r.type === reports[0].type);
+  
+  if (isSameType && reports.length > 1) {
+    // กรณีเทียบปี (Trend)
+    summaryText += `โดยเป็นการเปรียบเทียบแนวโน้ม (Trend Analysis) ของ <strong>${reports[0].typeLabel}</strong> ข้ามปีงบประมาณ พบว่ามีการเปลี่ยนแปลงอย่างมีนัยสำคัญทางสถิติดังนี้:`;
+    
+    // หาค่าที่โตสุด
+    let maxGrowth = 0; let topGrowthMetric = '';
+    
+    statLabels.forEach(label => {
+      const first = parseNumericValue(reports[0].data.stats.find(s => s.label === label)?.value);
+      const last = parseNumericValue(reports[reports.length-1].data.stats.find(s => s.label === label)?.value);
+      
+      if (first && last && first > 0) {
+        const growth = ((last - first) / first) * 100;
+        const trendIcon = growth > 0 ? '📈' : (growth < 0 ? '📉' : '➖');
+        const color = growth > 0 ? 'var(--emerald)' : (growth < 0 ? 'var(--rose)' : 'var(--text-muted)');
+        
+        highlights.push(`<strong>${label}:</strong> อัตราการเปลี่ยนแปลงอยู่ที่ <span style="color:${color}; font-weight:800;">${growth > 0 ? '+':''}${growth.toFixed(1)}%</span> เมื่อเทียบกับปีฐาน (${reports[0].year})`);
+        
+        if (growth > maxGrowth) { maxGrowth = growth; topGrowthMetric = label; }
+      }
+    });
+
+    recommendations.push(`รักษามาตรฐานเชิงบวกในด้าน <strong>${topGrowthMetric}</strong> ซึ่งเป็นจุดแข็งที่มีอัตราการเติบโตสูงสุด`);
+    recommendations.push(`วิเคราะห์ปัจจัยความสำเร็จของปีที่ได้คะแนนสูงสุด เพื่อนำมาประยุกต์เป็น Framework ในการวางแผนสื่อสารองค์กรปีถัดไป`);
+
+  } else {
+    // กรณีเทียบข้ามประเภท
+    summaryText += `โดยเป็นการเปรียบเทียบแบบ Cross-sectional เพื่อประเมินความสอดคล้องระหว่างกลุ่มตัวอย่าง พบว่าแต่ละกลุ่มให้ความสำคัญกับตัวชี้วัดแตกต่างกัน:`;
+    
+    statLabels.forEach(label => {
+      const vals = reports.map(r => ({ lbl: r.typeLabel, yr: r.year, val: parseNumericValue(r.data.stats.find(s => s.label === label)?.value) }));
+      const maxObj = vals.reduce((a,b) => a.val > b.val ? a : b);
+      highlights.push(`<strong>${label}:</strong> กลุ่ม <span style="color:${getYearColor(maxObj.yr)}; font-weight:800;">${maxObj.lbl} (${maxObj.yr})</span> ให้คะแนนสูงสุดประเมินไว้ที่ <strong>${maxObj.val}</strong>`);
+    });
+
+    recommendations.push(`พิจารณาปรับใช้กลยุทธ์การสื่อสารแบบเจาะกลุ่ม (Personalized Communication) เพื่อลดช่องว่างความพึงพอใจระหว่างกลุ่มบุคลากรและผู้ใช้บริการ`);
+    recommendations.push(`นำผลประเมินที่โดดเด่นไปต่อยอดเป็นแคมเปญ PR เพื่อยกระดับภาพลักษณ์องค์กรในภาพรวม`);
   }
-  return insights;
+
+  return { summaryText, highlights, recommendations };
 }
 
 init();
