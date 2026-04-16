@@ -40,270 +40,46 @@
 
     <script src="auth.js"></script>
     <script>
-        // ============================================
-        // ⭐ แก้ตรงนี้: วาง URL ที่ได้จาก Apps Script Deploy
-        // ============================================
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzmzYhYYfJoshKHGW5U-APtmvTQMqlf9L3lzTlXfgDSE2WbU7-Oa9ZiI2nCrti6E60h/exec"
- // ============================================================
-// 🎯 Apps Script สำหรับ CMUL PR Dashboard
-// สร้างขึ้นใหม่ - พร้อมใช้งานทันที
-//
-// 📋 โครงสร้าง Google Sheet ที่รองรับ:
-// ต้องมี Tab ชื่อ "accounts" โครงสร้างดังนี้:
-//
-// ┌──────────┬──────────┬───────┬──────────┐
-// │    A     │    B     │   C   │    D     │
-// ├──────────┼──────────┼───────┼──────────┤
-// │ Username │ Password │ Name  │ Position │  ← แถว 1 (หัวตาราง)
-// │ thian    │ 1234     │ คุณ..│ ผู้ดูแล  │  ← แถว 2+
-// └──────────┴──────────┴───────┴──────────┘
-// ============================================================
-
-const SHEET_NAME = "accounts"; 
-const DEFAULT_PASSWORD = "password123";
-const ALERT_EMAIL = "thianrawich.ph@gmail.com";
-
-// ตำแหน่งคอลัมน์ (นับจาก 0)
-const COL_USERNAME = 0;  // A
-const COL_PASSWORD = 1;  // B
-const COL_NAME     = 2;  // C
-const COL_POSITION = 3;  // D
-
-
-// ============================================================
-// 🧪 ฟังก์ชันทดสอบ - Run ตัวนี้ก่อน Deploy
-// ============================================================
-function TEST_checkSystem() {
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
-  
-  Logger.log("════════════════════════════════════════");
-  Logger.log("📁 ชื่อไฟล์: " + ss.getName());
-  Logger.log("🔗 URL: " + ss.getUrl());
-  Logger.log("📑 Tab ทั้งหมด: " + ss.getSheets().map(s => s.getName()).join(" | "));
-  Logger.log("════════════════════════════════════════");
-  
-  const sheet = findSheetByName(ss, SHEET_NAME);
-  if (!sheet) {
-    Logger.log("❌ ไม่พบ Tab ชื่อ '" + SHEET_NAME + "'");
-    Logger.log("→ แก้ไข: สร้าง/เปลี่ยนชื่อ Tab เป็น 'accounts'");
-    return;
-  }
-  
-  Logger.log("✅ พบ Tab 'accounts'");
-  const headers = sheet.getRange(1, 1, 1, 4).getValues()[0];
-  Logger.log("📋 หัวตาราง: A=" + headers[0] + " | B=" + headers[1] + " | C=" + headers[2] + " | D=" + headers[3]);
-  
-  const accounts = getAccountsFromSheet(sheet);
-  const count = Object.keys(accounts).length;
-  Logger.log("👥 พบผู้ใช้ " + count + " คน:");
-  Logger.log(JSON.stringify(accounts, null, 2));
-  
-  if (count > 0) {
-    Logger.log("════════════════════════════════════════");
-    Logger.log("🎉 ระบบพร้อม Deploy แล้ว!");
-  }
-}
-
-
-// ============================================================
-// 📡 Main Endpoints
-// ============================================================
-function doGet(e) {
-  try {
-    const action = e.parameter.action;
-    const ss = SpreadsheetApp.getActiveSpreadsheet();
-    const sheet = findSheetByName(ss, SHEET_NAME);
-    
-    if (!sheet) {
-      const existingSheets = ss.getSheets().map(s => s.getName()).join(", ");
-      return createJsonResponse({ 
-        success: false, 
-        message: "ไม่พบ Sheet '" + SHEET_NAME + "' | มีอยู่: " + existingSheets 
-      });
-    }
-
-    // 1. ดึงข้อมูลบัญชี
-    if (action === "getAccounts") {
-      return createJsonResponse({ 
-        success: true, 
-        accounts: getAccountsFromSheet(sheet) 
-      });
-    }
-    
-    // 2. รีเซ็ตรหัสผ่าน
-    if (action === "resetPassword") {
-      const user = (e.parameter.username || "").trim().toLowerCase();
-      const data = sheet.getDataRange().getValues();
-      for (let i = 1; i < data.length; i++) {
-        if (data[i][COL_USERNAME].toString().trim().toLowerCase() === user) {
-          sheet.getRange(i + 1, COL_PASSWORD + 1).setValue(DEFAULT_PASSWORD); 
-          return createJsonResponse({ 
-            success: true, 
-            message: "รีเซ็ตรหัสผ่านเป็น " + DEFAULT_PASSWORD + " เรียบร้อยแล้ว" 
-          });
-        }
-      }
-      return createJsonResponse({ success: false, message: "ไม่พบชื่อผู้ใช้งานในระบบ" });
-    }
-
-    // 3. ดึงรายงาน HTML
-    if (action === 'getReportContent') {
-      const reportSheet = findSheetByName(ss, "2026-SEO MAR-html-embed"); 
-      if (!reportSheet) {
-        return ContentService.createTextOutput("ไม่พบหน้าข้อมูลรายงาน")
-          .setMimeType(ContentService.MimeType.TEXT);
-      }
-      const htmlContent = reportSheet.getRange("A1").getValue(); 
-      return ContentService.createTextOutput(htmlContent)
-        .setMimeType(ContentService.MimeType.TEXT);
-    }
-
-    // 4. ส่งเมลแจ้งเตือน
-    if (action === "sendAlertEmail") {
-      const user = e.parameter.user || "ไม่ระบุตัวตน";
-      const time = new Date().toLocaleString("th-TH", {timeZone: "Asia/Bangkok"});
-      MailApp.sendEmail(ALERT_EMAIL, 
-        "🚨 แจ้งเตือนความปลอดภัย: พยายามสั่งพิมพ์/บันทึกหน้าจอ", 
-        "ผู้ใช้งาน: " + user + "\nเวลา: " + time + "\nระบบ: PR CMUL Dashboard");
-      return createJsonResponse({ success: true });
-    }
-
-    return createJsonResponse({ success: false, message: "ไม่รู้จัก action: " + action });
-    
-  } catch (err) {
-    return createJsonResponse({ success: false, message: "Server Error: " + err.message });
-  }
-}
-
-function doPost(e) {
-  try {
-    if (e.parameter.action === "changePassword") {
-      const user = (e.parameter.username || "").trim().toLowerCase();
-      const oldPass = (e.parameter.oldPassword || "").trim();
-      const newPass = (e.parameter.newPassword || "").trim();
-      const ss = SpreadsheetApp.getActiveSpreadsheet();
-      const sheet = findSheetByName(ss, SHEET_NAME);
-      
-      if (!sheet) return createJsonResponse({ success: false, message: "ไม่พบ Sheet" });
-      
-      const data = sheet.getDataRange().getValues();
-      
-      for (let i = 1; i < data.length; i++) {
-        if (data[i][COL_USERNAME].toString().trim().toLowerCase() === user) {
-          if (data[i][COL_PASSWORD].toString().trim() === oldPass) {
-            sheet.getRange(i + 1, COL_PASSWORD + 1).setValue(newPass);
-            return createJsonResponse({ success: true, message: "เปลี่ยนรหัสผ่านสำเร็จ" });
-          }
-          return createJsonResponse({ success: false, message: "รหัสผ่านเดิมไม่ถูกต้อง" });
-        }
-      }
-      return createJsonResponse({ success: false, message: "ไม่พบผู้ใช้" });
-    }
-    return createJsonResponse({ success: false, message: "ไม่รู้จัก action" });
-  } catch (err) {
-    return createJsonResponse({ success: false, message: "Server Error: " + err.message });
-  }
-}
-
-
-// ============================================================
-// 🛠️ Helper Functions
-// ============================================================
-function getAccountsFromSheet(sheet) {
-  const data = sheet.getDataRange().getValues();
-  const accounts = {};
-  
-  for (let i = 1; i < data.length; i++) {
-    const user = (data[i][COL_USERNAME] || "").toString().trim().toLowerCase();
-    if (user) {
-      accounts[user] = {
-        password:    (data[i][COL_PASSWORD] || "").toString().trim(),
-        displayName: (data[i][COL_NAME]     || "").toString().trim(),
-        role:        "admin",
-        roleLabel:   (data[i][COL_POSITION] || "").toString().trim()
-      };
-    }
-  }
-  return accounts;
-}
-
-function findSheetByName(ss, name) {
-  const targetName = name.trim().toLowerCase();
-  const sheets = ss.getSheets();
-  for (let i = 0; i < sheets.length; i++) {
-    if (sheets[i].getName().trim().toLowerCase() === targetName) {
-      return sheets[i];
-    }
-  }
-  return null;
-}
-
-function createJsonResponse(data) {
-  return ContentService.createTextOutput(JSON.stringify(data))
-    .setMimeType(ContentService.MimeType.JSON);
-}
-}
-";
-        
-        // ตัวอย่าง:
-        // const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxxxxxxxxxxxxxxx/exec";
-        // ============================================
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzmzYhYYfJoshKHGW5U-APtmvTQMqlf9L3lzTlXfgDSE2WbU7-Oa9ZiI2nCrti6E60h/exec";
         
         let accounts = {};
         let isReady = false;
-
         const statusEl = document.getElementById('status');
         const btnEl = document.getElementById('btnTxt');
 
-        if (SCRIPT_URL.indexOf("วาง_URL") !== -1 || SCRIPT_URL === "") {
-            statusEl.style.color = "#ef4444";
-            statusEl.innerText = "⚠️ โปรดตั้งค่า SCRIPT_URL ในไฟล์ก่อน";
-            btnEl.innerText = "ยังไม่ได้ตั้งค่า";
-        } else {
-            fetch(SCRIPT_URL + "?action=getAccounts")
-                .then(r => {
-                    if (!r.ok) throw new Error("HTTP " + r.status);
-                    return r.text();
-                })
-                .then(text => {
-                    try {
-                        return JSON.parse(text);
-                    } catch (e) {
-                        console.error("Response ไม่ใช่ JSON:", text.substring(0, 200));
-                        throw new Error("Apps Script ส่งข้อมูลกลับมาไม่ถูกต้อง (ตรวจสอบสิทธิ์การเข้าถึง = Anyone)");
-                    }
-                })
-                .then(d => {
-                    if (d.success === false) {
-                        throw new Error(d.message || "ไม่สามารถโหลดข้อมูลได้");
-                    }
-                    accounts = d.accounts || {};
-                    const count = Object.keys(accounts).length;
-                    if (count === 0) {
-                        statusEl.style.color = "#ef4444";
-                        statusEl.innerText = "❌ ไม่พบข้อมูลบัญชีใน Sheet";
-                        return;
-                    }
-                    isReady = true;
-                    btnEl.disabled = false;
-                    btnEl.innerText = "เข้าสู่ระบบ";
-                    statusEl.style.color = "#059669";
-                    statusEl.innerText = "✅ ระบบพร้อมใช้งาน (" + count + " บัญชี)";
-                })
-                .catch(err => {
-                    console.error("โหลดบัญชีล้มเหลว:", err);
+        fetch(SCRIPT_URL + "?action=getAccounts")
+            .then(r => r.text())
+            .then(text => {
+                try { return JSON.parse(text); }
+                catch (e) { throw new Error("Apps Script ตอบกลับไม่ถูกต้อง (เช็คสิทธิ์ Deploy = Anyone)"); }
+            })
+            .then(d => {
+                if (d.success === false) throw new Error(d.message || "โหลดข้อมูลไม่สำเร็จ");
+                accounts = d.accounts || {};
+                const count = Object.keys(accounts).length;
+                if (count === 0) {
                     statusEl.style.color = "#ef4444";
-                    statusEl.innerText = "❌ เชื่อมต่อระบบไม่ได้: " + err.message;
-                    btnEl.innerText = "ระบบไม่พร้อม";
-                });
-        }
+                    statusEl.innerText = "❌ ไม่พบข้อมูลบัญชีใน Sheet";
+                    return;
+                }
+                isReady = true;
+                btnEl.disabled = false;
+                btnEl.innerText = "เข้าสู่ระบบ";
+                statusEl.style.color = "#059669";
+                statusEl.innerText = "✅ ระบบพร้อมใช้งาน (" + count + " บัญชี)";
+            })
+            .catch(err => {
+                console.error(err);
+                statusEl.style.color = "#ef4444";
+                statusEl.innerText = "❌ " + err.message;
+                btnEl.innerText = "ระบบไม่พร้อม";
+            });
 
         document.getElementById('loginForm').onsubmit = (e) => {
             e.preventDefault();
-            
             if (!isReady) {
                 statusEl.style.color = "#ef4444";
-                statusEl.innerText = "ระบบยังไม่พร้อม โปรดรอสักครู่";
+                statusEl.innerText = "ระบบยังไม่พร้อม";
                 return;
             }
 
@@ -313,7 +89,7 @@ function createJsonResponse(data) {
 
             if (!acc) {
                 statusEl.style.color = "#ef4444";
-                statusEl.innerText = "❌ ไม่พบชื่อผู้ใช้นี้ในระบบ";
+                statusEl.innerText = "❌ ไม่พบชื่อผู้ใช้นี้";
                 return;
             }
 
@@ -337,7 +113,7 @@ function createJsonResponse(data) {
             if (!u) return alert("โปรดกรอก Username");
             if (confirm("รีเซ็ตรหัสผ่านของ \"" + u + "\" เป็น password123?")) {
                 try {
-                    const res = await fetch(`${SCRIPT_URL}?action=resetPassword&username=${encodeURIComponent(u)}`);
+                    const res = await fetch(SCRIPT_URL + "?action=resetPassword&username=" + encodeURIComponent(u));
                     const d = await res.json();
                     alert(d.message);
                     if (d.success) location.reload();
