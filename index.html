@@ -43,7 +43,7 @@
         // ═══════════════════════════════════════════════════════════════
         // 🔗 Apps Script URL - ต้องตรงกับใน auth.js และ dashboard.html
         // ═══════════════════════════════════════════════════════════════
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxz2YclGvdzi8VXzLAF1tAcUDLwsvkeSAl0c9mfMjixepDSMndyzUgHSHvXuInpyPJ_/exec";
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw8J-omZtpiUk7gGAyBXVqO_u5ThRMEmJXNqAUfumTT0NRQz6Ue2Z9R_GUIWpgeIpK5/exec";
         
         let accounts = {};
         let isReady = false;
@@ -122,7 +122,7 @@
         async function handleReset() {
             const u = document.getElementById('user').value.trim();
             if (!u) return alert("โปรดกรอก Username");
-            if (confirm("รีเซ็ตรหัสผ่านของ \"" + u + "\" เป็น password123?")) {
+            if(confirm("ระบบจะดำเนินการสร้างรหัสผ่านชั่วคราวและส่งไปยังอีเมลของคุณ ยืนยันการดำเนินการหรือไม่?")) {
                 try {
                     const res = await fetch(SCRIPT_URL + "?action=resetPassword&username=" + encodeURIComponent(u));
                     const d = await res.json();
