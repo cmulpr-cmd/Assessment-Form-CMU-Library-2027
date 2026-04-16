@@ -1,6 +1,6 @@
 (function() {
-    // แก้บั๊ก: ใส่ SCRIPT_URL จริงแทน placeholder
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyqId2pTu3eESlrk1w1-sFtxoMCRQVCC7WPXJ1p_JOhiaizULKbDcPCs03x5Va-SNLcyQ/exec";
+    // ⭐ URL ใหม่ (จาก Deploy ล่าสุด - ไฟล์ assessment_backup_backend)
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxr0sOK9Vc5KqJWKBvQ66NTuTHBYhA8PIsacQQ1V-yy2HLTqp5Lwvdjyd9T79xl2JuHHg/exec";
 
     // 1. ตรวจสอบการเข้าถึง
     const userRaw = sessionStorage.getItem("cc_pr_user");
@@ -12,7 +12,6 @@
 
     if (userRaw) {
         const user = JSON.parse(userRaw);
-        // แสดงชื่อมุมขวาบน
         const profile = document.createElement('div');
         profile.style.cssText = "position:fixed; top:15px; right:20px; z-index:1000; background:rgba(255,255,255,0.9); backdrop-filter:blur(10px); padding:8px 15px; border-radius:100px; border:1px solid rgba(8,145,178,0.2); display:flex; align-items:center; gap:10px; font-family:'Sarabun',sans-serif; box-shadow:0 4px 15px rgba(0,0,0,0.05);";
         profile.innerHTML = `
@@ -25,7 +24,7 @@
         document.body.appendChild(profile);
     }
 
-    // 2. ระบบรักษาความปลอดภัยสูงสุด
+    // 2. ระบบรักษาความปลอดภัย
     document.addEventListener('contextmenu', e => e.preventDefault());
     document.addEventListener('keydown', e => {
         if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) || (e.ctrlKey && e.key === 'U')) {
