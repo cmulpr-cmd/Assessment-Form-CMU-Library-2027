@@ -14,12 +14,13 @@
         p { color:#64748b; font-size:14px; margin-bottom:35px; }
         .input-group { text-align:left; margin-bottom:20px; }
         label { display:block; font-size:13px; font-weight:600; color:#475569; margin-bottom:8px; }
-        input { width:100%; padding:14px; border:1.5px solid #e2e8f0; border-radius:15px; background:#fff; font-size:15px; outline:none; transition:0.3s; box-sizing:border-box; }
+        input { width:100%; padding:14px; border:1.5px solid #e2e8f0; border-radius:15px; background:#fff; font-size:15px; outline:none; transition:0.3s; box-sizing:border-box; font-family:inherit; }
         input:focus { border-color:#0891b2; box-shadow:0 0 0 4px rgba(8,145,178,0.1); }
-        .btn { width:100%; padding:15px; background:linear-gradient(135deg,#0891b2,#2563eb); color:white; border:none; border-radius:15px; font-size:16px; font-weight:600; cursor:pointer; transition:0.3s; margin-top:10px; }
+        .btn { width:100%; padding:15px; background:linear-gradient(135deg,#0891b2,#2563eb); color:white; border:none; border-radius:15px; font-size:16px; font-weight:600; cursor:pointer; transition:0.3s; margin-top:10px; font-family:inherit; }
         .btn:hover:not(:disabled) { transform:translateY(-2px); box-shadow:0 8px 20px rgba(8,145,178,0.25); }
         .btn:disabled { opacity:0.5; cursor:not-allowed; }
-        .forgot { background:none; border:none; color:#94a3b8; font-size:13px; margin-top:25px; cursor:pointer; }
+        .forgot { background:none; border:none; color:#94a3b8; font-size:13px; margin-top:25px; cursor:pointer; font-family:inherit; }
+        .forgot:hover { color:#64748b; }
         .status { margin-top:15px; font-size:13px; min-height:20px; font-weight:600; }
     </style>
 </head>
@@ -38,8 +39,10 @@
         <button class="forgot" onclick="handleReset()">ลืมรหัสผ่าน? (คืนค่าเริ่มต้น)</button>
     </div>
 
-    <script src="auth.js"></script>
     <script>
+        // ═══════════════════════════════════════════════════════════════
+        // 🔗 Apps Script URL - ต้องตรงกับใน auth.js และ dashboard.html
+        // ═══════════════════════════════════════════════════════════════
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzmzYhYYfJoshKHGW5U-APtmvTQMqlf9L3lzTlXfgDSE2WbU7-Oa9ZiI2nCrti6E60h/exec";
         
         let accounts = {};
@@ -47,6 +50,12 @@
         const statusEl = document.getElementById('status');
         const btnEl = document.getElementById('btnTxt');
 
+        // ถ้า login อยู่แล้ว → ไป dashboard เลย
+        if (sessionStorage.getItem("cc_pr_user")) {
+            window.location.href = "dashboard.html";
+        }
+
+        // โหลดข้อมูลบัญชี
         fetch(SCRIPT_URL + "?action=getAccounts")
             .then(r => r.text())
             .then(text => {
@@ -94,14 +103,16 @@
             }
 
             if (acc.password === p) {
+                // บันทึก username ด้วย เพื่อใช้ตอนเปลี่ยนรหัส
                 sessionStorage.setItem("cc_pr_user", JSON.stringify({
+                    username: u,
                     displayName: acc.displayName,
                     role: acc.role,
                     roleLabel: acc.roleLabel
                 }));
                 statusEl.style.color = "#059669";
                 statusEl.innerText = "✅ สำเร็จ! กำลังไปที่ Dashboard...";
-                setTimeout(() => window.location.href = "dashboard.html", 1000);
+                setTimeout(() => window.location.href = "dashboard.html", 800);
             } else {
                 statusEl.style.color = "#ef4444";
                 statusEl.innerText = "❌ รหัสผ่านไม่ถูกต้อง";
