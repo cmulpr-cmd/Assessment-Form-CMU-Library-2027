@@ -96,7 +96,7 @@ body {
 .dropdown-item:hover { background: rgba(0,0,0,0.03); color: var(--text); }
 .dropdown-item.logout { color: var(--rose); margin-top: 4px; }
 .dropdown-item.logout:hover { background: rgba(225,29,72,0.05); }
-.dropdown-item svg { width: 18px; height: 18px; flex-shrink: 0; } /* 🔒 ล็อคขนาดไอคอนตรงนี้ครับ */
+.dropdown-item svg { width: 18px !important; height: 18px !important; flex-shrink: 0; } 
 
 /* === Hero === */
 .hero { padding: 50px 40px 35px; text-align: center; }
@@ -287,15 +287,18 @@ body {
 .ai-chart-card { background: white; border-radius: 20px; padding: 26px 28px; border: 1px solid var(--border); box-shadow: 0 2px 12px rgba(0,0,0,0.03); }
 .ai-chart-card h3 { font-family: 'Noto Sans Thai', sans-serif; font-size: 16px; font-weight: 800; color: var(--text); margin-bottom: 18px; display: flex; align-items: center; gap: 10px; }
 .ai-chart-card .chart-wrap { position: relative; height: 260px; }
+
+/* ตารางข้อมูล - ให้มีช่องกลางสำหรับความสวยงาม */
 .ai-table-card { background: white; border-radius: 20px; padding: 26px 28px; border: 1px solid var(--border); box-shadow: 0 2px 12px rgba(0,0,0,0.03); margin-bottom: 24px; overflow-x: auto; }
 .ai-table-card h3 { font-family: 'Noto Sans Thai', sans-serif; font-size: 16px; font-weight: 800; color: var(--text); margin-bottom: 18px; }
 .ai-data-table { width: 100%; border-collapse: collapse; }
-.ai-data-table th, .ai-data-table td { padding: 14px 16px; text-align: left; font-size: 14px; border-bottom: 1px solid var(--border); }
+.ai-data-table th, .ai-data-table td { padding: 14px 16px; text-align: center; font-size: 14px; border-bottom: 1px solid var(--border); }
 .ai-data-table th { font-weight: 800; font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
 .ai-data-table td { color: var(--text); font-weight: 600; }
-.ai-data-table td.stat-label { color: var(--text-dim); font-weight: 500; }
-.ai-data-table .year-tag { display: inline-flex; align-items: center; gap: 8px; }
+.ai-data-table td.stat-label { color: var(--text-dim); font-weight: 600; text-align: left; }
+.ai-data-table .year-tag { display: inline-flex; align-items: center; justify-content: center; gap: 8px; flex-direction: column; }
 .ai-data-table .year-tag .year-dot { width: 10px; height: 10px; border-radius: 50%; }
+
 .ai-insights { background: linear-gradient(135deg, rgba(245,158,11,0.05), rgba(219,39,119,0.05), rgba(124,58,237,0.05)); border-radius: 20px; padding: 28px; border: 1px solid rgba(124,58,237,0.15); margin-bottom: 24px; }
 .ai-insights h3 { font-family: 'Noto Sans Thai', sans-serif; font-size: 16px; font-weight: 800; color: var(--text); margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
 .ai-insights ul { list-style: none; padding: 0; }
@@ -453,12 +456,8 @@ body {
 </div>
 
 <script>
-// === ระบบตรวจสอบความปลอดภัย และ อัปเดตเมนูมุมขวาบน ===
 (function initSecurity() {
-  // บล็อกคลิกขวา
   document.addEventListener('contextmenu', e => e.preventDefault());
-  
-  // บล็อกปุ่มลัด
   document.addEventListener('keydown', e => {
       if (e.key === 'F12' || e.keyCode === 123) { e.preventDefault(); return false; }
       if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'I' || e.key === 'J')) { e.preventDefault(); return false; }
@@ -470,7 +469,6 @@ body {
       }
   });
 
-  // โหลดข้อมูลโปรไฟล์
   try {
       const rawUser = localStorage.getItem('cc_pr_user') || sessionStorage.getItem('cc_pr_user');
       if (!rawUser) {
@@ -520,13 +518,19 @@ const MONTH_NAMES = {
   'SEP': 'กันยายน', 'OCT': 'ตุลาคม',     'NOV': 'พฤศจิกายน', 'DEC': 'ธันวาคม'
 };
 
-// 🎨 สีประจำแต่ละปี (ใช้ในกราฟ AI Comparison)
-const YEAR_COLORS = { 2566: '#ef4444', 2567: '#f97316', 2568: '#22c55e', 2569: '#0891b2', 2570: '#2563eb', 2571: '#7c3aed', 2572: '#ec4899' };
+// 🎨 สีประจำแต่ละปีให้แตกต่างชัดเจน
+const YEAR_COLORS = { 
+  2566: '#ef4444', // Red
+  2567: '#f59e0b', // Amber 
+  2568: '#10b981', // Emerald 
+  2569: '#06b6d4', // Cyan 
+  2570: '#3b82f6', // Blue 
+  2571: '#8b5cf6', // Violet 
+  2572: '#ec4899'  // Pink 
+};
 function getYearColor(year) { return YEAR_COLORS[year] || '#64748b'; }
 
-// ═══════════════════════════════════════════════════════════════════════════
-// ⭐⭐⭐ ข้อมูลรายงาน (แก้บั๊ก Comma แล้ว) ⭐⭐⭐
-// ═══════════════════════════════════════════════════════════════════════════
+// ข้อมูลรายงาน
 const REPORT_CONFIG = {
   2566: {
     'MAR': {
@@ -578,7 +582,6 @@ const REPORT_CONFIG = {
     }
   }
 };
-// ═══════════════════════════════════════════════════════════════════════════
 
 let currentYear = CURRENT_YEAR;
 let currentMonth = null;
@@ -595,7 +598,7 @@ function getYearList() {
 function getMonthsForYear(year) { return REPORT_CONFIG[year] ? Object.keys(REPORT_CONFIG[year]) : []; }
 function getReport(year, month) { return REPORT_CONFIG[year] && REPORT_CONFIG[year][month] ? REPORT_CONFIG[year][month] : null; }
 
-// Loader ใหม่
+// Loader
 function showLoader(duration, callback, text, isAI = false) {
   const loader = document.getElementById('loader');
   const loaderText = document.getElementById('loaderText');
@@ -845,7 +848,7 @@ function openAIComparison() {
       const report = getReport(state.year, state.month);
       return { colIdx, year: state.year, month: state.month, type: state.type, label: state.label, typeLabel: state.type === 'internal' ? 'บุคลากรภายใน' : 'ผู้ใช้บริการภายนอก', data: report[state.type] };
     });
-  // เปลี่ยนพารามิเตอร์สุดท้ายเป็น true เพื่อใช้ข้อความของ AI
+  
   showLoader(1200, () => buildAIReport(filled), null, true);
 }
 
@@ -861,34 +864,114 @@ function parseNumericValue(strValue) {
   return isNaN(num) ? 0 : num;
 }
 
+// ============================================================================
+// 🤖 CORE AI ENGINE: อัปเกรดระบบวิเคราะห์ให้ฉลาดและลงลึกยิ่งขึ้น
+// ============================================================================
+
 function buildAIReport(reports) {
   const body = document.getElementById('aiModalBody');
-  const introHTML = `<div class="ai-intro"><div class="ai-intro-label">📊 กำลังเปรียบเทียบ ${reports.length} รายการ</div><div class="ai-intro-items">${reports.map(r => `<div class="ai-intro-chip" style="border-color: ${getYearColor(r.year)}40;"><div class="year-dot" style="background: ${getYearColor(r.year)};"></div><div><div class="chip-year" style="color: ${getYearColor(r.year)};">${r.label}</div><div class="chip-meta">${r.typeLabel}</div></div></div>`).join('')}</div></div>`;
+  
+  // 1. หัวข้อและแถบสีด้านบน
+  const introHTML = `<div class="ai-intro"><div class="ai-intro-label">📊 ภาพรวมการเปรียบเทียบ ${reports.length} รายการ</div><div class="ai-intro-items">${reports.map(r => `<div class="ai-intro-chip" style="border-color: ${getYearColor(r.year)}40;"><div class="year-dot" style="background: ${getYearColor(r.year)};"></div><div><div class="chip-year" style="color: ${getYearColor(r.year)};">${r.label}</div><div class="chip-meta">${r.typeLabel}</div></div></div>`).join('')}</div></div>`;
+  
   const allLabels = new Set();
   reports.forEach(r => r.data.stats.forEach(s => allLabels.add(s.label)));
   const statLabels = [...allLabels];
+
+  // 2. 🕸️ แผนภาพเรดาร์ (เปรียบเทียบทุกมิติ)
+  const radarHTML = `
+    <div class="ai-chart-card" style="margin-bottom: 24px;">
+      <h3>🕸️ แผนภาพเปรียบเทียบความสมดุล (Radar Chart)</h3>
+      <div class="chart-wrap" style="height: 380px;">
+        <canvas id="aiRadarChart"></canvas>
+      </div>
+    </div>
+  `;
+
+  // 3. กราฟแท่งแยกรายตัวชี้วัด
   const chartsHTML = `<div class="ai-charts">${statLabels.map((label, idx) => `<div class="ai-chart-card"><h3>📈 ${label}</h3><div class="chart-wrap"><canvas id="aiChart${idx}"></canvas></div></div>`).join('')}</div>`;
+  
+  // 4. ตารางข้อมูลพร้อมไฮไลต์ค่าสูงสุด (⭐)
   const tableRows = statLabels.map(label => {
-    const cells = reports.map(r => {
+    // หาค่าสูงที่สุดในแถวนี้ก่อน
+    const rowValues = reports.map(r => {
       const stat = r.data.stats.find(s => s.label === label);
-      return `<td>${stat ? stat.value : '—'}</td>`;
+      return { raw: stat ? stat.value : '—', num: stat ? parseNumericValue(stat.value) : -Infinity };
+    });
+    const maxNum = Math.max(...rowValues.map(v => v.num).filter(n => n !== -Infinity));
+
+    // สร้างเซลล์ตาราง
+    const cells = rowValues.map((val, i) => {
+      // ถ้าเป็นค่าสูงสุด (Max) ให้ไฮไลต์
+      if (val.num === maxNum && maxNum !== -Infinity) {
+        return `<td style="color:${getYearColor(reports[i].year)}; font-weight: 800; background: ${getYearColor(reports[i].year)}15; border-radius: 8px;">⭐ ${val.raw}</td>`;
+      }
+      return `<td>${val.raw}</td>`;
     }).join('');
+    
     return `<tr><td class="stat-label">${label}</td>${cells}</tr>`;
   }).join('');
-  const tableHTML = `<div class="ai-table-card"><h3>📋 ตารางข้อมูลเปรียบเทียบ</h3><table class="ai-data-table"><thead><tr><th>ตัวชี้วัด</th>${reports.map(r => `<th><div class="year-tag"><div class="year-dot" style="background: ${getYearColor(r.year)};"></div>${r.label}<br><span style="font-weight:500; color:var(--text-muted); font-size:11px;">${r.typeLabel}</span></div></th>`).join('')}</tr></thead><tbody>${tableRows}</tbody></table></div>`;
   
+  const tableHTML = `<div class="ai-table-card"><h3>📋 ตารางเปรียบเทียบข้อมูลเชิงลึก</h3><table class="ai-data-table"><thead><tr><th>ตัวชี้วัด</th>${reports.map(r => `<th><div class="year-tag"><div class="year-dot" style="background: ${getYearColor(r.year)};"></div>${r.label}<br><span style="font-weight:500; color:var(--text-muted); font-size:11px;">${r.typeLabel}</span></div></th>`).join('')}</tr></thead><tbody>${tableRows}</tbody></table></div>`;
+  
+  // 5. บทวิเคราะห์ AI แบบละเอียด
   const insights = generateInsights(reports, statLabels);
-  const insightsHTML = `<div class="ai-insights"><h3>💡 บทวิเคราะห์อัตโนมัติ</h3><ul>${insights.map(i => `<li>${i}</li>`).join('')}</ul></div>`;
-  const actionsHTML = `<div class="ai-actions"><button class="ai-action-btn" onclick="window.print()">🖨️ พิมพ์รายงาน</button><button class="ai-action-btn primary" onclick="closeAIModal()">✓ เรียบร้อย</button></div>`;
+  const insightsHTML = `<div class="ai-insights"><h3>💡 บทวิเคราะห์เชิงลึก (Deep Insights)</h3><ul>${insights.map(i => `<li>${i}</li>`).join('')}</ul></div>`;
+  const actionsHTML = `<div class="ai-actions"><button class="ai-action-btn" onclick="window.print()">🖨️ พิมพ์รายงาน</button><button class="ai-action-btn primary" onclick="closeAIModal()">✓ รับทราบข้อมูล</button></div>`;
 
-  body.innerHTML = introHTML + chartsHTML + tableHTML + insightsHTML + actionsHTML;
+  body.innerHTML = introHTML + radarHTML + chartsHTML + tableHTML + insightsHTML + actionsHTML;
   document.getElementById('aiModal').classList.add('show');
 
+  // วาดกราฟ
   setTimeout(() => {
+    
+    // --- 🕸️ วาด Radar Chart ---
+    const radarCanvas = document.getElementById('aiRadarChart');
+    if (radarCanvas) {
+      const radarDatasets = reports.map(r => {
+         return {
+            label: r.label + ' (' + r.typeLabel + ')',
+            data: statLabels.map(label => {
+               const stat = r.data.stats.find(s => s.label === label);
+               return stat ? parseNumericValue(stat.value) : 0;
+            }),
+            borderColor: getYearColor(r.year),
+            backgroundColor: getYearColor(r.year) + '33', // ความโปร่งใส 20%
+            borderWidth: 2.5,
+            pointBackgroundColor: getYearColor(r.year),
+            pointBorderColor: '#fff',
+            pointHoverBackgroundColor: '#fff',
+            pointHoverBorderColor: getYearColor(r.year)
+         };
+      });
+      const radarChart = new Chart(radarCanvas, {
+        type: 'radar',
+        data: { labels: statLabels, datasets: radarDatasets },
+        options: {
+           responsive: true, maintainAspectRatio: false,
+           scales: { 
+             r: { 
+               beginAtZero: true, 
+               grid: {color: 'rgba(0,0,0,0.08)'}, 
+               angleLines: {color: 'rgba(0,0,0,0.05)'},
+               pointLabels: { font: {family:'Sarabun', size: 13, weight: '600'}, color: '#475569' } 
+             } 
+           },
+           plugins: { 
+             legend: { position: 'bottom', labels: {font: {family:'Sarabun', size: 13, weight: '600'}, usePointStyle: true, padding: 20} },
+             tooltip: { backgroundColor: 'rgba(15,23,42,0.9)', titleFont: {family: 'Sarabun'}, bodyFont: {family: 'Sarabun'} }
+           },
+           animation: { duration: 1500, easing: 'easeOutBounce' }
+        }
+      });
+      currentCharts.push(radarChart);
+    }
+
+    // --- 📈 วาด Bar Charts ---
     statLabels.forEach((label, idx) => {
       const canvas = document.getElementById('aiChart' + idx);
       if (!canvas) return;
-      const labels = reports.map(r => r.label + '\n(' + r.typeLabel + ')');
+      const labels = reports.map(r => r.label + '\\n(' + r.typeLabel + ')');
       const values = reports.map(r => { const stat = r.data.stats.find(s => s.label === label); return stat ? parseNumericValue(stat.value) : 0; });
       const colors = reports.map(r => getYearColor(r.year));
       const colorsAlpha = reports.map(r => getYearColor(r.year) + 'cc');
@@ -910,26 +993,36 @@ function buildAIReport(reports) {
 
 function generateInsights(reports, statLabels) {
   const insights = [];
+
+  insights.push(`🎯 <strong>ภาพรวมการประเมิน:</strong> ดำเนินการวิเคราะห์เปรียบเทียบโครงสร้างข้อมูลจาก ${reports.length} รายการ พบความแปรปรวนในตัวชี้วัดสำคัญดังนี้`);
+
   statLabels.forEach(label => {
     const values = reports.map(r => ({ report: r, stat: r.data.stats.find(s => s.label === label) })).filter(v => v.stat).map(v => ({ report: v.report, value: parseNumericValue(v.stat.value), raw: v.stat.value }));
-    if (values.length < 2) {
-      if (values.length === 1) insights.push(`<strong>${label}:</strong> มีเฉพาะ ${values[0].report.label} ที่ค่า <strong style="color:${getYearColor(values[0].report.year)};">${values[0].raw}</strong>`);
-      return;
-    }
+    if (values.length < 2) return;
+
     const max = values.reduce((a, b) => a.value > b.value ? a : b);
     const min = values.reduce((a, b) => a.value < b.value ? a : b);
+    
+    // คำนวณค่าเฉลี่ย
+    const avg = (values.reduce((sum, v) => sum + v.value, 0) / values.length);
+    const isPercent = max.raw.includes('%');
     const diff = max.value - min.value;
-    const diffPct = min.value > 0 ? ((diff / min.value) * 100).toFixed(1) : '—';
-    if (max.report.year === min.report.year) {
-      insights.push(`<strong>${label}:</strong> ค่าสูงสุดคือ <strong style="color:${getYearColor(max.report.year)};">${max.raw}</strong> (${max.report.label} · ${max.report.typeLabel})`);
-    } else {
-      insights.push(`<strong>${label}:</strong> <strong style="color:${getYearColor(max.report.year)};">${max.report.label}</strong> มีค่าสูงสุดที่ <strong>${max.raw}</strong> ในขณะที่ <strong style="color:${getYearColor(min.report.year)};">${min.report.label}</strong> อยู่ที่ <strong>${min.raw}</strong> ต่างกัน <strong>${diffPct}%</strong>`);
-    }
+    const diffText = isPercent ? `${diff.toFixed(1)}%` : diff.toFixed(2);
+
+    let insightText = `<strong>${label}:</strong> ค่าเฉลี่ยโดยรวมอยู่ที่ <strong>${avg.toFixed(2)}${isPercent?'%':''}</strong> `;
+    insightText += `<br>&nbsp;&nbsp;&nbsp;&nbsp;🏆 ทำผลงานได้ดีที่สุดใน <strong style="color:${getYearColor(max.report.year)};">${max.report.label}</strong> (${max.raw})`;
+    insightText += `<br>&nbsp;&nbsp;&nbsp;&nbsp;📉 และมีค่าต่ำสุดใน <strong style="color:${getYearColor(min.report.year)};">${min.report.label}</strong> (${min.raw})`;
+    insightText += `<br>&nbsp;&nbsp;&nbsp;&nbsp;📌 <em>มีส่วนต่างประสิทธิภาพอยู่ที่ ${diffText}</em>`;
+
+    insights.push(insightText);
   });
-  const years = [...new Set(reports.map(r => r.year))].sort();
-  if (years.length > 1) insights.push(`🗓️ เปรียบเทียบข้อมูลจาก <strong>${years.length} ปีงบประมาณ</strong> (${years.join(', ')}) ช่วยให้เห็นแนวโน้มการเปลี่ยนแปลงของการสื่อสารองค์กรในแต่ละปี`);
-  const types = [...new Set(reports.map(r => r.typeLabel))];
-  if (types.length > 1) insights.push(`👥 รายงานประกอบด้วย <strong>${types.join(' และ ')}</strong> ทำให้สามารถเปรียบเทียบมุมมองทั้งภายในและภายนอกองค์กร`);
+
+  // วิเคราะห์แนวโน้ม ถ้าเปรียบเทียบ 2 ปี
+  if (reports.length === 2 && reports[0].year !== reports[1].year && reports[0].typeLabel === reports[1].typeLabel) {
+     const sorted = [...reports].sort((a,b) => a.year - b.year);
+     insights.push(`📈 <strong>แนวโน้มการเติบโต (Trend Analysis):</strong> เมื่อเปรียบเทียบกลุ่ม ${sorted[0].typeLabel} จาก ${sorted[0].label} สู่ ${sorted[1].label} พบว่ามีการเปลี่ยนแปลงอย่างมีนัยสำคัญ สามารถนำข้อมูลนี้ไปปรับปรุงแผน PR ของปีถัดไปได้`);
+  }
+
   return insights;
 }
 
