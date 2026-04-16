@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>เข้าสู่ระบบ - หน่วยสื่อสารองค์กร สำนักหอสมุด มช.</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Noto Sans Thai', sans-serif; }
+    body { 
+        min-height: 100vh; display: flex; align-items: center; justify-content: center;
+        background: #f0f4ff; position: relative; overflow: hidden;
+    }
+    /* พื้นหลัง Effect */
+    body::before {
+        content: ''; position: absolute; top: -20%; left: -10%; width: 50%; height: 50%;
+        background: radial-gradient(circle, rgba(8,145,178,0.1) 0%, transparent 70%);
+        animation: float 15s infinite alternate;
+    }
+    body::after {
+        content: ''; position: absolute; bottom: -20%; right: -10%; width: 50%; height: 50%;
+        background: radial-gradient(circle, rgba(37,99,235,0.1) 0%, transparent 70%);
+        animation: float 20s infinite alternate-reverse;
+    }
+    @keyframes float { 0% { transform: translate(0,0); } 100% { transform: translate(30px, 30px); } }
+
+    .login-container {
+        background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(16px);
+        padding: 50px 40px; border-radius: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.05);
+        border: 1px solid rgba(255,255,255,0.5); width: 100%; max-width: 420px;
+        z-index: 10; transform: translateY(20px); opacity: 0; animation: fadeUp 0.8s ease forwards;
+    }
+    @keyframes fadeUp { to { transform: translateY(0); opacity: 1; } }
+
+    .logo-area { text-align: center; margin-bottom: 30px; }
+    .logo-area img { height: 60px; margin-bottom: 15px; }
+    .logo-area h1 { font-size: 22px; color: #1a1d2e; font-weight: 700; }
+    .logo-area p { font-size: 14px; color: #64748b; }
+
+    .input-group { margin-bottom: 20px; }
+    .input-group label { display: block; font-size: 13px; color: #475569; margin-bottom: 8px; font-weight: 500; }
+    .input-group input {
+        width: 100%; padding: 14px 16px; border-radius: 12px; border: 1px solid #cbd5e1;
+        background: #f8fafc; font-size: 15px; color: #1e293b; outline: none; transition: all 0.3s;
+    }
+    .input-group input:focus { border-color: #0891b2; background: #fff; box-shadow: 0 0 0 4px rgba(8,145,178,0.1); }
+
+    .btn-submit {
+        width: 100%; padding: 14px; background: linear-gradient(135deg, #0891b2, #2563eb);
+        color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: 600;
+        cursor: pointer; transition: all 0.3s; margin-top: 10px;
+    }
+    .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(8,145,178,0.25); }
+
+    .btn-forgot {
+        display: block; text-align: center; margin-top: 20px; color: #64748b; font-size: 13px;
+        text-decoration: none; cursor: pointer; transition: color 0.3s; background: none; border: none; width: 100%;
+    }
+    .btn-forgot:hover { color: #0891b2; }
+
+    .loader { display: none; text-align: center; margin-top: 15px; color: #0891b2; font-size: 14px; }
+</style>
+</head>
+<body>
+
+<div class="login-container">
+    <div class="logo-area">
+        <img src="logo web.png" alt="CMUL Logo" onerror="this.style.display='none'">
+        <h1>เข้าสู่ระบบ</h1>
+        <p>หน่วยสื่อสารองค์กร สำนักหอสมุด มช.</p>
+    </div>
+
+    <form id="loginForm">
+        <div class="input-group">
+            <label>Username</label>
+            <input type="text" id="username" required placeholder="กรอกชื่อผู้ใช้งาน">
+        </div>
+        <div class="input-group">
+            <label>Password</label>
+            <input type="password" id="password" required placeholder="กรอกรหัสผ่าน">
+        </div>
+        <button type="submit" class="btn-submit">ลงชื่อเข้าใช้</button>
+        <div class="loader" id="loader">กำลังตรวจสอบข้อมูล...</div>
+        <button type="button" class="btn-forgot" onclick="resetPassword()">ลืมรหัสผ่าน? (คืนค่าเริ่มต้น)</button>
+    </form>
+</div>
+
+<script>
+    // **นำ URL ที่ได้จาก Apps Script มาใส่ตรงนี้**
+    const APPS_SCRIPT_URL = "YOUR_WEB_APP_URL_HERE";
+
+    document.getElementById("loginForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const user = document.getElementById("username").value;
+        const pass = document.getElementById("password").value;
+        const loader = document.getElementById("loader");
+        const btn = document.querySelector(".btn-submit");
+
+        loader.style.display = "block";
+        btn.disabled = true;
+
+        try {
+            const res = await fetch(APPS_SCRIPT_URL, {
+                method: "POST",
+                body: JSON.stringify({ action: "login", username: user, password: pass })
+            });
+            const data = await res.json();
+
+            if (data.success) {
+                // เก็บข้อมูล Session และเปลี่ยนหน้าไป Dashboard
+                sessionStorage.setItem("cmul_user", JSON.stringify(data.user));
+                window.location.href = "dashboard.html";
+            } else {
+                alert(data.message);
+            }
+        } catch (err) {
+            alert("เชื่อมต่อเซิร์ฟเวอร์ไม่ได้");
+        } finally {
+            loader.style.display = "none";
+            btn.disabled = false;
+        }
+    });
+
+    async function resetPassword() {
+        const user = document.getElementById("username").value;
+        if (!user) {
+            alert("กรุณากรอก Username ก่อนกดลืมรหัสผ่าน");
+            return;
+        }
+        
+        if(confirm("ยืนยันการรีเซ็ตรหัสผ่านกลับเป็นค่าเริ่มต้น?")) {
+            try {
+                const res = await fetch(APPS_SCRIPT_URL, {
+                    method: "POST",
+                    body: JSON.stringify({ action: "reset", username: user })
+                });
+                const data = await res.json();
+                alert(data.message);
+            } catch (err) {
+                alert("เกิดข้อผิดพลาดในการรีเซ็ต");
+            }
+        }
+    }
+
+    // กัน Security เบื้องต้นหน้า Login
+    document.addEventListener('contextmenu', e => e.preventDefault());
+</script>
+</body>
+</html>
