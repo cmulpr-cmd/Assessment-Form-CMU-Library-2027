@@ -98,7 +98,6 @@ body {
 .filter-group:hover { border-color: rgba(8,145,178,0.3); box-shadow: 0 6px 20px rgba(8,145,178,0.08); transform: translateY(-1px); }
 .filter-label { font-size: 13px; font-weight: 700; color: var(--cyan); padding-left: 14px; }
 
-/* อัปเกรด Select Input */
 .filter-select, .picker-select { 
   appearance: none; -webkit-appearance: none; 
   background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230891b2' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e"); 
@@ -214,8 +213,6 @@ body {
 .ai-compare-bar .ai-sub { font-size: 11px; opacity: 0.7; }
 .ai-compare-bar .ai-btn { background: linear-gradient(135deg, var(--amber), var(--pink), var(--violet)); color: white; border: none; padding: 11px 22px; border-radius: 100px; cursor: pointer; font-family: inherit; font-weight: 700; font-size: 14px; display: inline-flex; align-items: center; gap: 8px; transition: all 0.25s; box-shadow: 0 4px 16px rgba(236,72,153,0.3); }
 .ai-compare-bar .ai-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(236,72,153,0.5); }
-@keyframes sparkle { 0%,100% { transform: scale(1) rotate(0deg); } 50% { transform: scale(1.3) rotate(180deg); } }
-.ai-compare-bar .sparkle { display: inline-block; animation: sparkle 2s ease-in-out infinite; }
 
 /* === 🎯 AI Report Modal === */
 .ai-modal-bg { position: fixed; inset: 0; background: rgba(15,23,42,0.5); z-index: 9999; display: none; align-items: center; justify-content: center; backdrop-filter: blur(10px); padding: 20px; }
@@ -230,7 +227,7 @@ body {
 .ai-close-btn:hover { color: var(--rose); border-color: var(--rose); transform: rotate(90deg); background: rgba(225,29,72,0.05); }
 .ai-modal-body { padding: 36px; }
 
-/* === 🐧 Dynamic Penguin Loader === */
+/* === 📝 Animated Survey Loader (No External Images) === */
 .loader-overlay {
   position: fixed; inset: 0; background: rgba(248,250,252,0.85);
   backdrop-filter: blur(8px); z-index: 9997;
@@ -239,34 +236,28 @@ body {
 }
 .loader-overlay.show { display: flex; animation: fadeIn 0.3s ease; }
 
-.penguin-stage { 
-  position: relative; width: 140px; height: 140px; 
-  display: flex; justify-content: center; align-items: flex-end; 
-  margin-bottom: 10px; 
-}
-.penguin-img { 
-  width: 95px; height: auto; 
-  animation: penguinJump 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite alternate; 
-  filter: drop-shadow(0 10px 10px rgba(0,0,0,0.15)); 
-  z-index: 2; transform-origin: bottom center; 
-}
-.penguin-shadow { 
-  position: absolute; bottom: -5px; width: 65px; height: 8px; 
-  background: rgba(0,0,0,0.15); border-radius: 50%; 
-  animation: penguinShadow 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite alternate; 
-  z-index: 1; 
-}
+.survey-loader { position: relative; width: 120px; height: 120px; display: flex; justify-content: center; align-items: flex-end; margin-bottom: 10px; }
+.survey-svg { width: 90px; height: auto; animation: surveyFloat 2.5s ease-in-out infinite; z-index: 2; filter: drop-shadow(0 15px 15px rgba(8,145,178,0.2)); }
+.survey-shadow { position: absolute; bottom: -5px; width: 70px; height: 8px; background: rgba(0,0,0,0.1); border-radius: 50%; animation: surveyShadow 2.5s ease-in-out infinite; z-index: 1; }
 
-@keyframes penguinJump { 
-  0% { transform: translateY(0) scaleY(0.95); } 
-  100% { transform: translateY(-35px) scaleY(1.05) rotate(3deg); } 
-}
-@keyframes penguinShadow { 
-  0% { transform: scale(1); opacity: 1; } 
-  100% { transform: scale(0.5); opacity: 0.2; } 
-}
+@keyframes surveyFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+@keyframes surveyShadow { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(0.6); opacity: 0.3; } }
 
-.loader-text { font-family: 'Noto Sans Thai', sans-serif; font-size: 17px; font-weight: 800; color: var(--cyan); letter-spacing: 0.5px; margin-top: 10px; }
+/* Checkmarks Animation */
+.chk-path { stroke-dasharray: 40; stroke-dashoffset: 40; animation: drawCheck 3s ease-in-out infinite; }
+.chk-1 { animation-delay: 0.2s; }
+.chk-2 { animation-delay: 0.8s; }
+.chk-3 { animation-delay: 1.4s; }
+@keyframes drawCheck { 0%, 10% { stroke-dashoffset: 40; } 30%, 100% { stroke-dashoffset: 0; } }
+
+/* Line Animation */
+.line-path { animation: pulseLine 3s ease-in-out infinite; transform-origin: left; }
+.ln-1 { animation-delay: 0s; }
+.ln-2 { animation-delay: 0.6s; }
+.ln-3 { animation-delay: 1.2s; }
+@keyframes pulseLine { 0%, 5% { transform: scaleX(0.2); opacity: 0; } 20%, 100% { transform: scaleX(1); opacity: 1; } }
+
+.loader-text { font-family: 'Noto Sans Thai', sans-serif; font-size: 17px; font-weight: 800; color: var(--cyan); letter-spacing: 0.5px; margin-top: 15px; }
 
 /* === Footer === */
 .page-footer { padding: 30px 40px; text-align: center; font-size: 13px; font-weight: 500; color: var(--text-muted); border-top: 1px solid var(--border); background: rgba(255,255,255,0.5); }
@@ -329,9 +320,19 @@ body {
 <div class="bg-scene"></div>
 
 <div class="loader-overlay" id="loader">
-  <div class="penguin-stage">
-    <img src="https://img.icons8.com/color/150/penguin.png" alt="Loading" class="penguin-img" id="loaderImg">
-    <div class="penguin-shadow"></div>
+  <div class="survey-loader">
+    <svg viewBox="0 0 100 100" class="survey-svg">
+      <rect x="25" y="15" width="50" height="75" rx="6" fill="#ffffff" stroke="var(--cyan)" stroke-width="4"/>
+      <path d="M 40 15 L 40 10 C 40 7 45 5 50 5 C 55 5 60 7 60 10 L 60 15" fill="#f8fafc" stroke="var(--blue)" stroke-width="4" stroke-linecap="round"/>
+      <rect x="35" y="13" width="30" height="6" rx="3" fill="var(--blue)"/>
+      <line x1="45" y1="35" x2="65" y2="35" stroke="var(--text-muted)" stroke-width="4" stroke-linecap="round" class="line-path ln-1"/>
+      <line x1="45" y1="55" x2="65" y2="55" stroke="var(--text-muted)" stroke-width="4" stroke-linecap="round" class="line-path ln-2"/>
+      <line x1="45" y1="75" x2="55" y2="75" stroke="var(--text-muted)" stroke-width="4" stroke-linecap="round" class="line-path ln-3"/>
+      <polyline points="28 35 34 41 44 28" fill="none" stroke="var(--emerald)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" class="chk-path chk-1"/>
+      <polyline points="28 55 34 61 44 48" fill="none" stroke="var(--emerald)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" class="chk-path chk-2"/>
+      <polyline points="28 75 34 81 44 68" fill="none" stroke="var(--emerald)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" class="chk-path chk-3"/>
+    </svg>
+    <div class="survey-shadow"></div>
   </div>
   <div class="loader-text" id="loaderText">กำลังประมวลผลข้อมูล..</div>
 </div>
@@ -527,7 +528,6 @@ const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw8J-omZtpiUk7gGAyBX
       document.getElementById('dropName').textContent = displayName;
       document.getElementById('dropRole').textContent = displayRole;
       
-      // เก็บ username สำหรับไว้ใช้เปลี่ยนรหัสผ่าน
       window.currentUserLogin = user.username || JSON.parse(sessionStorage.getItem('cc_pr_raw_user') || '{}').username;
   } catch(e) { console.error(e); }
 })();
@@ -547,7 +547,6 @@ function logout() {
   window.location.href = 'index.html';
 }
 
-// 🔒 ระบบเปลี่ยนรหัสผ่าน (ทำงานได้จริง 100%)
 function openChangePass() {
   document.getElementById('profileMenu').classList.remove('active');
   document.getElementById('passModal').classList.add('show');
@@ -608,7 +607,6 @@ const YEARS_FORWARD = 3;
 
 const MONTH_NAMES = { 'JAN': 'มกราคม',  'FEB': 'กุมภาพันธ์', 'MAR': 'มีนาคม', 'APR': 'เมษายน', 'MAY': 'พฤษภาคม', 'JUN': 'มิถุนายน', 'JUL': 'กรกฎาคม', 'AUG': 'สิงหาคม', 'SEP': 'กันยายน', 'OCT': 'ตุลาคม', 'NOV': 'พฤศจิกายน', 'DEC': 'ธันวาคม' };
 
-// สีประจำแต่ละปี
 const YEAR_COLORS = { 
   2566: '#ef4444', 2567: '#f59e0b', 2568: '#10b981', 
   2569: '#06b6d4', 2570: '#3b82f6', 2571: '#8b5cf6', 2572: '#ec4899'  
@@ -635,16 +633,13 @@ function getYearList() { const years = []; for (let y = CURRENT_YEAR - YEARS_BAC
 function getMonthsForYear(year) { return REPORT_CONFIG[year] ? Object.keys(REPORT_CONFIG[year]) : []; }
 function getReport(year, month) { return REPORT_CONFIG[year] && REPORT_CONFIG[year][month] ? REPORT_CONFIG[year][month] : null; }
 
-// 🐧 Dynamic Penguin Loader
 function showLoader(duration, callback, text, isAI = false) {
   const loader = document.getElementById('loader');
   const loaderText = document.getElementById('loaderText');
-  const loaderImg = document.getElementById('loaderImg');
   
   if (isAI) {
     loaderText.innerHTML = '🤖 AI กำลังวิเคราะห์ข้อมูลเชิงลึก..';
     loaderText.style.color = '#0284c7';
-    // สามารถเปลี่ยนรูป AI ได้ถ้ามีรูปหุ่นยนต์
   } else if (text) {
     loaderText.innerHTML = text;
     loaderText.style.color = 'var(--cyan)';
@@ -708,7 +703,7 @@ function enterCompareMode() {
     [1, 2, 3].forEach(i => {
        const col = document.getElementById('col' + i);
        col.style.animation = 'none';
-       col.offsetHeight; /* trigger reflow */
+       col.offsetHeight; 
        col.style.animation = null; 
        renderColumnPicker(i);
     });
@@ -726,7 +721,6 @@ function exitCompareMode() {
 
 function renderColumnPicker(colIdx) {
   const col = document.getElementById('col' + colIdx); const years = getYearList();
-  // ใช้ไอคอนกราฟแท่งแบบมินิมอล (Bar Chart)
   col.innerHTML = `<div class="col-picker"><div class="icon-wrap"><svg width="34" height="34" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"></line><line x1="18" y1="20" x2="18" y2="4"></line><line x1="6" y1="20" x2="6" y2="16"></line></svg></div><h4>คอลัมน์ที่ ${colIdx}</h4><p>เลือกปี เดือน และประเภทที่ต้องการ</p>
     <select class="picker-select" id="pickY${colIdx}" onchange="onPickerYearChange(${colIdx})">${years.map(y => `<option value="${y}" ${y===CURRENT_YEAR?'selected':''}>ปีงบประมาณ ${y}</option>`).join('')}</select>
     <select class="picker-select" id="pickM${colIdx}"></select>
@@ -852,5 +846,3 @@ init();
 
 </body>
 </html>
-
-}
