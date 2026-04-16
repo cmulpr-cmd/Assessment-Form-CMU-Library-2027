@@ -1,119 +1,807 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-    <meta charset="UTF-8">
-    <title>Dashboard - หน่วยสื่อสารองค์กร มช.</title>
-    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root { --cyan: #0891b2; --bg: #f8fafc; --border: rgba(0,0,0,0.06); }
-        body { margin:0; background:var(--bg); font-family:'Sarabun',sans-serif; }
-        header { background:white; padding:15px 40px; border-bottom:1px solid var(--border); display:flex; align-items:center; }
-        .logo { height:45px; }
-        .container { padding:40px; transition: opacity 0.4s ease; }
-        .controls { display:flex; gap:15px; align-items:center; margin-bottom:30px; margin-right: 180px; margin-left: auto;}
-        select { padding:10px 20px; border-radius:12px; border:1px solid #e2e8f0; outline:none; cursor:pointer; font-family:inherit; }
-        .compare-grid { display:grid; grid-template-columns: repeat(3, 1fr); gap:20px; display:none; }
-        .col { background:white; border-radius:25px; border:1px solid var(--border); min-height:600px; display:flex; flex-direction:column; overflow:hidden; }
-        .col-top { padding:20px; background:#f8fafc; border-bottom:1px solid var(--border); text-align:center; }
-        .content-box { flex:1; display:flex; align-items:center; justify-content:center; color:#94a3b8; font-size:14px; }
-        .btn-comp { background:#1e293b; color:white; border:none; padding:12px 25px; border-radius:12px; cursor:pointer; font-weight:600; }
-        .btn-comp:hover { background:var(--cyan); }
-        #loader { position:fixed; inset:0; background:rgba(255,255,255,0.9); z-index:10000; display:none; flex-direction:column; align-items:center; justify-content:center; }
-        .pen { width:120px; animation: bounce 1s infinite alternate; }
-        @keyframes bounce { from { transform:translateY(0); } to { transform:translateY(-30px); } }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard สรุปผลการประเมิน หน่วยสื่อสารองค์กร</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700;800;900&family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+
+:root {
+  --bg: #f0f4ff;
+  --surface: #ffffff;
+  --border: rgba(0,0,0,0.07);
+  --border-hover: rgba(0,0,0,0.14);
+  --text: #1a1d2e;
+  --text-dim: #5a6178;
+  --text-muted: #8c93a8;
+  --cyan: #0891b2;
+  --blue: #2563eb;
+  --violet: #7c3aed;
+  --pink: #db2777;
+  --emerald: #059669;
+  --sky: #0ea5e9;
+  --rose: #e11d48;
+}
+
+body {
+  font-family: 'Sarabun', 'Noto Sans Thai', sans-serif;
+  background: var(--bg); color: var(--text);
+  min-height: 100vh; overflow-x: hidden;
+}
+
+/* === Background === */
+.bg-scene { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+.bg-scene::before {
+  content: ''; position: absolute; top: -20%; left: -15%; width: 60%; height: 60%;
+  background: radial-gradient(ellipse, rgba(8,145,178,0.08) 0%, transparent 70%);
+  animation: drift1 20s ease-in-out infinite;
+}
+.bg-scene::after {
+  content: ''; position: absolute; bottom: -15%; right: -10%; width: 55%; height: 55%;
+  background: radial-gradient(ellipse, rgba(124,58,237,0.06) 0%, transparent 70%);
+  animation: drift2 25s ease-in-out infinite;
+}
+@keyframes drift1 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(4%,6%)} }
+@keyframes drift2 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-5%,-4%)} }
+
+.page { position: relative; z-index: 2; min-height: 100vh; display: flex; flex-direction: column; }
+
+/* === Top Bar === */
+.topbar {
+  padding: 18px 40px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+  background: rgba(255,255,255,0.7); backdrop-filter: blur(12px);
+  position: sticky; top: 0; z-index: 100;
+}
+.topbar-brand { display: flex; align-items: center; gap: 12px; }
+.brand-text { font-size: 14px; font-weight: 600; color: var(--text-dim); }
+.brand-text span { color: var(--text); font-weight: 700; }
+.topbar-right { display: flex; align-items: center; gap: 14px; }
+.topbar-year {
+  font-size: 13px; color: var(--text-muted); font-weight: 600;
+  padding: 5px 16px; border-radius: 100px;
+  border: 1px solid var(--border); background: rgba(255,255,255,0.6);
+}
+
+/* === Hero === */
+.hero { padding: 60px 40px 35px; text-align: center; }
+.hero-chip {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 7px 20px; border-radius: 100px;
+  background: linear-gradient(135deg, rgba(8,145,178,0.08), rgba(37,99,235,0.08));
+  border: 1px solid rgba(8,145,178,0.15);
+  color: var(--cyan); font-size: 13px; font-weight: 700;
+  margin-bottom: 24px;
+}
+.hero-chip::before {
+  content: ''; width: 8px; height: 8px; border-radius: 50%;
+  background: var(--emerald); animation: blink 2.5s ease-in-out infinite;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+.hero h1 {
+  font-family: 'Noto Sans Thai', sans-serif;
+  font-size: 44px; font-weight: 900; line-height: 1.25;
+  letter-spacing: -0.5px; margin-bottom: 16px;
+}
+.hero h1 .line1 { color: var(--text); }
+.hero h1 .line2 {
+  background: linear-gradient(90deg, var(--cyan), var(--blue), var(--violet));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.hero-desc { font-size: 17px; color: var(--text-dim); max-width: 600px; margin: 0 auto; line-height: 1.7; }
+
+/* === Controls Bar === */
+.controls-bar {
+  max-width: 1020px; margin: 0 auto 30px; padding: 0 40px;
+  display: flex; gap: 12px; align-items: center; flex-wrap: wrap; justify-content: center;
+}
+.filter-group {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--surface); padding: 6px;
+  border-radius: 100px; border: 1px solid var(--border);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+}
+.filter-label {
+  font-size: 12px; font-weight: 700; color: var(--text-muted);
+  padding-left: 14px; letter-spacing: 0.5px;
+}
+.filter-select {
+  border: none; background: transparent; padding: 8px 14px;
+  font-family: inherit; font-size: 14px; font-weight: 600; color: var(--text);
+  cursor: pointer; outline: none; border-radius: 100px; transition: background 0.2s;
+}
+.filter-select:hover { background: rgba(8,145,178,0.06); }
+
+.btn-compare {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 14px 24px; border-radius: 100px; border: none;
+  font-family: inherit; font-size: 14px; font-weight: 700;
+  background: var(--text); color: white; cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25,1,0.5,1);
+  box-shadow: 0 4px 14px rgba(26,29,46,0.2);
+}
+.btn-compare:hover {
+  background: linear-gradient(135deg, var(--cyan), var(--blue));
+  transform: translateY(-2px); box-shadow: 0 8px 24px rgba(8,145,178,0.3);
+}
+.btn-compare svg { transition: transform 0.3s; }
+.btn-compare:hover svg { transform: rotate(180deg); }
+
+.btn-back {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 18px; border-radius: 100px; border: 1px solid var(--border);
+  font-family: inherit; font-size: 13px; font-weight: 600;
+  background: var(--surface); color: var(--text-dim); cursor: pointer;
+  transition: all 0.25s;
+}
+.btn-back:hover { color: var(--text); border-color: var(--border-hover); transform: translateX(-3px); }
+
+/* === Content === */
+.content-area { flex: 1; padding: 0 40px 60px; max-width: 1020px; margin: 0 auto; width: 100%; }
+.content-area.wide { max-width: 1600px; }
+
+.cards-label {
+  font-size: 12px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 2px; color: var(--text-muted);
+  margin-bottom: 20px; padding-left: 4px;
+  display: flex; align-items: center; gap: 10px;
+}
+.count-pill {
+  background: rgba(8,145,178,0.1); color: var(--cyan);
+  padding: 2px 10px; border-radius: 100px;
+  font-size: 11px; letter-spacing: 0;
+}
+
+/* === Cards === */
+.cards-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+@media (max-width: 768px) { .cards-grid { grid-template-columns: 1fr; } }
+
+.report-card {
+  position: relative; background: var(--surface);
+  border: 1px solid var(--border); border-radius: 22px;
+  padding: 36px; cursor: pointer; text-decoration: none; color: inherit;
+  overflow: hidden; transition: all 0.4s cubic-bezier(0.25,1,0.5,1);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+  display: flex; flex-direction: column;
+}
+.report-card:hover { transform: translateY(-6px); border-color: var(--border-hover); }
+.report-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; }
+.card-internal::before { background: linear-gradient(90deg, var(--emerald), var(--cyan), var(--sky)); }
+.card-external::before { background: linear-gradient(90deg, var(--pink), var(--violet), var(--blue)); }
+.card-internal:hover { box-shadow: 0 16px 48px rgba(8,145,178,0.12), 0 4px 16px rgba(5,150,105,0.08); }
+.card-external:hover { box-shadow: 0 16px 48px rgba(124,58,237,0.12), 0 4px 16px rgba(219,39,119,0.08); }
+
+.card-icon { width: 54px; height: 54px; border-radius: 15px; display: flex; align-items: center; justify-content: center; margin-bottom: 22px; }
+.card-internal .card-icon { background: linear-gradient(135deg, rgba(5,150,105,0.1), rgba(8,145,178,0.1)); color: var(--cyan); }
+.card-external .card-icon { background: linear-gradient(135deg, rgba(219,39,119,0.1), rgba(124,58,237,0.1)); color: var(--violet); }
+
+.card-badge {
+  display: inline-block; font-size: 11px; font-weight: 800;
+  text-transform: uppercase; letter-spacing: 1.2px;
+  padding: 4px 12px; border-radius: 8px; margin-bottom: 14px;
+}
+.card-internal .card-badge { background: rgba(5,150,105,0.1); color: var(--emerald); }
+.card-external .card-badge { background: rgba(219,39,119,0.1); color: var(--pink); }
+
+.card-title { font-family: 'Noto Sans Thai', sans-serif; font-size: 20px; font-weight: 800; line-height: 1.4; margin-bottom: 12px; color: var(--text); }
+.card-desc { font-size: 14px; color: var(--text-dim); line-height: 1.7; margin-bottom: 24px; flex: 1; }
+.card-stats { display: flex; gap: 24px; margin-bottom: 24px; padding-top: 20px; border-top: 1px solid var(--border); }
+.stat-value { font-size: 24px; font-weight: 800; letter-spacing: -0.5px; }
+.card-internal .stat-value { color: var(--cyan); }
+.card-external .stat-value { color: var(--violet); }
+.stat-label { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+
+.card-cta {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 14px; font-weight: 700;
+  padding: 11px 22px; border-radius: 12px; transition: all 0.3s;
+  align-self: flex-start;
+}
+.card-internal .card-cta { color: #fff; background: linear-gradient(135deg, var(--emerald), var(--cyan)); box-shadow: 0 4px 16px rgba(8,145,178,0.2); }
+.card-internal .card-cta:hover { box-shadow: 0 6px 24px rgba(8,145,178,0.35); transform: translateY(-1px); }
+.card-external .card-cta { color: #fff; background: linear-gradient(135deg, var(--pink), var(--violet)); box-shadow: 0 4px 16px rgba(124,58,237,0.2); }
+.card-external .card-cta:hover { box-shadow: 0 6px 24px rgba(124,58,237,0.35); transform: translateY(-1px); }
+.cta-arrow { transition: transform 0.3s; }
+.report-card:hover .cta-arrow { transform: translateX(4px); }
+
+/* === Empty === */
+.empty-state {
+  grid-column: 1 / -1; padding: 80px 40px; text-align: center;
+  background: var(--surface); border: 2px dashed var(--border); border-radius: 22px;
+}
+.empty-state img { width: 100px; opacity: 0.6; margin-bottom: 20px; }
+.empty-state h3 { font-size: 20px; color: var(--text-dim); margin-bottom: 8px; }
+.empty-state p { font-size: 14px; color: var(--text-muted); }
+
+/* === Compare Mode === */
+.compare-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
+  height: calc(100vh - 220px); min-height: 600px;
+}
+@media (max-width: 1100px) { .compare-grid { grid-template-columns: 1fr; height: auto; } }
+
+.compare-col {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 22px;
+  overflow: hidden; display: flex; flex-direction: column; min-height: 500px;
+  transition: all 0.4s cubic-bezier(0.25,1,0.5,1);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+}
+.compare-col:hover { box-shadow: 0 8px 28px rgba(0,0,0,0.07); }
+
+.col-picker {
+  flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 40px 28px; text-align: center; gap: 14px;
+}
+.col-picker .icon-wrap {
+  width: 72px; height: 72px; border-radius: 20px;
+  background: linear-gradient(135deg, rgba(8,145,178,0.1), rgba(124,58,237,0.1));
+  display: flex; align-items: center; justify-content: center;
+  color: var(--cyan); margin-bottom: 6px;
+}
+.col-picker h4 { font-family: 'Noto Sans Thai', sans-serif; font-size: 17px; font-weight: 700; color: var(--text); }
+.col-picker p { font-size: 13px; color: var(--text-muted); margin-bottom: 6px; }
+
+.picker-select {
+  width: 100%; max-width: 260px; padding: 12px 16px;
+  border: 1.5px solid var(--border); border-radius: 14px;
+  background: var(--surface); color: var(--text);
+  font-family: inherit; font-size: 14px; font-weight: 600;
+  outline: none; cursor: pointer; transition: all 0.25s;
+}
+.picker-select:hover { border-color: var(--cyan); }
+.picker-select:focus { border-color: var(--cyan); box-shadow: 0 0 0 4px rgba(8,145,178,0.1); }
+.picker-select:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.picker-btn {
+  width: 100%; max-width: 260px; padding: 13px; border: none; border-radius: 14px;
+  font-family: inherit; font-size: 14px; font-weight: 700;
+  background: linear-gradient(135deg, var(--cyan), var(--blue));
+  color: white; cursor: pointer; margin-top: 6px;
+  transition: all 0.3s; box-shadow: 0 4px 14px rgba(8,145,178,0.25);
+}
+.picker-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(8,145,178,0.4); }
+.picker-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.col-header {
+  padding: 16px 22px; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  background: linear-gradient(135deg, rgba(8,145,178,0.04), rgba(37,99,235,0.04));
+}
+.col-header-info { display: flex; flex-direction: column; gap: 2px; }
+.col-header-title { font-size: 15px; font-weight: 800; color: var(--text); font-family: 'Noto Sans Thai', sans-serif; }
+.col-header-subtitle { font-size: 11px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+
+.col-change-btn {
+  padding: 7px 14px; border: 1px solid var(--border); border-radius: 100px;
+  background: var(--surface); color: var(--text-dim);
+  font-family: inherit; font-size: 12px; font-weight: 600;
+  cursor: pointer; transition: all 0.25s;
+  display: inline-flex; align-items: center; gap: 5px;
+}
+.col-change-btn:hover { color: var(--rose); border-color: var(--rose); background: rgba(225,29,72,0.05); }
+
+.col-content { flex: 1; overflow: hidden; position: relative; }
+.col-content iframe { width: 100%; height: 100%; border: none; background: white; }
+
+/* === Penguin Loader === */
+.loader-overlay {
+  position: fixed; inset: 0; background: rgba(240,244,255,0.85);
+  backdrop-filter: blur(8px); z-index: 9999;
+  display: none; align-items: center; justify-content: center;
+  flex-direction: column; gap: 20px;
+}
+.loader-overlay.show { display: flex; animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.penguin-stage { width: 140px; height: 140px; position: relative; display: flex; align-items: flex-end; justify-content: center; }
+.penguin-stage img {
+  width: 110px; height: 110px;
+  animation: bounce 0.7s ease-in-out infinite alternate;
+  filter: drop-shadow(0 8px 12px rgba(0,0,0,0.15));
+}
+@keyframes bounce { from { transform: translateY(0) rotate(-3deg); } to { transform: translateY(-25px) rotate(3deg); } }
+.penguin-shadow {
+  position: absolute; bottom: 0;
+  width: 80px; height: 10px; border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(0,0,0,0.2) 0%, transparent 70%);
+  animation: shadow 0.7s ease-in-out infinite alternate;
+}
+@keyframes shadow { from { transform: scale(1); opacity: 0.6; } to { transform: scale(0.6); opacity: 0.3; } }
+.loader-text { font-family: 'Noto Sans Thai', sans-serif; font-size: 16px; font-weight: 700; color: var(--cyan); letter-spacing: 0.5px; }
+.loader-dots::after { content: ''; animation: dots 1.5s linear infinite; }
+@keyframes dots { 0% { content: ''; } 25% { content: '.'; } 50% { content: '..'; } 75% { content: '...'; } 100% { content: ''; } }
+
+/* === Transitions === */
+.fade-transition { transition: opacity 0.4s ease, transform 0.4s ease; }
+.fade-out { opacity: 0; transform: translateY(12px); pointer-events: none; }
+
+/* === Footer === */
+.page-footer {
+  padding: 26px 40px; text-align: center;
+  font-size: 12px; color: var(--text-muted);
+  border-top: 1px solid var(--border); background: rgba(255,255,255,0.5);
+}
+
+/* === Initial Load === */
+.fade-up { opacity: 0; transform: translateY(24px); animation: fadeUp 0.7s cubic-bezier(0.25,1,0.5,1) forwards; }
+@keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+.delay-1{animation-delay:.1s} .delay-2{animation-delay:.2s} .delay-3{animation-delay:.35s} .delay-4{animation-delay:.5s} .delay-5{animation-delay:.65s}
+
+@media (max-width: 768px) {
+  .hero h1 { font-size: 30px; }
+  .topbar, .hero, .content-area { padding-left: 20px; padding-right: 20px; }
+  .hero { padding-top: 40px; padding-bottom: 20px; }
+  .controls-bar { flex-direction: column; align-items: stretch; }
+}
+</style>
 </head>
 <body>
 
-<div id="loader">
-    <img src="https://img.icons8.com/color/150/penguin.png" class="pen">
-    <p style="margin-top:20px; font-weight:600; color:var(--cyan);">กำลังประมวลผลข้อมูล...</p>
+<div class="bg-scene"></div>
+
+<!-- ======================================================================
+     🐧 PENGUIN LOADER
+====================================================================== -->
+<div class="loader-overlay" id="loader">
+  <div class="penguin-stage">
+    <img src="https://img.icons8.com/color/150/penguin.png" alt="Loading">
+    <div class="penguin-shadow"></div>
+  </div>
+  <div class="loader-text">กำลังประมวลผลข้อมูล<span class="loader-dots"></span></div>
 </div>
 
-<header>
-    <img src="logo web.png" alt="CMUL" class="logo">
-    <div class="controls">
-        <select id="mainYear" onchange="applyYearFilter()"></select>
-        <button class="btn-comp" onclick="toggleCompare()" id="btnText">โหมดเปรียบเทียบ</button>
+<div class="page">
+
+  <!-- ========== TOP BAR ========== -->
+  <header class="topbar fade-up delay-1">
+    <div class="topbar-brand">
+      <img src="logo web.png" alt="โลโก้สำนักหอสมุด มช." style="height: 50px; width: auto; margin-right: 10px;">
+      <div class="brand-text"><span>หน่วยสื่อสารองค์กร</span><br>สำนักหอสมุด มหาวิทยาลัยเชียงใหม่</div>
     </div>
-</header>
-
-<div class="container" id="normalView">
-    <div style="background:white; height:400px; border-radius:30px; border:1px solid var(--border); display:flex; align-items:center; justify-content:center;">
-        ภาพรวมข้อมูลปีปัจจุบัน (Dashboard หลัก)
+    <div class="topbar-right">
+      <div class="topbar-year" id="topbarYear">ปีงบประมาณ 2569</div>
     </div>
+  </header>
+
+  <!-- ========== HERO ========== -->
+  <section class="hero" id="heroSection">
+    <div class="hero-chip fade-up delay-2" id="heroChip">Last Update: 1 เมษายน 2569 | เวลา 10.30 น.</div>
+    <h1 class="fade-up delay-3">
+      <span class="line1">ผลการประเมิน</span><br>
+      <span class="line2">การสื่อสารองค์กร</span>
+    </h1>
+    <p class="hero-desc fade-up delay-4">
+      รายงานสรุปผลการประเมินการสื่อสารองค์กรของสำนักหอสมุด มหาวิทยาลัยเชียงใหม่<br>
+      เลือกปีและเดือนเพื่อดูรายงาน
+    </p>
+  </section>
+
+  <!-- ========== CONTROLS ========== -->
+  <div class="controls-bar fade-up delay-4" id="controlsBar">
+    <div class="filter-group">
+      <span class="filter-label">📅 ปีงบประมาณ</span>
+      <select class="filter-select" id="mainYear" onchange="onMainYearChange()"></select>
+    </div>
+    <div class="filter-group">
+      <span class="filter-label">🗓️ เดือน</span>
+      <select class="filter-select" id="mainMonth" onchange="onMainMonthChange()"></select>
+    </div>
+    <button class="btn-compare" onclick="enterCompareMode()">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"/>
+      </svg>
+      โหมดเปรียบเทียบ
+    </button>
+  </div>
+
+  <!-- ========== MAIN ========== -->
+  <section class="content-area" id="contentArea">
+
+    <div id="normalMode">
+      <div class="cards-label fade-up delay-4">
+        <span>รายงานทั้งหมด</span>
+        <span class="count-pill" id="reportCount">—</span>
+      </div>
+      <div class="cards-grid fade-transition" id="cardsGrid"></div>
+    </div>
+
+    <div id="compareMode" style="display:none;">
+      <div class="cards-label" style="display:flex;justify-content:space-between;align-items:center;">
+        <span style="display:flex;align-items:center;gap:10px;">
+          <span>🔍 โหมดเปรียบเทียบ</span>
+          <span class="count-pill">เลือกข้อมูลในแต่ละคอลัมน์</span>
+        </span>
+        <button class="btn-back" onclick="exitCompareMode()">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 12H5m7-7l-7 7 7 7"/>
+          </svg>
+          กลับหน้าปกติ
+        </button>
+      </div>
+      <div class="compare-grid fade-transition">
+        <div class="compare-col" id="col1"></div>
+        <div class="compare-col" id="col2"></div>
+        <div class="compare-col" id="col3"></div>
+      </div>
+    </div>
+
+  </section>
+
+  <footer class="page-footer fade-up delay-5">
+    หน่วยสื่อสารองค์กร สำนักหอสมุด มหาวิทยาลัยเชียงใหม่ &middot; รอบปีงบประมาณ <span id="footerYear">2569</span>
+  </footer>
+
 </div>
 
-<div class="container compare-grid" id="compareView">
-    <div class="col" id="col1"></div>
-    <div class="col" id="col2"></div>
-    <div class="col" id="col3"></div>
-</div>
-
-<script src="auth.js"></script>
 <script>
-    const currentY = 2569;
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzmzYhYYfJoshKHGW5U-APtmvTQMqlf9L3lzTlXfgDSE2WbU7-Oa9ZiI2nCrti6E60h/exec";
+// ═══════════════════════════════════════════════════════════════════════════
+// 📋 ADMIN CONFIG - แก้ไขข้อมูลรายงานที่นี่
+// ═══════════════════════════════════════════════════════════════════════════
+//
+// 🎯 วิธีเพิ่ม/แก้ไขรายงาน:
+//
+//   1️⃣ เพิ่มปีใหม่: เพิ่ม key เป็นตัวเลข เช่น 2570: { ... }
+//
+//   2️⃣ เพิ่มเดือนใหม่ในแต่ละปี:
+//      'APR': {
+//        label: 'เมษายน 2569',
+//        updatedAt: '1 พฤษภาคม 2569',
+//        internal: { file: 'ชื่อไฟล์.html', stats: [...] },
+//        external: { file: 'ชื่อไฟล์.html', stats: [...] }
+//      }
+//
+//   3️⃣ ถ้าเดือนนั้นไม่มีข้อมูลบางประเภท ให้ใส่ null:
+//      internal: null
+//
+//   4️⃣ ช่อง 'file' = ชื่อไฟล์ HTML (ต้องอยู่โฟลเดอร์เดียวกัน)
+//
+//   5️⃣ stats ใส่ได้ 3 ช่อง: value (ตัวเลข) + label (คำอธิบาย)
+//
+// ═══════════════════════════════════════════════════════════════════════════
 
-    const select = document.getElementById('mainYear');
-    for(let i = currentY - 3; i <= currentY + 3; i++) {
-        let opt = document.createElement('option');
-        opt.value = i; opt.text = "ปีงบประมาณ " + i;
-        if(i === currentY) opt.selected = true;
-        select.appendChild(opt);
+const CURRENT_YEAR = 2569;   // ปีปัจจุบัน (พ.ศ.)
+const YEARS_BACK = 3;        // ย้อนหลังกี่ปี
+const YEARS_FORWARD = 3;     // อนาคตกี่ปี
+
+const MONTH_NAMES = {
+  'JAN': 'มกราคม',  'FEB': 'กุมภาพันธ์', 'MAR': 'มีนาคม',    'APR': 'เมษายน',
+  'MAY': 'พฤษภาคม', 'JUN': 'มิถุนายน',   'JUL': 'กรกฎาคม',   'AUG': 'สิงหาคม',
+  'SEP': 'กันยายน', 'OCT': 'ตุลาคม',     'NOV': 'พฤศจิกายน', 'DEC': 'ธันวาคม'
+};
+
+// ═══════════════════════════════════════════════════════════════════════════
+// ⭐⭐⭐ ข้อมูลรายงาน - แก้ไขหลักตรงนี้ ⭐⭐⭐
+// ═══════════════════════════════════════════════════════════════════════════
+const REPORT_CONFIG = {
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // 📁 ปีงบประมาณ 2569
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  2569: {
+    'MAR': {
+      label: 'มีนาคม 2569',
+      updatedAt: '1 เมษายน 2569 | เวลา 10.30 น.',
+      internal: {
+        file: 'cmul-communication-report.html',
+        stats: [
+          { value: '65',    label: 'ผู้ตอบ (คน)' },
+          { value: '4.03',  label: 'ความพึงพอใจรวม' },
+          { value: '91.1%', label: 'ควรผลิต CMUL News ต่อ' }
+        ]
+      },
+      external: {
+        file: 'cmul-user-survey-report.html',
+        stats: [
+          { value: '411',  label: 'ผู้ตอบ (คน)' },
+          { value: '4.28', label: 'ความพึงพอใจเนื้อหา' },
+          { value: '4.47', label: 'ภาพลักษณ์องค์กร' }
+        ]
+      }
     }
 
-    function applyYearFilter() {
-        console.log("Year changed to:", document.getElementById('mainYear').value);
-    }
+    // 💡 ตัวอย่างเพิ่มเดือนใหม่ (ลบเครื่องหมาย // ออกแล้วแก้ข้อมูล)
+    // ,'APR': {
+    //   label: 'เมษายน 2569',
+    //   updatedAt: '1 พฤษภาคม 2569',
+    //   internal: {
+    //     file: 'apr-internal-2569.html',
+    //     stats: [
+    //       { value: '70',   label: 'ผู้ตอบ (คน)' },
+    //       { value: '4.10', label: 'ความพึงพอใจ' },
+    //       { value: '92%',  label: 'อื่นๆ' }
+    //     ]
+    //   },
+    //   external: null  // ← ถ้ายังไม่มีข้อมูล
+    // }
+  }
 
-    function showLoader(fn) {
-        const loader = document.getElementById('loader');
-        loader.style.display = 'flex';
-        setTimeout(() => {
-            fn();
-            loader.style.display = 'none';
-        }, 1200);
-    }
+  // 💡 ตัวอย่างเพิ่มปีใหม่ (ลบเครื่องหมาย // ออกแล้วแก้ข้อมูล)
+  // ,2568: {
+  //   'MAR': {
+  //     label: 'มีนาคม 2568',
+  //     updatedAt: '1 เมษายน 2568',
+  //     internal: { file: 'mar-internal-2568.html', stats: [...] },
+  //     external: { file: 'mar-external-2568.html', stats: [...] }
+  //   }
+  // }
 
-    function toggleCompare() {
-        showLoader(() => {
-            const normal = document.getElementById('normalView');
-            const compare = document.getElementById('compareView');
-            const btn = document.getElementById('btnText');
-            
-            if (compare.style.display === 'none' || !compare.style.display) {
-                normal.style.display = 'none';
-                compare.style.display = 'grid';
-                btn.innerText = "กลับหน้าปกติ";
-                [1,2,3].forEach(i => resetColumn(i));
-            } else {
-                normal.style.display = 'block';
-                compare.style.display = 'none';
-                btn.innerText = "โหมดเปรียบเทียบ";
-            }
-        });
-    }
+};
+// ═══════════════════════════════════════════════════════════════════════════
+// ⛔ จบส่วน Config - ไม่ต้องแก้โค้ดด้านล่าง
+// ═══════════════════════════════════════════════════════════════════════════
 
-    function resetColumn(i) {
-        const col = document.getElementById('col'+i);
-        col.innerHTML = '<div class="col-top"><select id="m' + i + '"><option value="">เลือกเดือน</option><option value="MAR26">มีนาคม</option><option value="APR26">เมษายน</option></select><button onclick="loadReport(' + i + ')" style="margin-top:10px; background:var(--cyan); color:white; border:none; border-radius:8px; padding:5px 15px; cursor:pointer;">ดูผล</button></div><div class="content-box" id="content' + i + '">โปรดเลือกข้อมูลเพื่อเปรียบเทียบ</div>';
-    }
 
-    async function loadReport(i) {
-        const m = document.getElementById('m'+i).value;
-        if(!m) return alert("โปรดเลือกเดือน");
+// State
+let currentYear = CURRENT_YEAR;
+let currentMonth = null;
+let isCompareMode = false;
+const columnStates = { 1: null, 2: null, 3: null };
 
-        showLoader(async () => {
-            try {
-                const res = await fetch(SCRIPT_URL + "?action=getReportContent&month=" + m);
-                const html = await res.text();
-                document.getElementById('col'+i).innerHTML = '<div class="col-top"><div style="font-weight:700; color:var(--cyan);">' + m + '</div><button onclick="resetColumn(' + i + ')" style="font-size:11px; background:#e2e8f0; border:none; padding:4px 10px; border-radius:6px; cursor:pointer; margin-top:5px;">เปลี่ยนข้อมูล</button></div><div style="flex:1; padding:10px; overflow-y:auto;">' + html + '</div>';
-            } catch (err) {
-                alert("โหลดรายงานไม่สำเร็จ: " + err.message);
-            }
-        });
-    }
+// Helpers
+function getYearList() {
+  const years = [];
+  for (let y = CURRENT_YEAR - YEARS_BACK; y <= CURRENT_YEAR + YEARS_FORWARD; y++) years.push(y);
+  return years;
+}
+function getMonthsForYear(year) {
+  return REPORT_CONFIG[year] ? Object.keys(REPORT_CONFIG[year]) : [];
+}
+function getReport(year, month) {
+  return REPORT_CONFIG[year] && REPORT_CONFIG[year][month] ? REPORT_CONFIG[year][month] : null;
+}
+function showLoader(duration, callback) {
+  const loader = document.getElementById('loader');
+  loader.classList.add('show');
+  setTimeout(() => {
+    if (callback) callback();
+    setTimeout(() => loader.classList.remove('show'), 150);
+  }, duration);
+}
+function fadeOut(el, callback) {
+  el.classList.add('fade-out');
+  setTimeout(() => {
+    if (callback) callback();
+    setTimeout(() => el.classList.remove('fade-out'), 20);
+  }, 280);
+}
+
+// Init
+function init() {
+  const yearSel = document.getElementById('mainYear');
+  getYearList().forEach(y => {
+    const opt = document.createElement('option');
+    opt.value = y;
+    opt.textContent = y;
+    if (y === currentYear) opt.selected = true;
+    yearSel.appendChild(opt);
+  });
+  updateMonthSelect();
+  renderCards();
+}
+
+function updateMonthSelect() {
+  const monthSel = document.getElementById('mainMonth');
+  const months = getMonthsForYear(currentYear);
+  monthSel.innerHTML = '';
+  if (months.length === 0) {
+    monthSel.innerHTML = '<option value="">— ไม่มีข้อมูล —</option>';
+    currentMonth = null;
+  } else {
+    months.forEach((m, idx) => {
+      const opt = document.createElement('option');
+      opt.value = m;
+      opt.textContent = MONTH_NAMES[m] || m;
+      if (idx === months.length - 1) opt.selected = true;
+      monthSel.appendChild(opt);
+    });
+    currentMonth = months[months.length - 1];
+  }
+}
+
+// Render Normal Mode
+function renderCards() {
+  const grid = document.getElementById('cardsGrid');
+  const report = currentMonth ? getReport(currentYear, currentMonth) : null;
+
+  document.getElementById('footerYear').textContent = currentYear;
+  document.getElementById('topbarYear').textContent = 'ปีงบประมาณ ' + currentYear;
+
+  if (!report) {
+    grid.innerHTML = `
+      <div class="empty-state">
+        <img src="https://img.icons8.com/color/150/penguin.png" alt="No data">
+        <h3>ยังไม่มีข้อมูลรายงาน</h3>
+        <p>ปีงบประมาณ ${currentYear} ยังไม่ได้ถูกตั้งค่าไว้ในระบบ<br>หรือยังไม่มีข้อมูลเดือนใดๆ</p>
+      </div>
+    `;
+    document.getElementById('reportCount').textContent = '0 รายการ';
+    document.getElementById('heroChip').textContent = 'ปีงบประมาณ ' + currentYear;
+    return;
+  }
+
+  document.getElementById('heroChip').textContent = 'Last Update: ' + report.updatedAt;
+
+  const available = [report.internal, report.external].filter(r => r).length;
+  document.getElementById('reportCount').textContent = available + ' รายการ';
+
+  let html = '';
+  if (report.internal) html += createCardHTML('internal', report.internal, report.label);
+  if (report.external) html += createCardHTML('external', report.external, report.label);
+
+  if (!html) {
+    html = `
+      <div class="empty-state">
+        <img src="https://img.icons8.com/color/150/penguin.png" alt="No data">
+        <h3>ไม่พบข้อมูลรายงานในเดือนนี้</h3>
+        <p>โปรดเลือกเดือนอื่น หรือเพิ่มข้อมูลใน config</p>
+      </div>
+    `;
+  }
+  grid.innerHTML = html;
+}
+
+function createCardHTML(type, data, periodLabel) {
+  const isInternal = type === 'internal';
+  const badge = isInternal ? 'บุคลากรภายใน' : 'ผู้ใช้บริการภายนอก';
+  const title = isInternal
+    ? 'สรุปผลการประเมินการเปิดรับ<br>และการสื่อสารองค์กรของบุคลากร'
+    : 'สรุปผลการประเมินการเปิดรับข่าวสาร<br>และภาพลักษณ์ของผู้ใช้บริการ';
+  const desc = isInternal
+    ? 'ผลสำรวจความคิดเห็นของบุคลากรสำนักหอสมุดต่อการสื่อสารภายในองค์กร ครอบคลุมช่องทาง เนื้อหา ความพึงพอใจ และ CMUL News'
+    : 'ผลสำรวจความคิดเห็นของผู้ใช้บริการต่อการสื่อสารภายนอกองค์กร ครอบคลุมช่องทาง เนื้อหา ความพึงพอใจ ภาพลักษณ์ และ Keyword';
+  const iconSvg = isInternal
+    ? '<svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>'
+    : '<svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>';
+  const statsHTML = data.stats.map(s => `<div class="stat-block"><div class="stat-value">${s.value}</div><div class="stat-label">${s.label}</div></div>`).join('');
+
+  return `
+    <a href="${data.file}" class="report-card card-${type}">
+      <div class="card-icon">${iconSvg}</div>
+      <div class="card-badge">${badge} · ${periodLabel}</div>
+      <div class="card-title">${title}</div>
+      <div class="card-desc">${desc}</div>
+      <div class="card-stats">${statsHTML}</div>
+      <div class="card-cta">ดูรายงานฉบับเต็ม <span class="cta-arrow">→</span></div>
+    </a>
+  `;
+}
+
+// Controls
+function onMainYearChange() {
+  currentYear = parseInt(document.getElementById('mainYear').value);
+  const grid = document.getElementById('cardsGrid');
+  showLoader(800, () => {
+    fadeOut(grid, () => {
+      updateMonthSelect();
+      renderCards();
+    });
+  });
+}
+function onMainMonthChange() {
+  currentMonth = document.getElementById('mainMonth').value;
+  const grid = document.getElementById('cardsGrid');
+  showLoader(600, () => fadeOut(grid, renderCards));
+}
+
+// Compare Mode
+function enterCompareMode() {
+  isCompareMode = true;
+  showLoader(900, () => {
+    document.getElementById('contentArea').classList.add('wide');
+    document.getElementById('heroSection').style.display = 'none';
+    document.getElementById('controlsBar').style.display = 'none';
+    document.getElementById('normalMode').style.display = 'none';
+    document.getElementById('compareMode').style.display = 'block';
+    [1, 2, 3].forEach(i => renderColumnPicker(i));
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+}
+function exitCompareMode() {
+  isCompareMode = false;
+  showLoader(700, () => {
+    document.getElementById('contentArea').classList.remove('wide');
+    document.getElementById('heroSection').style.display = '';
+    document.getElementById('controlsBar').style.display = '';
+    document.getElementById('compareMode').style.display = 'none';
+    document.getElementById('normalMode').style.display = 'block';
+    columnStates[1] = columnStates[2] = columnStates[3] = null;
+  });
+}
+
+function renderColumnPicker(colIdx) {
+  const col = document.getElementById('col' + colIdx);
+  const years = getYearList();
+  col.innerHTML = `
+    <div class="col-picker">
+      <div class="icon-wrap">
+        <svg width="30" height="30" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+          <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/>
+          <line x1="3" y1="10" x2="21" y2="10"/>
+        </svg>
+      </div>
+      <h4>คอลัมน์ที่ ${colIdx}</h4>
+      <p>เลือกปี เดือน และประเภทที่ต้องการ</p>
+      <select class="picker-select" id="pickY${colIdx}" onchange="onPickerYearChange(${colIdx})">
+        ${years.map(y => `<option value="${y}" ${y===CURRENT_YEAR?'selected':''}>ปีงบประมาณ ${y}</option>`).join('')}
+      </select>
+      <select class="picker-select" id="pickM${colIdx}"></select>
+      <select class="picker-select" id="pickT${colIdx}">
+        <option value="internal">👥 บุคลากรภายใน</option>
+        <option value="external">📢 ผู้ใช้บริการภายนอก</option>
+      </select>
+      <button class="picker-btn" id="pickBtn${colIdx}" onclick="loadColumnReport(${colIdx})">
+        ดูรายงาน →
+      </button>
+    </div>
+  `;
+  onPickerYearChange(colIdx);
+}
+
+function onPickerYearChange(colIdx) {
+  const year = parseInt(document.getElementById('pickY' + colIdx).value);
+  const monthSel = document.getElementById('pickM' + colIdx);
+  const btn = document.getElementById('pickBtn' + colIdx);
+  const months = getMonthsForYear(year);
+  monthSel.innerHTML = '';
+  if (months.length === 0) {
+    monthSel.innerHTML = '<option value="">— ไม่มีข้อมูล —</option>';
+    monthSel.disabled = true; btn.disabled = true;
+  } else {
+    months.forEach(m => { monthSel.innerHTML += `<option value="${m}">${MONTH_NAMES[m]||m}</option>`; });
+    monthSel.disabled = false; btn.disabled = false;
+  }
+}
+
+function loadColumnReport(colIdx) {
+  const year = parseInt(document.getElementById('pickY' + colIdx).value);
+  const month = document.getElementById('pickM' + colIdx).value;
+  const type = document.getElementById('pickT' + colIdx).value;
+  const report = getReport(year, month);
+
+  if (!report || !report[type]) {
+    alert('❌ ไม่มีข้อมูล' + (type === 'internal' ? 'บุคลากรภายใน' : 'ผู้ใช้บริการภายนอก') + 'สำหรับ' + (MONTH_NAMES[month]||month) + ' ' + year);
+    return;
+  }
+
+  columnStates[colIdx] = { year, month, type, file: report[type].file, label: report.label };
+  const col = document.getElementById('col' + colIdx);
+  const typeLabel = type === 'internal' ? 'บุคลากรภายใน' : 'ผู้ใช้บริการภายนอก';
+
+  showLoader(700, () => {
+    col.innerHTML = `
+      <div class="col-header">
+        <div class="col-header-info">
+          <div class="col-header-title">${report.label}</div>
+          <div class="col-header-subtitle">${typeLabel}</div>
+        </div>
+        <button class="col-change-btn" onclick="resetColumn(${colIdx})">
+          <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M23 4v6h-6M1 20v-6h6"/>
+            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+          </svg>
+          เปลี่ยนข้อมูล
+        </button>
+      </div>
+      <div class="col-content">
+        <iframe src="${report[type].file}" title="รายงาน${typeLabel}"></iframe>
+      </div>
+    `;
+  });
+}
+
+function resetColumn(colIdx) {
+  columnStates[colIdx] = null;
+  const col = document.getElementById('col' + colIdx);
+  fadeOut(col, () => renderColumnPicker(colIdx));
+}
+
+init();
 </script>
+
 </body>
 </html>
