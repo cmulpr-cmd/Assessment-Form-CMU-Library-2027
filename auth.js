@@ -1,7 +1,10 @@
 (function() {
+    // แก้บั๊ก: ใส่ SCRIPT_URL จริงแทน placeholder
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyqId2pTu3eESlrk1w1-sFtxoMCRQVCC7WPXJ1p_JOhiaizULKbDcPCs03x5Va-SNLcyQ/exec";
+
     // 1. ตรวจสอบการเข้าถึง
     const userRaw = sessionStorage.getItem("cc_pr_user");
-    if (!userRaw && !window.location.pathname.endsWith("index.html")) {
+    if (!userRaw && !window.location.pathname.endsWith("index.html") && window.location.pathname !== "/" && !window.location.pathname.endsWith("/")) {
         alert("Access denied: ไม่อนุญาตให้เข้าถึงข้อมูลโดยตรง โปรดลงชื่อเข้าใช้");
         window.location.href = "index.html";
         return;
@@ -31,7 +34,6 @@
         if ((e.ctrlKey || e.metaKey) && (e.key === 'p' || e.key === 'P')) {
             e.preventDefault();
             const user = userRaw ? JSON.parse(userRaw).displayName : "Unknown";
-            const SCRIPT_URL = "URL_APPS_SCRIPT_ที่นี่"; 
             fetch(`${SCRIPT_URL}?action=sendAlertEmail&user=${encodeURIComponent(user)}`, {mode:'no-cors'});
             alert("🔒 ระบบความปลอดภัย: ไม่อนุญาตให้พิมพ์หรือบันทึกหน้าจอนี้\nระบบได้ส่งแจ้งเตือนไปยังผู้ดูแลเรียบร้อยแล้ว");
         }
