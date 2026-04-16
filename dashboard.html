@@ -56,8 +56,12 @@
 <script src="auth.js"></script>
 <script>
     const currentY = 2569;
-    // ⭐ URL ใหม่ (จาก Deploy ล่าสุด - ไฟล์ assessment_backup_backend)
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxr0sOK9Vc5KqJWKBvQ66NTuTHBYhA8PIsacQQ1V-yy2HLTqp5Lwvdjyd9T79xl2JuHHg/exec";
+    
+    // ============================================
+    // ⭐ แก้ตรงนี้: วาง URL ที่ได้จาก Apps Script Deploy
+    // ============================================
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby15LzDt9gWKk1Vg4ejtvXIGXy4Z7bd7inq-aZPlBiG0KjHbfsfzvzwDDbQaYYGYNMX/exec";
+    // ============================================
 
     const select = document.getElementById('mainYear');
     for(let i = currentY - 3; i <= currentY + 3; i++) {
