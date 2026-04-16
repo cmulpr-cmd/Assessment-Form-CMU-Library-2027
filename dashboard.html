@@ -326,7 +326,6 @@ body {
   border-top: 1px solid var(--border); background: rgba(255,255,255,0.5);
 }
 
-/* === Initial Load === */
 .fade-up { opacity: 0; transform: translateY(24px); animation: fadeUp 0.7s cubic-bezier(0.25,1,0.5,1) forwards; }
 @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
 .delay-1{animation-delay:.1s} .delay-2{animation-delay:.2s} .delay-3{animation-delay:.35s} .delay-4{animation-delay:.5s} .delay-5{animation-delay:.65s}
@@ -343,9 +342,7 @@ body {
 
 <div class="bg-scene"></div>
 
-<!-- ======================================================================
-     🐧 PENGUIN LOADER
-====================================================================== -->
+<!-- ========== Penguin Loader ========== -->
 <div class="loader-overlay" id="loader">
   <div class="penguin-stage">
     <img src="https://img.icons8.com/color/150/penguin.png" alt="Loading">
@@ -362,6 +359,7 @@ body {
       <img src="logo web.png" alt="โลโก้สำนักหอสมุด มช." style="height: 50px; width: auto; margin-right: 10px;">
       <div class="brand-text"><span>หน่วยสื่อสารองค์กร</span><br>สำนักหอสมุด มหาวิทยาลัยเชียงใหม่</div>
     </div>
+    <!-- auth.js จะ inject โปรไฟล์ผู้ใช้ตรงนี้ -->
     <div class="topbar-right">
       <div class="topbar-year" id="topbarYear">ปีงบประมาณ 2569</div>
     </div>
@@ -437,6 +435,9 @@ body {
 
 </div>
 
+<!-- ⚠️ auth.js ต้องโหลดก่อน script หลัก เพื่อเช็ค login -->
+<script src="auth.js"></script>
+
 <script>
 // ═══════════════════════════════════════════════════════════════════════════
 // 📋 ADMIN CONFIG - แก้ไขข้อมูลรายงานที่นี่
@@ -503,7 +504,7 @@ const REPORT_CONFIG = {
       }
     }
 
-    // 💡 ตัวอย่างเพิ่มเดือนใหม่ (ลบเครื่องหมาย // ออกแล้วแก้ข้อมูล)
+    // 💡 ตัวอย่างเพิ่มเดือนใหม่ (ลบ // ออกแล้วแก้ข้อมูล)
     // ,'APR': {
     //   label: 'เมษายน 2569',
     //   updatedAt: '1 พฤษภาคม 2569',
@@ -515,11 +516,11 @@ const REPORT_CONFIG = {
     //       { value: '92%',  label: 'อื่นๆ' }
     //     ]
     //   },
-    //   external: null  // ← ถ้ายังไม่มีข้อมูล
+    //   external: null
     // }
   }
 
-  // 💡 ตัวอย่างเพิ่มปีใหม่ (ลบเครื่องหมาย // ออกแล้วแก้ข้อมูล)
+  // 💡 ตัวอย่างเพิ่มปีใหม่
   // ,2568: {
   //   'MAR': {
   //     label: 'มีนาคม 2568',
