@@ -2,142 +2,127 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard - หน่วยสื่อสารองค์กร สำนักหอสมุด มช.</title>
+    <title>Dashboard - หน่วยสื่อสารองค์กร มช.</title>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <script src="auth.js"></script>
     <style>
         :root { --cyan: #0891b2; --bg: #f8fafc; --border: rgba(0,0,0,0.06); }
         body { margin:0; background:var(--bg); font-family:'Sarabun',sans-serif; }
+        header { background:white; padding:15px 40px; border-bottom:1px solid var(--border); display:flex; align-items:center; }
+        .logo { height:45px; }
+        .container { padding:40px; transition: opacity 0.4s ease; }
+        .controls { display:flex; gap:15px; align-items:center; margin-bottom:30px; margin-right: 180px; margin-left: auto;}
+        select { padding:10px 20px; border-radius:12px; border:1px solid #e2e8f0; outline:none; cursor:pointer; font-family:inherit; }
         
-        header { background:white; padding:15px 40px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:20px; }
-        .logo { height:40px; }
-        .nav-controls { margin-left:auto; display:flex; gap:10px; align-items:center; margin-right: 180px;}
+        /* 3 Columns Mode */
+        .compare-grid { display:grid; grid-template-columns: repeat(3, 1fr); gap:20px; display:none; }
+        .col { background:white; border-radius:25px; border:1px solid var(--border); min-height:600px; display:flex; flex-direction:column; overflow:hidden; }
+        .col-top { padding:20px; background:#f8fafc; border-bottom:1px solid var(--border); text-align:center; }
+        .content-box { flex:1; display:flex; align-items:center; justify-content:center; color:#94a3b8; font-size:14px; }
         
-        select { padding:8px 15px; border-radius:10px; border:1px solid #e2e8f0; font-family:inherit; outline:none; cursor:pointer; }
-        
-        .container { padding:40px; transition: opacity 0.5s; }
-        .grid-3 { display:grid; grid-template-columns: repeat(3, 1fr); gap:20px; }
-        
-        /* Comparison Mode */
-        .compare-col { background:white; border-radius:20px; padding:20px; border:1px solid var(--border); min-height:500px; display:flex; flex-direction:column; }
-        .col-header { padding-bottom:15px; border-bottom:1px solid var(--border); margin-bottom:20px; text-align:center; }
-        .btn-reset { background:#f1f5f9; border:none; padding:5px 12px; border-radius:8px; font-size:12px; cursor:pointer; margin-top:10px; font-family:inherit;}
-        
-        /* Penguin Loader Overlay */
-        #loader { position:fixed; inset:0; background:rgba(255,255,255,0.9); z-index:10000; display:none; flex-direction:column; align-items:center; justify-content:center; }
-        .penguin { width:100px; animation: bounce 1s infinite alternate; }
-        @keyframes bounce { from { transform:translateY(0); } to { transform:translateY(-20px); } }
+        .btn-comp { background:#1e293b; color:white; border:none; padding:12px 25px; border-radius:12px; cursor:pointer; font-weight:600; }
+        .btn-comp:hover { background:var(--cyan); }
 
-        .btn-compare { background:#1e293b; color:white; border:none; padding:10px 20px; border-radius:10px; cursor:pointer; font-family:inherit; font-weight:600; transition:0.3s;}
-        .btn-compare:hover { background:var(--cyan); }
-        
-        .card { background:white; border-radius:20px; padding:30px; border:1px solid var(--border); box-shadow:0 4px 12px rgba(0,0,0,0.02); }
-        .fade { animation: fadeIn 0.5s ease; }
-        @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+        /* Penguin Loader */
+        #loader { position:fixed; inset:0; background:rgba(255,255,255,0.9); z-index:10000; display:none; flex-direction:column; align-items:center; justify-content:center; }
+        .pen { width:120px; animation: bounce 1s infinite alternate; }
+        @keyframes bounce { from { transform:translateY(0); } to { transform:translateY(-30px); } }
     </style>
 </head>
 <body>
 
 <div id="loader">
-    <img src="https://img.icons8.com/color/96/penguin.png" class="penguin">
-    <p>กำลังประมวลผลข้อมูล...</p>
+    <img src="https://img.icons8.com/color/150/penguin.png" class="pen">
+    <p style="margin-top:20px; font-weight:600; color:var(--cyan);">กำลังประมวลผลข้อมูล...</p>
 </div>
 
 <header>
     <img src="logo web.png" alt="CMUL" class="logo">
-    <div style="font-weight:700;">Dashboard สรุปผลการประเมิน 2569</div>
-    
-    <div class="nav-controls">
-        <select id="mainYearSelect" onchange="loadNewData()"></select>
-        <button class="btn-compare" onclick="toggleCompare()" id="compBtn">โหมดเปรียบเทียบ</button>
+    <div class="controls">
+        <select id="mainYear" onchange="applyYearFilter()"></select>
+        <button class="btn-comp" onclick="toggleCompare()" id="btnText">โหมดเปรียบเทียบ</button>
     </div>
 </header>
 
-<div class="container fade" id="mainView">
-    <div class="grid-3">
-        <div class="card"><h3>รายงานผลภายใน</h3><p>สถิติการสื่อสารของบุคลากร...</p></div>
-        <div class="card"><h3>รายงานผลภายนอก</h3><p>สถิติจากผู้รับบริการภายนอก...</p></div>
-        <div class="card"><h3>ภาพรวมองค์กร</h3><p>ดัชนีชี้วัดความสำเร็จ...</p></div>
+<div class="container" id="normalView">
+    <div style="background:white; height:400px; border-radius:30px; border:1px solid var(--border); display:flex; align-items:center; justify-content:center;">
+        ภาพรวมข้อมูลปีปัจจุบัน (Dashboard หลัก)
     </div>
 </div>
 
-<div class="container fade" id="compareView" style="display:none;">
-    <div class="grid-3">
-        <div class="compare-col" id="col1"></div>
-        <div class="compare-col" id="col2"></div>
-        <div class="compare-col" id="col3"></div>
-    </div>
+<div class="container compare-grid" id="compareView">
+    <div class="col" id="col1"></div>
+    <div class="col" id="col2"></div>
+    <div class="col" id="col3"></div>
 </div>
 
+<script src="auth.js"></script>
 <script>
     const currentY = 2569;
-    let isCompare = false;
+    const SCRIPT_URL = "URL_APPS_SCRIPT_ที่นี่";
 
-    // ตั้งค่าปีล่วงหน้า-ย้อนหลัง
-    const yearSelect = document.getElementById('mainYearSelect');
+    // สร้างลิสต์ปี (ย้อนหลัง 3 - หน้า 3)
+    const select = document.getElementById('mainYear');
     for(let i = currentY - 3; i <= currentY + 3; i++) {
         let opt = document.createElement('option');
-        opt.value = i; opt.text = 'ปีงบประมาณ ' + i;
+        opt.value = i; opt.text = "ปีงบประมาณ " + i;
         if(i === currentY) opt.selected = true;
-        yearSelect.appendChild(opt);
+        select.appendChild(opt);
     }
 
-    function showLoading(callback) {
-        document.getElementById('loader').style.display = 'flex';
+    function showLoader(fn) {
+        const loader = document.getElementById('loader');
+        loader.style.display = 'flex';
         setTimeout(() => {
-            callback();
-            document.getElementById('loader').style.display = 'none';
-        }, 1000);
-    }
-
-    function loadNewData() {
-        showLoading(() => {
-            // โลจิกดึงข้อมูลปีใหม่
-            console.log("Data loaded for " + yearSelect.value);
-        });
+            fn();
+            loader.style.display = 'none';
+        }, 1200);
     }
 
     function toggleCompare() {
-        showLoading(() => {
-            isCompare = !isCompare;
-            document.getElementById('mainView').style.display = isCompare ? 'none' : 'block';
-            document.getElementById('compareView').style.display = isCompare ? 'block' : 'none';
-            document.getElementById('compBtn').innerText = isCompare ? 'กลับหน้าปกติ' : 'โหมดเปรียบเทียบ';
-            if(isCompare) initCompareCols();
+        showLoader(() => {
+            const normal = document.getElementById('normalView');
+            const compare = document.getElementById('compareView');
+            const btn = document.getElementById('btnText');
+            
+            if (compare.style.display === 'none' || !compare.style.display) {
+                normal.style.display = 'none';
+                compare.style.display = 'grid';
+                btn.innerText = "กลับหน้าปกติ";
+                [1,2,3].forEach(i => resetColumn(i));
+            } else {
+                normal.style.display = 'block';
+                compare.style.display = 'none';
+                btn.innerText = "โหมดเปรียบเทียบ";
+            }
         });
-    }
-
-    function initCompareCols() {
-        [1,2,3].forEach(i => resetColumn(i));
     }
 
     function resetColumn(i) {
         const col = document.getElementById('col'+i);
         col.innerHTML = `
-            <div class="col-header">
-                <select id="m${i}"><option value="">เลือกเดือน</option><option>มีนาคม</option><option>เมษายน</option></select>
-                <select id="y${i}"><option>2568</option><option>2569</option></select>
-                <button onclick="applyCol(${i})" style="margin-top:10px; background:var(--cyan); color:white; border:none; padding:5px 15px; border-radius:8px; cursor:pointer;">เลือก</button>
+            <div class="col-top">
+                <select id="m${i}"><option value="">เลือกเดือน</option><option value="MAR26">มีนาคม</option><option value="APR26">เมษายน</option></select>
+                <button onclick="loadReport(${i})" style="margin-top:10px; background:var(--cyan); color:white; border:none; border-radius:8px; padding:5px 15px; cursor:pointer;">ดูผล</button>
             </div>
-            <div style="flex:1; display:flex; align-items:center; justify-content:center; color:#94a3b8;">เลือกข้อมูลเพื่อเปรียบเทียบ</div>
+            <div class="content-box" id="content${i}">โปรดเลือกข้อมูลเพื่อเปรียบเทียบ</div>
         `;
     }
 
-    function applyCol(i) {
+    async function loadReport(i) {
         const m = document.getElementById('m'+i).value;
-        const y = document.getElementById('y'+i).value;
-        if(!m) return alert("กรุณาเลือกเดือน");
-        
-        showLoading(() => {
+        if(!m) return alert("โปรดเลือกเดือน");
+
+        showLoader(async () => {
+            // ดึง HTML โค้ดรายงานจาก Sheet ตามที่คุณ Woody ต้องการ
+            const res = await fetch(`${SCRIPT_URL}?action=getReportContent&month=${m}`);
+            const html = await res.text();
+            
             document.getElementById('col'+i).innerHTML = `
-                <div class="col-header">
-                    <div style="font-weight:700; color:var(--cyan);">${m} ${y}</div>
-                    <button class="btn-reset" onclick="resetColumn(${i})">เปลี่ยนข้อมูล</button>
+                <div class="col-top">
+                    <div style="font-weight:700; color:var(--cyan);">${m}</div>
+                    <button onclick="resetColumn(${i})" style="font-size:11px; background:#e2e8f0; border:none; padding:4px 10px; border-radius:6px; cursor:pointer; margin-top:5px;">เปลี่ยนข้อมูล</button>
                 </div>
-                <div style="padding:10px;">
-                    <p>แสดงผลลัพธ์การประเมิน...</p>
-                    <div style="height:200px; background:#f8fafc; border-radius:12px; border:1px dashed #cbd5e1; display:flex; align-items:center; justify-content:center; font-size:12px; color:#94a3b8;">พื้นที่แสดงกราฟ/ข้อมูล</div>
-                </div>
+                <div style="flex:1; padding:10px; overflow-y:auto;">${html}</div>
             `;
         });
     }
