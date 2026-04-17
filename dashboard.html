@@ -710,24 +710,30 @@ const YEAR_COLORS = {
 function getYearColor(year) { return YEAR_COLORS[year] || '#64748b'; }
 
 const REPORT_CONFIG = {
-  2564: { 'MAR': { label: 'มีนาคม 2564', updatedAt: '2564 B.E. | Nutnaree D., Data Collector', 
-        internal: { file: 'report/2021/cmul-communication-report.html', stats: [ { value: '118', label: 'ผู้ตอบ (คน)' }, { value: 'N/A', label: 'ความพึงพอใจรวม' }, 
-        external: { file: 'report/2021/cmul-user-survey-report.html', stats: [ { value: '411', label: 'ผู้ตอบ (คน)' }, { value: 'N/A', label: 'ความพึงพอใจเนื้อหา' }, { value: 'N/A', label: 'ภาพลักษณ์องค์กร' } ] } } },
-  2565: { 'MAR': { label: 'มีนาคม 2565', updatedAt: '2565 B.E. | Nutnaree D., Data Collector', 
-        internal: { file: 'report/2022/cmul-communication-report.html', stats: [ { value: '118', label: 'ผู้ตอบ (คน)' }, { value: 'N/A', label: 'ความพึงพอใจรวม' }, 
-        external: { file: 'report/2022/cmul-user-survey-report.html', stats: [ { value: '411', label: 'ผู้ตอบ (คน)' }, { value: 'N/A', label: 'ความพึงพอใจเนื้อหา' }, { value: 'N/A', label: 'ภาพลักษณ์องค์กร' } ] } } },
-  2566: { 'MAR': { label: 'มีนาคม 2566', updatedAt: '2566 B.E. | Nutnaree D., Data Collector', 
-        internal: { file: 'report/2023/cmul-communication-report.html', stats: [ { value: '118', label: 'ผู้ตอบ (คน)' }, { value: 'N/A', label: 'ความพึงพอใจรวม' }, 
-        external: { file: 'report/2023/cmul-user-survey-report.html', stats: [ { value: '411', label: 'ผู้ตอบ (คน)' }, { value: 'N/A', label: 'ความพึงพอใจเนื้อหา' }, { value: 'N/A', label: 'ภาพลักษณ์องค์กร' } ] } } },
-  2567: { 'MAR': { label: 'มีนาคม 2567', updatedAt: '2567 B.E. | Nutnaree D., Data Collector', 
-        internal: { file: 'report/2024/cmul-communication-report.html', stats: [ { value: '118', label: 'ผู้ตอบ (คน)' }, { value: 'N/A', label: 'ความพึงพอใจรวม' }, 
-        external: { file: 'report/2024/cmul-user-survey-report.html', stats: [ { value: '411', label: 'ผู้ตอบ (คน)' }, { value: 'N/A', label: 'ความพึงพอใจเนื้อหา' }, { value: 'N/A', label: 'ภาพลักษณ์องค์กร' } ] } } },
-  2568: { 'MAR': { label: 'มีนาคม 2568', updatedAt: '1 เมษายน 2568 | เวลา 10.30 น.', 
-        internal: { file: 'report/2025/cmul-communication-report.html', stats: [ { value: '65', label: 'ผู้ตอบ (คน)' }, { value: '4.03', label: 'ความพึงพอใจรวม' }, { value: '91.1%', label: 'ควรผลิต CMUL News ต่อ' } ] }, 
-        external: { file: 'report/2025/cmul-user-survey-report.html', stats: [ { value: '411', label: 'ผู้ตอบ (คน)' }, { value: '4.28', label: 'ความพึงพอใจเนื้อหา' }, { value: '4.47', label: 'ภาพลักษณ์องค์กร' } ] } } },
-  2569: { 'MAR': { label: 'มีนาคม 2569', updatedAt: '1 เมษายน 2569 | เวลา 10.30 น.', 
-        internal: { file: 'report/2026/cmul-communication-report.html', stats: [ { value: '65', label: 'ผู้ตอบ (คน)' }, { value: '4.03', label: 'ความพึงพอใจรวม' }, { value: '91.1%', label: 'ควรผลิต CMUL News ต่อ' } ] }, 
-        external: { file: 'report/2026/cmul-user-survey-report.html', stats: [ { value: '411', label: 'ผู้ตอบ (คน)' }, { value: '4.28', label: 'ความพึงพอใจเนื้อหา' }, { value: '4.47', label: 'ภาพลักษณ์องค์กร' } ] } } },
+  2564: { 'MAR': { label: 'มีนาคม 2564', updatedAt: '2564 B.E. | Nutnaree D., Data Collector',
+    internal: { file: 'report/2021/cmul-communication-report.html', stats: [ { value: '118', label: 'ผู้ตอบ (คน)' }, { value: 'N/A', label: 'ความพึงพอใจรวม' }, { value: 'N/A', label: 'ข้อมูลเพิ่มเติม' } ] },
+    external: { file: 'report/2021/cmul-user-survey-report.html', stats: [ { value: '411', label: 'ผู้ตอบ (คน)' }, { value: 'N/A', label: 'ความพึงพอใจเนื้อหา' }, { value: 'N/A', label: 'ภาพลักษณ์องค์กร' } ] }
+  } },
+  2565: { 'MAR': { label: 'มีนาคม 2565', updatedAt: '2565 B.E. | Nutnaree D., Data Collector',
+    internal: { file: 'report/2022/cmul-communication-report.html', stats: [ { value: '118', label: 'ผู้ตอบ (คน)' }, { value: 'N/A', label: 'ความพึงพอใจรวม' }, { value: 'N/A', label: 'ข้อมูลเพิ่มเติม' } ] },
+    external: { file: 'report/2022/cmul-user-survey-report.html', stats: [ { value: '411', label: 'ผู้ตอบ (คน)' }, { value: 'N/A', label: 'ความพึงพอใจเนื้อหา' }, { value: 'N/A', label: 'ภาพลักษณ์องค์กร' } ] }
+  } },
+  2566: { 'MAR': { label: 'มีนาคม 2566', updatedAt: '2566 B.E. | Nutnaree D., Data Collector',
+    internal: { file: 'report/2023/cmul-communication-report.html', stats: [ { value: '118', label: 'ผู้ตอบ (คน)' }, { value: 'N/A', label: 'ความพึงพอใจรวม' }, { value: 'N/A', label: 'ข้อมูลเพิ่มเติม' } ] },
+    external: { file: 'report/2023/cmul-user-survey-report.html', stats: [ { value: '411', label: 'ผู้ตอบ (คน)' }, { value: 'N/A', label: 'ความพึงพอใจเนื้อหา' }, { value: 'N/A', label: 'ภาพลักษณ์องค์กร' } ] }
+  } },
+  2567: { 'MAR': { label: 'มีนาคม 2567', updatedAt: '2567 B.E. | Nutnaree D., Data Collector',
+    internal: { file: 'report/2024/cmul-communication-report.html', stats: [ { value: '118', label: 'ผู้ตอบ (คน)' }, { value: 'N/A', label: 'ความพึงพอใจรวม' }, { value: 'N/A', label: 'ข้อมูลเพิ่มเติม' } ] },
+    external: { file: 'report/2024/cmul-user-survey-report.html', stats: [ { value: '411', label: 'ผู้ตอบ (คน)' }, { value: 'N/A', label: 'ความพึงพอใจเนื้อหา' }, { value: 'N/A', label: 'ภาพลักษณ์องค์กร' } ] }
+  } },
+  2568: { 'MAR': { label: 'มีนาคม 2568', updatedAt: '1 เมษายน 2568 | เวลา 10.30 น.',
+    internal: { file: 'report/2025/cmul-communication-report.html', stats: [ { value: '65', label: 'ผู้ตอบ (คน)' }, { value: '4.03', label: 'ความพึงพอใจรวม' }, { value: '91.1%', label: 'ควรผลิต CMUL News ต่อ' } ] },
+    external: { file: 'report/2025/cmul-user-survey-report.html', stats: [ { value: '411', label: 'ผู้ตอบ (คน)' }, { value: '4.28', label: 'ความพึงพอใจเนื้อหา' }, { value: '4.47', label: 'ภาพลักษณ์องค์กร' } ] }
+  } },
+  2569: { 'MAR': { label: 'มีนาคม 2569', updatedAt: '1 เมษายน 2569 | เวลา 10.30 น.',
+    internal: { file: 'report/2026/cmul-communication-report.html', stats: [ { value: '65', label: 'ผู้ตอบ (คน)' }, { value: '4.03', label: 'ความพึงพอใจรวม' }, { value: '91.1%', label: 'ควรผลิต CMUL News ต่อ' } ] },
+    external: { file: 'report/2026/cmul-user-survey-report.html', stats: [ { value: '411', label: 'ผู้ตอบ (คน)' }, { value: '4.28', label: 'ความพึงพอใจเนื้อหา' }, { value: '4.47', label: 'ภาพลักษณ์องค์กร' } ] }
+  } },
   2570: { },
   2571: { },
   2572: { },
@@ -768,7 +774,7 @@ function fadeOut(el, callback) { el.classList.add('fade-out'); setTimeout(() => 
 
 function init() {
   const yearSel = document.getElementById('mainYear');
-  getYearList().forEach(y => { const opt = document.createElement('option'); opt.value = y; opt.textContent = "ปีงบประมาณ " + y; if (y === currentYear) opt.selected = true; yearSel.appendChild(opt); });
+  getYearList().forEach(y => { const opt = document.createElement('option'); opt.value = y; opt.textContent = y; if (y === currentYear) opt.selected = true; yearSel.appendChild(opt); });
   updateMonthSelect(); renderCards();
 }
 
