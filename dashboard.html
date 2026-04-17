@@ -696,19 +696,22 @@ document.getElementById('changePassForm').onsubmit = async function(e) {
 // 📋 ADMIN CONFIG - ข้อมูลรายงาน
 // ═══════════════════════════════════════════════════════════════════════════
 const CURRENT_YEAR = 2569;
-const YEARS_BACK = 3;
-const YEARS_FORWARD = 3;
+const YEARS_BACK = 5;
+const YEARS_FORWARD = 5;
 
 const MONTH_NAMES = { 'JAN': 'มกราคม',  'FEB': 'กุมภาพันธ์', 'MAR': 'มีนาคม', 'APR': 'เมษายน', 'MAY': 'พฤษภาคม', 'JUN': 'มิถุนายน', 'JUL': 'กรกฎาคม', 'AUG': 'สิงหาคม', 'SEP': 'กันยายน', 'OCT': 'ตุลาคม', 'NOV': 'พฤศจิกายน', 'DEC': 'ธันวาคม' };
 
 // สีประจำแต่ละปี
 const YEAR_COLORS = { 
+  2564: '#1a0747', 2565: '#9000d3',
   2566: '#ef4444', 2567: '#f59e0b', 2568: '#10b981', 
-  2569: '#0ea5e9', 2570: '#6366f1', 2571: '#d946ef', 2572: '#8b5cf6'  
+  2569: '#0ea5e9', 2570: '#6366f1', 2571: '#d946ef', 2572: '#8b5cf6', 2573: '#ffa300', 2574: '#d81212'   
 };
 function getYearColor(year) { return YEAR_COLORS[year] || '#64748b'; }
 
 const REPORT_CONFIG = {
+  2564: { },
+  2565: { },
   2566: { },
   2567: { },
   2568: { 'MAR': { label: 'มีนาคม 2569', updatedAt: '1 เมษายน 2569 | เวลา 10.30 น.', 
@@ -720,6 +723,8 @@ const REPORT_CONFIG = {
   2570: { },
   2571: { },
   2572: { }
+  2573: { }
+  2574: { }
 };
 
 let currentYear = CURRENT_YEAR;
