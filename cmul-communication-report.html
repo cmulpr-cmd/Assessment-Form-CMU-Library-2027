@@ -406,10 +406,11 @@ async function exportAndSendEmail() {
     try {
         // 🌟 3. Real POST to Apps Script
         const response = await fetch(SCRIPT_URL_POST, {
-            method: 'POST',
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: JSON.stringify({ action: 'sendHtmlEmail', username: userId, htmlData: cleanHtmlString })
-        });
+    method: 'POST',
+    redirect: 'follow',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify({ action: 'sendHtmlEmail', username: userId, htmlData: cleanHtmlString })
+});
         
         const data = await response.json();
         
@@ -454,5 +455,6 @@ new Chart(document.getElementById('chartCMUL'), { type: 'bar', data: { labels: [
 new Chart(document.getElementById('chartCMULSat'), { type: 'radar', data: { labels: ['ออกแบบ', 'ช่องทาง', 'เนื้อหา'], datasets: [{ data: [4.08, 4.06, 3.93], borderColor: colors.cyan, backgroundColor: 'rgba(8, 145, 178, 0.15)' }] }, options: { plugins: { legend: { display: false } }, responsive: true, maintainAspectRatio: false } });
 new Chart(document.getElementById('chartDept'), { type: 'bar', data: { labels: ['สำนักงาน', 'จัดการทรัพยากร', 'บริการ'], datasets: [{ data: [13, 11, 10], backgroundColor: colors.blue, borderRadius: 8 }] }, options: { plugins: { legend: { display: false } }, responsive: true, maintainAspectRatio: false } });
 </script>
+  <script src="auth.js"></script>
 </body>
 </html>
