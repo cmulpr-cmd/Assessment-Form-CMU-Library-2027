@@ -714,27 +714,25 @@ async function exportAndSendEmail() {
     btnIcon.style.display = 'none';
     btnSpin.style.display = 'block';
 
-    const allCanvas = document.querySelectorAll('canvas');
-    const canvasImages = [];
-    allCanvas.forEach(canvas => {
-        try {
-            const img = document.createElement('img');
-            img.src = canvas.toDataURL('image/png');
-            img.style.width = '100%';
-            img.style.maxWidth = canvas.width + 'px';
-            img.style.height = 'auto';
-            canvas.parentNode.insertBefore(img, canvas.nextSibling);
-            canvas.style.display = 'none';
-            canvasImages.push({ canvas, img });
-        } catch(e) {}
+    const canvasDataMap = [];
+    document.querySelectorAll('canvas').forEach((canvas, idx) => {
+        try { canvasDataMap.push({ idx, dataUrl: canvas.toDataURL('image/png'), w: canvas.width }); }
+        catch(e) { canvasDataMap.push({ idx, dataUrl: null, w: 0 }); }
     });
 
     const htmlClone = document.documentElement.cloneNode(true);
 
-    canvasImages.forEach(({ canvas, img }) => { canvas.style.display = ''; img.remove(); });
+    htmlClone.querySelectorAll('canvas').forEach((canvas, idx) => {
+        const data = canvasDataMap[idx];
+        if (data && data.dataUrl) {
+            const img = document.createElement('img');
+            img.src = data.dataUrl;
+            img.style.cssText = 'width:100%;max-width:' + data.w + 'px;height:auto;display:block;';
+            canvas.parentNode.replaceChild(img, canvas);
+        } else { canvas.remove(); }
+    });
 
     htmlClone.querySelectorAll('script, #preloader, #exitLoader, #securityModal, #emailSuccessModal, #mainNavBar, .user-profile-wrap, .pw-modal-bg').forEach(el => el.remove());
-    htmlClone.querySelectorAll('canvas').forEach(c => c.remove());
     htmlClone.querySelectorAll('style').forEach(s => { s.innerHTML = s.innerHTML.replace(/@media\s+print\s*\{[^}]*\}/g, ''); });
 
     const watermark = document.createElement('div');
