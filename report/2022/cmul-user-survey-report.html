@@ -1,1 +1,624 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>สรุปผลการประเมินการสื่อสารองค์กร (ผู้ใช้บริการ) - สำนักหอสมุด มช.</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700;800;900&family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-primary: #f8fafc;
+  --bg-card: #ffffff;
+  --bg-card-hover: #f1f5f9;
+  --border-subtle: rgba(0, 0, 0, 0.08);
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #64748b;
+  --accent-blue: #2563eb;
+  --accent-cyan: #0891b2;
+  --accent-emerald: #059669;
+  --accent-amber: #d97706;
+  --accent-rose: #e11d48;
+  --accent-violet: #7c3aed;
+  --accent-orange: #ea580c;
+  --gradient-blue: linear-gradient(135deg, #3b82f6, #06b6d4);
+  --gradient-emerald: linear-gradient(135deg, #10b981, #06b6d4);
+  --gradient-violet: linear-gradient(135deg, #8b5cf6, #ec4899);
+  --gradient-amber: linear-gradient(135deg, #f59e0b, #f97316);
+  --shadow-glow: 0 4px 20px rgba(0, 0, 0, 0.03);
+}
 
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body { font-family: 'IBM Plex Sans Thai', 'Noto Sans Thai', sans-serif; background: var(--bg-primary); color: var(--text-primary); min-height: 100vh; overflow-x: hidden; }
+
+/* === 🗄️ Smart Data Loaders === */
+.full-overlay { position: fixed; inset: 0; z-index: 9999; background: rgba(248, 250, 252, 0.95); backdrop-filter: blur(15px); display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.6s ease, visibility 0.6s ease; }
+.overlay-hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+.db-icon { width: 100px; height: 100px; margin-bottom: 25px; filter: drop-shadow(0 10px 15px rgba(8,145,178,0.2)); }
+.db-disk { transform-origin: center; animation: floatDisk 3s ease-in-out infinite; }
+.db-disk-2 { animation-delay: 0.2s; }
+.db-disk-3 { animation-delay: 0.4s; }
+.db-light { animation: blinkLight 1.5s infinite alternate; }
+@keyframes floatDisk { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+@keyframes blinkLight { 0% { fill: #cbd5e1; } 100% { fill: #06b6d4; filter: drop-shadow(0 0 5px #06b6d4); } }
+.overlay-text { font-family: 'Noto Sans Thai', sans-serif; font-size: 20px; color: var(--accent-cyan); font-weight: 800; text-align: center; line-height: 1.5; letter-spacing: 0.5px; }
+.overlay-sub { font-size: 14px; color: var(--text-muted); font-weight: 500; margin-top: 8px; }
+.loading-dots::after { content: ''; animation: dots 1.5s steps(4, end) infinite; }
+@keyframes dots { 0%, 20% { content: ''; } 40% { content: '..'; } 60% { content: '...'; } 80%, 100% { content: ''; } }
+
+/* Vault Exit Animation */
+.vault-icon { width: 110px; height: 110px; margin-bottom: 25px; color: var(--accent-emerald); }
+.vault-lock { transform-origin: center; animation: lockTurn 1.5s cubic-bezier(0.25,1,0.5,1) forwards; }
+@keyframes lockTurn { 0% { transform: rotate(-45deg); opacity: 0; } 100% { transform: rotate(0deg); opacity: 1; } }
+
+/* === 🚨 Security Modal === */
+.sec-modal-bg { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7); z-index: 10000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(8px); padding: 20px; opacity: 0; transition: opacity 0.3s; }
+.sec-modal-bg.show { display: flex; opacity: 1; }
+.sec-modal { background: white; border-radius: 28px; width: 100%; max-width: 460px; padding: 40px; text-align: center; box-shadow: 0 30px 80px rgba(0,0,0,0.3); transform: scale(0.9) translateY(20px); opacity: 0; transition: all 0.4s cubic-bezier(0.25,1,0.5,1); }
+.sec-modal-bg.show .sec-modal { transform: scale(1) translateY(0); opacity: 1; }
+.sec-icon-wrap { width: 75px; height: 75px; border-radius: 22px; background: #fce7f3; color: #e11d48; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; }
+.sec-modal h3 { font-family: 'Noto Sans Thai', sans-serif; font-size: 22px; font-weight: 800; color: #0f172a; margin-bottom: 12px; }
+.sec-modal p { font-size: 15px; color: #475569; margin-bottom: 25px; line-height: 1.6; }
+.sec-highlight-box { background: #eff6ff; border-radius: 16px; padding: 20px; margin-bottom: 24px; color: #2563eb; font-weight: 600; font-size: 14.5px; border: 1px solid #dbeafe; line-height: 1.6; }
+.btn-close { background: #f1f5f9; border: 1px solid #e2e8f0; color: #334155; font-size: 15px; font-weight: 700; cursor: pointer; transition: 0.3s; font-family: inherit; padding: 14px 24px; border-radius: 16px; width: 100%; }
+.btn-close:hover { background: #e2e8f0; color: #0f172a; transform: translateY(-1px); }
+
+/* 🎉 Email Success Modal */
+.success-icon-wrap { width: 75px; height: 75px; border-radius: 22px; background: #d1fae5; color: #059669; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; box-shadow: 0 10px 20px rgba(5,150,105,0.15); }
+.btn-success-close { background: linear-gradient(135deg, var(--accent-emerald), var(--accent-cyan)); border: none; color: white; font-size: 15px; font-weight: 700; cursor: pointer; transition: 0.3s; font-family: inherit; padding: 14px 24px; border-radius: 16px; width: 100%; box-shadow: 0 4px 15px rgba(5,150,105,0.3); }
+.btn-success-close:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(5,150,105,0.4); }
+
+/* === Layout Styles === */
+.noise-overlay { position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.2; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+.hero { position: relative; padding: 60px 40px 40px; text-align: center; overflow: hidden; }
+.hero::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(ellipse at 50% 0%, rgba(59,130,246,0.06) 0%, transparent 60%), radial-gradient(ellipse at 20% 50%, rgba(139,92,246,0.04) 0%, transparent 50%), radial-gradient(ellipse at 80% 50%, rgba(6,182,212,0.04) 0%, transparent 50%); z-index: 0; }
+.hero-content { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; }
+.hero-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 100px; background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.2); color: var(--accent-blue); font-size: 13px; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 20px; }
+.hero-badge::before { content: ''; width: 6px; height: 6px; background: var(--accent-blue); border-radius: 50%; animation: pulse 2s infinite; }
+.hero h1 { font-family: 'Noto Sans Thai', sans-serif; font-size: 36px; font-weight: 800; line-height: 1.3; background: linear-gradient(135deg, #0f172a 0%, #4338ca 50%, #0284c7 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 12px; }
+.hero-sub { font-size: 16px; color: var(--text-secondary); font-weight: 400; margin-bottom: 8px; }
+.hero-meta { display: flex; justify-content: center; gap: 24px; margin-top: 24px; flex-wrap: wrap; }
+.meta-item { display: flex; align-items: center; gap: 8px; color: var(--text-muted); font-size: 13px; font-weight: 500; }
+.meta-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--accent-blue); }
+
+.kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; max-width: 1200px; margin: 0 auto; padding: 0 40px 40px; position: relative; z-index: 1; }
+.kpi-card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 16px; padding: 24px; position: relative; overflow: hidden; transition: transform 0.3s, box-shadow 0.3s; box-shadow: var(--shadow-glow); }
+.kpi-card:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+.kpi-card::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+.kpi-card:nth-child(1)::after { background: var(--gradient-blue); }
+.kpi-card:nth-child(2)::after { background: var(--gradient-emerald); }
+.kpi-card:nth-child(3)::after { background: var(--gradient-violet); }
+.kpi-card:nth-child(4)::after { background: var(--gradient-amber); }
+.kpi-label { font-size: 13px; color: var(--text-muted); font-weight: 600; margin-bottom: 8px; }
+.kpi-value { font-size: 36px; font-weight: 800; letter-spacing: -1px; line-height: 1; margin-bottom: 6px; }
+.kpi-card:nth-child(1) .kpi-value { color: var(--accent-blue); }
+.kpi-card:nth-child(2) .kpi-value { color: var(--accent-emerald); }
+.kpi-card:nth-child(3) .kpi-value { color: var(--accent-violet); }
+.kpi-card:nth-child(4) .kpi-value { color: var(--accent-amber); }
+.kpi-detail { font-size: 12px; color: var(--text-secondary); }
+
+.dashboard { max-width: 1200px; margin: 0 auto; padding: 0 40px 60px; display: grid; gap: 20px; position: relative; z-index: 1; }
+.row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+.row-full { display: grid; grid-template-columns: 1fr; }
+.card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 16px; padding: 28px; position: relative; transition: box-shadow 0.3s; box-shadow: var(--shadow-glow); }
+.card:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.04); }
+.card-header { margin-bottom: 20px; }
+.card-tag { display: inline-block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; padding: 4px 12px; border-radius: 6px; margin-bottom: 12px; }
+.tag-blue { background: rgba(37,99,235,0.1); color: var(--accent-blue); }
+.tag-emerald { background: rgba(5,150,105,0.1); color: var(--accent-emerald); }
+.tag-violet { background: rgba(124,58,237,0.1); color: var(--accent-violet); }
+.tag-amber { background: rgba(217,119,6,0.1); color: var(--accent-amber); }
+.tag-rose { background: rgba(225,29,72,0.1); color: var(--accent-rose); }
+.tag-cyan { background: rgba(8,145,178,0.1); color: var(--accent-cyan); }
+.card-title { font-size: 17px; font-weight: 700; color: var(--text-primary); line-height: 1.4; }
+.chart-container { position: relative; width: 100%; }
+
+/* Satisfaction Bar */
+.sat-item { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+.sat-label { font-size: 14px; color: var(--text-secondary); font-weight: 500; min-width: 180px; line-height: 1.3; }
+.sat-bar-wrap { flex: 1; height: 28px; background: rgba(0,0,0,0.04); border-radius: 8px; overflow: hidden; position: relative; }
+.sat-bar { height: 100%; border-radius: 8px; display: flex; align-items: center; justify-content: flex-end; padding-right: 12px; transition: width 1.2s cubic-bezier(0.25,1,0.5,1); font-size: 13px; font-weight: 700; color: #fff; width: 0%; }
+.sat-bar.blue { background: linear-gradient(90deg, #60a5fa, var(--accent-blue)); }
+.sat-bar.emerald { background: linear-gradient(90deg, #34d399, var(--accent-emerald)); }
+.sat-bar.violet { background: linear-gradient(90deg, #a78bfa, var(--accent-violet)); }
+.sat-bar.cyan { background: linear-gradient(90deg, #22d3ee, var(--accent-cyan)); }
+.sat-bar.amber { background: linear-gradient(90deg, #fbbf24, var(--accent-amber)); }
+.sat-bar.rose { background: linear-gradient(90deg, #fb7185, var(--accent-rose)); }
+
+/* Donut center */
+.donut-wrap { position: relative; display: flex; justify-content: center; }
+.donut-center { position: absolute; top: calc(50% - 18px); left: 50%; transform: translate(-50%, -50%); text-align: center; pointer-events: none; }
+.donut-center .big { font-size: 28px; font-weight: 800; display: block; }
+.donut-center .small { font-size: 12px; color: var(--text-muted); font-weight: 500;}
+
+/* === 🌟 TOP BAR DESIGN 🌟 === */
+.back-bar { position: sticky; top: 0; z-index: 100; background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border-subtle); padding: 12px 40px; display: flex; align-items: center; justify-content: space-between; }
+.back-btn { display: inline-flex; align-items: center; gap: 8px; color: var(--text-secondary); font-size: 14px; font-weight: 700; text-decoration: none; padding: 10px 18px; border-radius: 10px; background: rgba(0,0,0,0.04); border: 1px solid transparent; transition: all 0.3s; font-family: inherit; cursor: pointer; }
+.back-btn:hover { background: white; border-color: var(--border-subtle); color: var(--text-primary); transform: translateX(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+
+.topbar-right { display: flex; align-items: center; gap: 20px; }
+
+/* Email Export Button */
+.btn-email-export {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+  color: white; border: none; padding: 10px 20px; border-radius: 100px;
+  font-family: inherit; font-size: 14px; font-weight: 700; cursor: pointer;
+  transition: all 0.3s; box-shadow: 0 4px 15px rgba(37,99,235,0.25);
+  min-width: 220px; position: relative; overflow: hidden;
+}
+.btn-email-export:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(37,99,235,0.4); }
+.btn-email-export:disabled { opacity: 0.85; cursor: not-allowed; transform: none; background: linear-gradient(135deg, #475569, #64748b); box-shadow: none; }
+.mini-spin-inline { width: 16px; height: 16px; border: 2.5px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 1s linear infinite; display: none; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Profile Menu */
+.profile-menu { position: relative; display: flex; align-items: center; border-left: 1px solid var(--border-subtle); padding-left: 20px; }
+.profile-btn { display: flex; align-items: center; gap: 10px; cursor: pointer; background: transparent; border: none; outline: none; font-family: inherit; padding: 4px; border-radius: 100px; transition: background 0.2s; }
+.profile-btn:hover { background: rgba(0,0,0,0.04); }
+.profile-info { text-align: right; display: flex; flex-direction: column; }
+.profile-name { font-size: 13px; font-weight: 700; color: var(--text-primary); }
+.profile-role { font-size: 11px; color: var(--text-muted); font-weight: 500; }
+.profile-avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue)); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; box-shadow: 0 4px 10px rgba(8,145,178,0.2); }
+.profile-dropdown { position: absolute; top: calc(100% + 15px); right: 0; background: white; border: 1px solid var(--border-subtle); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); width: 220px; padding: 8px; opacity: 0; visibility: hidden; transform: translateY(10px); transition: all 0.25s cubic-bezier(0.25,1,0.5,1); z-index: 100; }
+.profile-menu.active .profile-dropdown { opacity: 1; visibility: visible; transform: translateY(0); }
+.dropdown-item { display: flex; align-items: center; gap: 10px; padding: 12px 16px; color: var(--text-secondary); text-decoration: none; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; border-radius: 10px; border: none; background: transparent; width: 100%; font-family: inherit; text-align: left; }
+.dropdown-item:hover { background: rgba(0,0,0,0.04); color: var(--text-primary); }
+
+/* Suggestion cards */
+.suggestion-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.suggestion-item { background: rgba(0,0,0,0.02); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 16px; font-size: 13px; color: var(--text-secondary); line-height: 1.7; transition: background 0.3s; }
+.suggestion-item:hover { background: rgba(0,0,0,0.04); }
+.suggestion-num { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 6px; background: rgba(37,99,235,0.1); color: var(--accent-blue); font-size: 11px; font-weight: 700; margin-right: 8px; flex-shrink: 0; }
+
+.report-footer { max-width: 1200px; margin: 0 auto; padding: 30px 40px 50px; text-align: center; color: var(--text-muted); font-size: 13px; border-top: 1px solid var(--border-subtle); position: relative; z-index: 1; }
+.back-top { display: inline-flex; align-items: center; justify-content: center; gap: 8px; color: var(--text-secondary); font-size: 14px; font-weight: 600; text-decoration: none; padding: 12px 28px; border-radius: 12px; background: rgba(0,0,0,0.04); border: 1px solid var(--border-subtle); transition: all 0.3s; margin-top: 16px; font-family: inherit; cursor: pointer; }
+.back-top:hover { background: rgba(0,0,0,0.08); color: var(--text-primary); transform: translateY(-2px); }
+
+@media print { body { display: none !important; } }
+@media (max-width: 900px) {
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  .row-2, .row-3 { grid-template-columns: 1fr; }
+  .suggestion-grid { grid-template-columns: 1fr; }
+  .hero h1 { font-size: 26px; }
+  .hero, .kpi-grid, .dashboard { padding-left: 20px; padding-right: 20px; }
+  .back-bar { padding-left: 16px; padding-right: 16px; }
+  .topbar-right { gap: 10px; }
+}
+</style>
+</head>
+<body id="top">
+
+<div id="entryLoader" class="full-overlay">
+  <svg class="db-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path class="db-disk" d="M10 70 C10 81.0457 27.9086 90 50 90 C72.0914 90 90 81.0457 90 70 V80 C90 91.0457 72.0914 100 50 100 C27.9086 100 10 91.0457 10 80 V70 Z" fill="#e2e8f0"/>
+    <ellipse class="db-disk" cx="50" cy="70" rx="40" ry="20" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/>
+    <path class="db-disk db-disk-2" d="M10 45 C10 56.0457 27.9086 65 50 65 C72.0914 65 90 56.0457 90 45 V55 C90 66.0457 72.0914 75 50 75 C27.9086 75 10 66.0457 10 55 V45 Z" fill="#cbd5e1"/>
+    <ellipse class="db-disk db-disk-2" cx="50" cy="45" rx="40" ry="20" fill="#f1f5f9" stroke="#94a3b8" stroke-width="2"/>
+    <path class="db-disk db-disk-3" d="M10 20 C10 31.0457 27.9086 40 50 40 C72.0914 40 90 31.0457 90 20 V30 C90 41.0457 72.0914 50 50 50 C27.9086 50 10 41.0457 10 30 V20 Z" fill="#94a3b8"/>
+    <ellipse class="db-disk db-disk-3" cx="50" cy="20" rx="40" ry="20" fill="#e2e8f0" stroke="#64748b" stroke-width="2"/>
+    <circle class="db-light" cx="40" cy="85" r="3" fill="#cbd5e1"/>
+    <circle class="db-light" cx="50" cy="85" r="3" fill="#cbd5e1" style="animation-delay: 0.3s"/>
+    <circle class="db-light" cx="60" cy="85" r="3" fill="#cbd5e1" style="animation-delay: 0.6s"/>
+  </svg>
+  <div class="overlay-text">กำลังโหลดข้อมูลจากฐานข้อมูล<br>หน่วยสื่อสารองค์กร สำนักหอสมุด</div>
+  <div class="overlay-sub">โปรดรอสักครู่<span class="loading-dots"></span></div>
+</div>
+
+<div id="exitLoader" class="full-overlay overlay-hidden">
+  <svg class="vault-icon" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M15 35 H85 V85 A10 10 0 0 1 75 95 H25 A10 10 0 0 1 15 85 Z" fill="#f8fafc" stroke="#10b981"/>
+    <path d="M30 35 V25 A20 20 0 0 1 70 25 V35" stroke="#10b981"/>
+    <circle cx="50" cy="65" r="12" fill="#10b981" class="vault-lock"/>
+    <path d="M50 65 V75" stroke="#ffffff" stroke-width="3" class="vault-lock"/>
+    <path d="M40 10 L50 20 L60 10" stroke="#10b981" stroke-width="3" style="animation: bounce 1s infinite alternate;"/>
+  </svg>
+  <div class="overlay-text" style="color: var(--accent-emerald);">กำลังเก็บไฟล์คืนเข้าฐานข้อมูล<br>และกำลังพาท่านไปยังหน้า Dashboard</div>
+  <div class="overlay-sub">ปกป้องข้อมูลด้วยความปลอดภัยสูงสุด<span class="loading-dots"></span></div>
+</div>
+
+<div id="securityModal" class="sec-modal-bg">
+  <div class="sec-modal">
+    <div class="sec-icon-wrap">
+      <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        <line x1="12" y1="8" x2="12" y2="12"/>
+        <line x1="12" y1="16" x2="12.01" y2="16"/>
+      </svg>
+    </div>
+    <h3>ตรวจพบการพยายามบันทึกหน้าจอ!</h3>
+    <p>ไม่อนุญาตให้ใช้วิธีการแคปเจอร์ หรือสั่งพิมพ์ (Print) โดยตรง</p>
+    <div class="sec-highlight-box">หากท่านต้องการไฟล์รายงานฉบับสมบูรณ์<br>โปรดใช้ปุ่ม <span style="color:var(--accent-blue);">"ส่งข้อมูลไปยังอีเมลของท่าน"</span> ที่แถบเมนูด้านบน</div>
+    <div class="sec-actions"><button class="btn-close" onclick="closeSecModal()">รับทราบ / ปิดหน้าต่างนี้</button></div>
+  </div>
+</div>
+
+<div id="emailSuccessModal" class="sec-modal-bg">
+  <div class="sec-modal">
+    <div class="success-icon-wrap">
+      <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+      </svg>
+    </div>
+    <h3 style="color: var(--accent-emerald);">จัดส่งอีเมลสำเร็จ!</h3>
+    <p style="margin-bottom: 30px;">ระบบได้จัดส่งไฟล์รายงานในรูปแบบ HTML ที่ปลอดภัย<br>ไปยังอีเมลของท่านเรียบร้อยแล้ว โปรดตรวจสอบในกล่องข้อความ</p>
+    <div class="sec-actions"><button class="btn-success-close" onclick="closeSuccessModal()">ตกลง</button></div>
+  </div>
+</div>
+
+<div class="noise-overlay"></div>
+
+<nav class="back-bar" id="mainNavBar">
+  <button class="back-btn" onclick="handleExit()">← กลับหน้าหลัก</button>
+  <div class="topbar-right">
+    <button class="btn-email-export" id="btnSendEmail" onclick="exportAndSendEmail()">
+      <svg class="normal-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      <span class="btn-label">ส่งข้อมูลไปยังอีเมลของท่าน</span>
+      <div class="mini-spin-inline" id="btnEmailSpin"></div>
+    </button>
+    <div class="profile-menu" id="profileMenu">
+      <button class="profile-btn" onclick="toggleProfile(event)">
+        <div class="profile-info">
+          <div class="profile-name" id="userNameDisplay">กำลังโหลด...</div>
+          <div class="profile-role" id="userRoleDisplay">-</div>
+        </div>
+        <div class="profile-avatar" id="userAvatarDisplay">?</div>
+      </button>
+      <div class="profile-dropdown">
+        <button class="dropdown-item" onclick="handleExit()">
+          <svg fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+          กลับหน้า Dashboard
+        </button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">รายงานสรุปผลการประเมิน (ผู้ใช้บริการ)</div>
+    <h1>สรุปแบบประเมินประสิทธิผลการสื่อสารองค์กร<br>กลุ่มผู้ใช้บริการ</h1>
+    <p class="hero-sub">สำนักหอสมุด มหาวิทยาลัยเชียงใหม่</p>
+    <div class="hero-meta">
+      <div class="meta-item"><div class="meta-dot"></div>ผู้ตอบแบบสอบถามรวม 323 คน</div>
+      <div class="meta-item"><div class="meta-dot"></div>ครอบคลุมนักศึกษา อาจารย์ และบุคลากรทั่วไป</div>
+    </div>
+  </div>
+</section>
+
+<div class="kpi-grid">
+  <div class="kpi-card">
+    <div class="kpi-label">ผู้ตอบแบบสอบถามรวม</div>
+    <div class="kpi-value">323</div>
+    <div class="kpi-detail">คน (นศ. ป.ตรี มากที่สุด 49.85%)</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">ประสิทธิผลการสื่อสาร (ภาพรวม)</div>
+    <div class="kpi-value">4.29</div>
+    <div class="kpi-detail">จาก 5.00 (ระดับมาก)</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">การรับรู้ข่าวสาร (Awareness)</div>
+    <div class="kpi-value">87.0%</div>
+    <div class="kpi-detail">281 คน ทราบข่าวสารของหอสมุด</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">ความพึงพอใจสื่อสูงสุด</div>
+    <div class="kpi-value">4.33</div>
+    <div class="kpi-detail">Facebook (ระดับมาก)</div>
+  </div>
+</div>
+
+<div class="dashboard">
+
+  <div class="row-3">
+    <div class="card">
+      <div class="card-header"><div class="card-tag tag-blue">ข้อมูลผู้ตอบ</div><div class="card-title">สถานภาพผู้ตอบแบบสอบถาม</div></div>
+      <div class="donut-wrap"><canvas id="chartUserType" height="220"></canvas><div class="donut-center"><span class="big" style="color:var(--accent-blue)">323</span><span class="small">คน</span></div></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-tag tag-emerald">การเข้าถึง</div><div class="card-title">สัดส่วนการรับทราบข่าวสาร</div></div>
+      <div class="donut-wrap"><canvas id="chartAwareness" height="220"></canvas><div class="donut-center"><span class="big" style="color:var(--accent-emerald)">87.0%</span><span class="small">ทราบข่าวสาร</span></div></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-tag tag-cyan">พฤติกรรม</div><div class="card-title">ความถี่ในการเปิดรับข่าวสาร</div></div>
+      <div class="donut-wrap"><canvas id="chartFreq" height="220"></canvas><div class="donut-center"><span class="big" style="color:var(--accent-cyan)">42.0%</span><span class="small">1-2 ครั้ง/สัปดาห์</span></div></div>
+    </div>
+  </div>
+
+  <div class="row-2">
+    <div class="card">
+      <div class="card-header"><div class="card-tag tag-violet">ช่องทางการสื่อสาร</div><div class="card-title">สื่อที่รับข่าวสารจากห้องสมุดมากที่สุด (เรียงตามลำดับ)</div></div>
+      <div class="chart-container"><canvas id="chartChannels" height="280"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-tag tag-amber">ภาพลักษณ์องค์กร</div><div class="card-title">หากเปรียบสำนักหอสมุดเป็นคน จะมีลักษณะอย่างไร?</div></div>
+      <div class="chart-container"><canvas id="chartBrand" height="280"></canvas></div>
+    </div>
+  </div>
+
+  <div class="row-full">
+    <div class="card">
+      <div class="card-header"><div class="card-tag tag-rose">ปัจจัยการตัดสินใจ</div><div class="card-title">ปัจจัยที่มีผลต่อการพิจารณารับฟังข้อมูลข่าวสารจากห้องสมุด (ตอบได้หลายข้อ)</div></div>
+      <div class="chart-container"><canvas id="chartFactors" height="200"></canvas></div>
+    </div>
+  </div>
+
+  <div class="row-full">
+    <div class="card">
+      <div class="card-header"><div class="card-tag tag-emerald">ความพึงพอใจต่อสื่อ</div><div class="card-title">ความพึงพอใจต่อสื่อแต่ละประเภท (ค่าเฉลี่ย จาก 5.00)</div></div>
+      <div style="margin-top:8px;">
+        <div class="sat-item"><div class="sat-label">Facebook</div><div class="sat-bar-wrap"><div class="sat-bar blue" data-target="86.6">4.33</div></div></div>
+        <div class="sat-item"><div class="sat-label">Line Official</div><div class="sat-bar-wrap"><div class="sat-bar emerald" data-target="85.8">4.29</div></div></div>
+        <div class="sat-item"><div class="sat-label">Website</div><div class="sat-bar-wrap"><div class="sat-bar cyan" data-target="78.2">3.91</div></div></div>
+        <div class="sat-item"><div class="sat-label">จอ LED ภายในห้องสมุด</div><div class="sat-bar-wrap"><div class="sat-bar amber" data-target="77.6">3.88</div></div></div>
+        <div class="sat-item"><div class="sat-label">โปสเตอร์</div><div class="sat-bar-wrap"><div class="sat-bar violet" data-target="76.4">3.82</div></div></div>
+        <div class="sat-item"><div class="sat-label">Instagram</div><div class="sat-bar-wrap"><div class="sat-bar rose" data-target="63.6">3.18</div></div></div>
+        <div class="sat-item"><div class="sat-label">Twitter</div><div class="sat-bar-wrap"><div class="sat-bar rose" data-target="61.6">3.08</div></div></div>
+        <div class="sat-item"><div class="sat-label">YouTube</div><div class="sat-bar-wrap"><div class="sat-bar rose" data-target="61.0">3.05</div></div></div>
+        <div class="sat-item"><div class="sat-label">Tiktok</div><div class="sat-bar-wrap"><div class="sat-bar rose" data-target="60.4">3.02</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row-full">
+    <div class="card">
+      <div class="card-header"><div class="card-tag tag-cyan">ประสิทธิผลการสื่อสาร</div><div class="card-title">ผลของการสื่อสารองค์กรสำนักหอสมุดในมุมมองผู้ใช้บริการ (ภาพรวม)</div></div>
+      <div class="chart-container"><canvas id="chartEffectivenessRadar" height="300"></canvas></div>
+    </div>
+  </div>
+
+  <div class="row-full">
+    <div class="card">
+      <div class="card-header"><div class="card-tag tag-violet">ข้อเสนอแนะ</div><div class="card-title">ข้อเสนอแนะและความคิดเห็นเพิ่มเติมจากผู้ใช้บริการ</div></div>
+      <div class="suggestion-grid">
+        <div class="suggestion-item"><span class="suggestion-num">1</span><b>ปรับอุณหภูมิเครื่องปรับอากาศ:</b> มีผู้ใช้บริการจำนวนมากเสนอให้ลดความเย็นของเครื่องปรับอากาศลง เนื่องจากหนาวเกินไปจนรบกวนการอ่านหนังสือ</div>
+        <div class="suggestion-item"><span class="suggestion-num">2</span><b>ขยายเวลาเปิดให้บริการ:</b> ต้องการให้เปิดบริการนานขึ้น โดยเฉพาะในช่วงใกล้สอบ ควรขยายเวลาเป็น 24 ชั่วโมง หรือเปิดให้บริการในวันหยุดเสาร์-อาทิตย์และนักขัตฤกษ์</div>
+        <div class="suggestion-item"><span class="suggestion-num">3</span><b>ชื่นชมการทำสื่อบน Social Media:</b> ผู้ใช้บริการชื่นชอบการนำเสนอที่ทันเหตุการณ์ น่าดึงดูด และมีความเป็นกันเอง (เช่น แอดมิน Facebook และ Twitter)</div>
+        <div class="suggestion-item"><span class="suggestion-num">4</span><b>การจัดสรรพื้นที่และโซน:</b> ควรแยกโซนการใช้เสียง (Co-working space/ติวหนังสือ) และโซนที่ต้องการความเงียบสงบให้ชัดเจน เพื่อไม่ให้รบกวนกัน</div>
+        <div class="suggestion-item"><span class="suggestion-num">5</span><b>การจัดการทรัพยากรหนังสือ:</b> เสนอให้อัปเดตหนังสือใหม่ๆ ให้รวดเร็วขึ้น จัดชั้นหนังสือให้เป็นหมวดหมู่ที่ค้นหาง่าย และรวมหนังสือประเภทเดียวกันไว้ในชั้นเดียวกัน</div>
+        <div class="suggestion-item"><span class="suggestion-num">6</span><b>รองรับนักศึกษาต่างชาติ:</b> ควรมีการทำคู่มือ กฎระเบียบ การสื่อสาร และเครื่องมือค้นหาต่างๆ ในรูปแบบภาษาอังกฤษ (Bilingual Content) เพื่อให้นักศึกษาต่างชาติเข้าถึงได้ง่ายขึ้น</div>
+        <div class="suggestion-item"><span class="suggestion-num">7</span><b>กฎระเบียบและป้ายประกาศ:</b> อยากให้ข้อมูลการเข้าใช้หอสมุด กฎระเบียบ และการปฏิบัติตัวในโซนต่างๆ มีความชัดเจน เข้าใจง่าย และมองเห็นได้เด่นชัด</div>
+        <div class="suggestion-item"><span class="suggestion-num">8</span><b>กิจกรรมและการมีส่วนร่วม:</b> เสนอให้จัดกิจกรรมอบรม การเสวนาเพื่อสร้างแรงบันดาลใจ และแชร์เนื้อหาสาระความรู้สั้นๆ เพื่อให้หอสมุดเป็นพื้นที่เรียนรู้อย่างแท้จริง</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer class="report-footer">
+  สำนักหอสมุด มหาวิทยาลัยเชียงใหม่ &middot; สรุปผลการประเมินประสิทธิผลการสื่อสารองค์กร (ผู้ใช้บริการ)<br>
+  จำนวนผู้ตอบแบบสอบถาม 323 คน
+  <br>
+  <button onclick="window.scrollTo({top:0, behavior:'smooth'})" class="back-top">↑ กลับขึ้นบนสุด</button>
+</footer>
+
+<script>
+// --- URL & Profile Init ---
+const SCRIPT_URL_POST = "https://script.google.com/macros/s/AKfycbxkQWe5ZFxQxpbEZuJkk3Id9eGubQwk2f4E7r1-LXEjLDloVzucc52ex6Qe9tP_fk4b/exec";
+
+(function loadProfile() {
+    try {
+        const rawUser = localStorage.getItem('cc_pr_user') || sessionStorage.getItem('cc_pr_user');
+        if (rawUser) {
+            const user = JSON.parse(rawUser);
+            const displayName = user.displayName || user.name || user.username || 'User';
+            const displayRole = user.roleLabel || user.position || 'บุคลากร';
+            document.getElementById('userNameDisplay').textContent = displayName;
+            document.getElementById('userRoleDisplay').textContent = displayRole;
+            const avatar = document.getElementById('userAvatarDisplay');
+            avatar.style.background = 'transparent';
+            avatar.innerHTML = `<img src="Staff/${user.username}.jpg" style="width:100%; height:100%; border-radius:50%; object-fit:cover;" onerror="this.onerror=null; this.parentElement.style.background='linear-gradient(135deg, #0891b2, #2563eb)'; this.parentElement.innerHTML='${displayName.charAt(0).toUpperCase()}';">`;
+        }
+    } catch(e) {}
+})();
+
+function toggleProfile(e) { e.stopPropagation(); document.getElementById('profileMenu').classList.toggle('active'); }
+document.addEventListener('click', (e) => { if (!e.target.closest('.profile-menu')) document.getElementById('profileMenu').classList.remove('active'); });
+
+// --- Loaders & Exit ---
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    document.getElementById('entryLoader').classList.add('overlay-hidden');
+    setTimeout(() => { document.querySelectorAll('.sat-bar').forEach(bar => { bar.style.width = bar.getAttribute('data-target') + '%'; }); }, 200);
+  }, 2200); 
+});
+
+function handleExit() {
+  document.getElementById('exitLoader').classList.remove('overlay-hidden');
+  setTimeout(() => { window.location.href = 'dashboard.html'; }, 2000);
+}
+
+// --- Anti-Leak Security ---
+function initAdvancedSecurity() {
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'F12' || e.keyCode === 123) { e.preventDefault(); return false; }
+        if (((e.ctrlKey || e.metaKey) && (e.key === 'p' || e.key === 'P' || e.keyCode === 80)) || 
+             e.key === 'PrintScreen' || e.keyCode === 44 ||
+             ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'S' || e.key === 's'))) {
+            e.preventDefault(); triggerSecurityModal(); return false;
+        }
+    });
+    window.onbeforeprint = () => { triggerSecurityModal(); return false; };
+}
+function triggerSecurityModal() { document.getElementById('securityModal').classList.add('show'); }
+function closeSecModal() { document.getElementById('securityModal').classList.remove('show'); }
+function closeSuccessModal() { document.getElementById('emailSuccessModal').classList.remove('show'); }
+
+// --- 📧 Fixed Export & Send Email System ---
+async function exportAndSendEmail() {
+    const btn = document.getElementById('btnSendEmail');
+    const btnLabel = btn.querySelector('.btn-label');
+    const btnIcon = btn.querySelector('svg');
+    const btnSpin = document.getElementById('btnEmailSpin');
+
+    let userName = "คุณผู้ใช้งาน"; let userId = "";
+    try {
+        const u = JSON.parse(localStorage.getItem('cc_pr_user') || sessionStorage.getItem('cc_pr_user') || '{}');
+        userName = u.displayName || "คุณผู้ใช้งาน"; userId = u.username || "";
+    } catch(e){}
+
+    if (!userId) { alert("กรุณาเข้าสู่ระบบก่อนทำการขอไฟล์รายงาน"); return; }
+
+    btn.disabled = true;
+    btnLabel.innerText = 'กำลังเตรียมข้อมูล...';
+    btnIcon.style.display = 'none';
+    btnSpin.style.display = 'block';
+
+    const canvasDataMap = [];
+    document.querySelectorAll('canvas').forEach((canvas, idx) => {
+        try { canvasDataMap.push({ idx, dataUrl: canvas.toDataURL('image/png'), w: canvas.width }); }
+        catch(e) { canvasDataMap.push({ idx, dataUrl: null, w: 0 }); }
+    });
+
+    const htmlClone = document.documentElement.cloneNode(true);
+
+    htmlClone.querySelectorAll('canvas').forEach((canvas, idx) => {
+        const data = canvasDataMap[idx];
+        if (data && data.dataUrl) {
+            const img = document.createElement('img');
+            img.src = data.dataUrl;
+            img.style.cssText = 'width:100%;max-width:' + data.w + 'px;height:auto;display:block;';
+            canvas.parentNode.replaceChild(img, canvas);
+        } else {
+            canvas.remove();
+        }
+    });
+
+    htmlClone.querySelectorAll('script, #entryLoader, #exitLoader, #preloader, #securityModal, #emailSuccessModal, #mainNavBar, .user-profile-wrap, .pw-modal-bg').forEach(el => el.remove());
+
+    htmlClone.querySelectorAll('style').forEach(s => {
+        s.innerHTML = s.innerHTML.replace(/@media\s+print\s*\{[^}]*\}/g, '');
+    });
+
+    const watermark = document.createElement('div');
+    watermark.style.cssText = "position:fixed;bottom:20px;right:20px;color:rgba(0,0,0,0.12);font-size:12px;font-weight:600;z-index:9999;pointer-events:none;font-family:sans-serif;text-align:right;";
+    watermark.innerHTML = 'เอกสารนี้ดาวน์โหลดอย่างเป็นทางการโดย: ' + userName + '<br>เมื่อ: ' + new Date().toLocaleString('th-TH');
+    htmlClone.querySelector('body').appendChild(watermark);
+
+    const cleanHtmlString = htmlClone.outerHTML;
+
+    btnLabel.innerText = 'กำลังส่งอีเมล...';
+
+    try {
+        const response = await fetch(SCRIPT_URL_POST, {
+            method: 'POST',
+            redirect: 'follow',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({ action: 'sendHtmlEmail', username: userId, htmlData: cleanHtmlString })
+        });
+
+        const data = await response.json();
+
+        btn.disabled = false;
+        btnLabel.innerText = 'ส่งข้อมูลไปยังอีเมลของท่าน';
+        btnIcon.style.display = 'block';
+        btnSpin.style.display = 'none';
+
+        if (data.success) {
+            document.getElementById('emailSuccessModal').classList.add('show');
+        } else {
+            alert("❌ ส่งไม่สำเร็จ: " + data.message);
+        }
+    } catch (err) {
+        btn.disabled = false;
+        btnLabel.innerText = 'ส่งข้อมูลไปยังอีเมลของท่าน';
+        btnIcon.style.display = 'block';
+        btnSpin.style.display = 'none';
+        alert("❌ เกิดข้อผิดพลาดในการเชื่อมต่อ: " + err.message);
+    }
+}
+initAdvancedSecurity();
+
+// --- Charts Logic (Full Data from Original for Users) ---
+Chart.defaults.font.family = "'IBM Plex Sans Thai', 'Noto Sans Thai', sans-serif";
+Chart.defaults.color = '#64748b';
+Chart.defaults.plugins.legend.labels.usePointStyle = true;
+Chart.defaults.plugins.legend.labels.pointStyleWidth = 10;
+Chart.defaults.plugins.legend.labels.padding = 16;
+
+const gridColor = 'rgba(0, 0, 0, 0.05)';
+const colors = {
+  blue: '#3b82f6', cyan: '#06b6d4', emerald: '#10b981',
+  amber: '#f59e0b', rose: '#f43f5e', violet: '#8b5cf6', orange: '#f97316',
+  blueA: 'rgba(59,130,246,0.7)', cyanA: 'rgba(6,182,212,0.7)',
+  emeraldA: 'rgba(16,185,129,0.7)', amberA: 'rgba(245,158,11,0.7)',
+  roseA: 'rgba(244,63,94,0.7)', violetA: 'rgba(139,92,246,0.7)',
+  orangeA: 'rgba(249,115,22,0.7)'
+};
+const chartOpt = (showLegend, pos) => ({ plugins: { legend: { display: showLegend, position: pos || 'bottom', labels: { font: { size: 11 } } } }, responsive: true, maintainAspectRatio: false });
+const barScales = { scales: { y: { grid: { color: gridColor }, ticks: { font: { size: 11 } } }, x: { grid: { display: false }, ticks: { font: { size: 11 } } } } };
+const hBarScales = { scales: { x: { grid: { color: gridColor }, ticks: { font: { size: 11 } } }, y: { grid: { display: false }, ticks: { font: { size: 12 } } } } };
+
+// 1. User Type
+new Chart(document.getElementById('chartUserType'), {
+  type: 'doughnut',
+  data: { labels: ['นศ. ป.ตรี (49.8%)', 'นศ. บัณฑิตฯ (23.2%)', 'บุคลากรสายสนับสนุน (13.6%)', 'อาจารย์/นักวิจัย (7.1%)', 'บุคคลทั่วไป (6.2%)'], 
+    datasets: [{ data: [161, 75, 44, 23, 20], backgroundColor: [colors.blue, colors.cyan, colors.emerald, colors.violet, colors.amber], borderWidth: 0, cutout: '65%' }] },
+  options: chartOpt(true)
+});
+
+// 2. Awareness
+new Chart(document.getElementById('chartAwareness'), {
+  type: 'doughnut',
+  data: { labels: ['ทราบ (87.0%)', 'ไม่ทราบ (13.0%)'], datasets: [{ data: [281, 42], backgroundColor: [colors.emerald, colors.rose], borderWidth: 0, cutout: '65%' }] },
+  options: chartOpt(true)
+});
+
+// 3. Frequency
+new Chart(document.getElementById('chartFreq'), {
+  type: 'doughnut',
+  data: { labels: ['ทุกวัน (18.8%)', '3-4 ครั้ง/สัปดาห์ (30.8%)', '1-2 ครั้ง/สัปดาห์ (42.0%)', '1-2 ครั้ง/เดือน (8.3%)'],
+    datasets: [{ data: [52, 85, 116, 23], backgroundColor: [colors.cyan, colors.blue, colors.amber, colors.rose], borderWidth: 0, cutout: '65%' }] },
+  options: chartOpt(true)
+});
+
+// 4. Channels (Ranked based on percent)
+new Chart(document.getElementById('chartChannels'), {
+  type: 'bar',
+  data: { labels: ['โปสเตอร์', 'Instagram', 'จอ LED ภายในห้องสมุด', 'Website', 'Facebook', 'YouTube', 'Line Official', 'Twitter', 'Tiktok'],
+    datasets: [{ label: 'คิดเป็นร้อยละ', data: [34.3, 22.9, 22.1, 20.3, 17.7, 11.4, 7.0, 5.2, 1.1], backgroundColor: [colors.emerald, '#ec4899', colors.amber, colors.blue, colors.cyan, colors.rose, '#10b981', '#38bdf8', colors.violet], borderRadius: 8, borderSkipped: false }] },
+  options: { indexAxis: 'y', plugins: { legend: { display: false } }, ...hBarScales }
+});
+
+// 5. Brand Character
+new Chart(document.getElementById('chartBrand'), {
+  type: 'bar',
+  data: { labels: ['ใจดีชอบช่วยเหลือ', 'วัยรุ่นทันสมัย', 'สนุกสนาน ร่าเริง', 'ผู้สูงอายุ/เชี่ยวชาญ', 'ศิลปิน/สร้างสรรค์'],
+    datasets: [
+      { label: 'จำนวนผู้ใช้บริการที่เลือก (คน)', data: [98, 72, 71, 47, 31], backgroundColor: colors.blueA, borderRadius: 8, borderSkipped: false }
+    ] },
+  options: { ...chartOpt(false), ...barScales }
+});
+
+// 6. Factors
+new Chart(document.getElementById('chartFactors'), {
+  type: 'bar',
+  data: { labels: ['น่าเชื่อถือ/ทันสมัย', 'ศึกษาเรียนรู้เพิ่มเติม', 'ประโยชน์ต่องาน', 'กระชับ/ครอบคลุม', 'ติดตามกิจกรรม'],
+    datasets: [{ label: 'จำนวนผู้ใช้บริการที่เลือก (คน)', data: [245, 227, 224, 166, 162], backgroundColor: colors.emeraldA, borderRadius: 8, borderSkipped: false }] },
+  options: { plugins: { legend: { position: 'top', labels: { font: { size: 12 } } } }, ...barScales, responsive: true, maintainAspectRatio: false }
+});
+
+// 7. Effectiveness Radar
+new Chart(document.getElementById('chartEffectivenessRadar'), {
+  type: 'radar',
+  data: { labels: ['ความเป็นมืออาชีพ', 'ภาพลักษณ์/ความไว้วางใจ', 'สื่อหลากหลาย/เข้าถึงง่าย', 'ประโยชน์ต่อการศึกษา/วิจัย', 'ถูกต้อง/ทันเหตุการณ์', 'ความสัมพันธ์ที่ดี', 'สื่อสารต่อเนื่อง/ใกล้ชิด', 'การเข้าร่วมกิจกรรม'],
+    datasets: [{ label: 'ค่าเฉลี่ย', data: [4.33, 4.31, 4.31, 4.30, 4.28, 4.27, 4.26, 4.22],
+      borderColor: colors.cyan, backgroundColor: 'rgba(8,145,178,0.15)',
+      pointBackgroundColor: colors.cyan, pointBorderColor: '#fff', pointRadius: 5, borderWidth: 2 }] },
+  options: { plugins: { legend: { display: false } },
+    scales: { r: { beginAtZero: false, min: 4.0, max: 4.5,
+      angleLines: { color: 'rgba(0,0,0,0.05)' }, grid: { color: 'rgba(0,0,0,0.05)' },
+      pointLabels: { font: { size: 12 }, color: '#64748b' },
+      ticks: { stepSize: 0.1, font: { size: 10 }, backdropColor: 'transparent' } } },
+    responsive: true, maintainAspectRatio: false }
+});
+
+</script>
+</body>
+</html>
