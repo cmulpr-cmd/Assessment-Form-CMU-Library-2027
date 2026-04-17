@@ -500,40 +500,31 @@ async function exportAndSendEmail() {
     btnIcon.style.display = 'none';
     btnSpin.style.display = 'block';
 
-    // 2. แปลง Canvas (กราฟ) เป็นรูปภาพก่อน clone
-    const allCanvas = document.querySelectorAll('canvas');
-    const canvasImages = [];
-    allCanvas.forEach(canvas => {
-        try {
-            const img = document.createElement('img');
-            img.src = canvas.toDataURL('image/png');
-            img.style.cssText = canvas.style.cssText || '';
-            img.style.width = '100%';
-            img.style.maxWidth = canvas.width + 'px';
-            img.style.height = 'auto';
-            img.setAttribute('data-was-canvas', 'true');
-            // แทรกรูปไว้หลัง canvas ชั่วคราว
-            canvas.parentNode.insertBefore(img, canvas.nextSibling);
-            canvas.style.display = 'none';
-            canvasImages.push({ canvas, img });
-        } catch(e) { console.warn('ไม่สามารถแปลง canvas:', e); }
+    // 2. เก็บ data URL ของทุก canvas ก่อน (ไม่แตะ DOM จริงเลย!)
+    const canvasDataMap = [];
+    document.querySelectorAll('canvas').forEach((canvas, idx) => {
+        try { canvasDataMap.push({ idx, dataUrl: canvas.toDataURL('image/png'), w: canvas.width }); }
+        catch(e) { canvasDataMap.push({ idx, dataUrl: null, w: 0 }); }
     });
 
-    // 3. Clone หน้าเว็บ
+    // 3. Clone หน้าเว็บ (DOM จริงไม่ถูกแก้ไข ไม่มีทางพัง)
     const htmlClone = document.documentElement.cloneNode(true);
 
-    // 4. คืนสถานะ canvas เดิม (ไม่งั้นหน้าเว็บจริงจะพัง)
-    canvasImages.forEach(({ canvas, img }) => {
-        canvas.style.display = '';
-        img.remove();
+    // 4. ใน clone เท่านั้น: แทน canvas ด้วย img
+    htmlClone.querySelectorAll('canvas').forEach((canvas, idx) => {
+        const data = canvasDataMap[idx];
+        if (data && data.dataUrl) {
+            const img = document.createElement('img');
+            img.src = data.dataUrl;
+            img.style.cssText = 'width:100%;max-width:' + data.w + 'px;height:auto;display:block;';
+            canvas.parentNode.replaceChild(img, canvas);
+        } else {
+            canvas.remove();
+        }
     });
 
     // 5. ลบส่วนที่ไม่ต้องการออกจาก clone
-    const removeSelectors = 'script, #entryLoader, #exitLoader, #securityModal, #emailSuccessModal, #mainNavBar, .user-profile-wrap, .pw-modal-bg';
-    htmlClone.querySelectorAll(removeSelectors).forEach(el => el.remove());
-
-    // 6. ลบ canvas ที่ซ่อนอยู่ใน clone (เหลือแค่รูป img ที่แปลงไว้)
-    htmlClone.querySelectorAll('canvas').forEach(c => c.remove());
+    htmlClone.querySelectorAll('script, #entryLoader, #exitLoader, #preloader, #securityModal, #emailSuccessModal, #mainNavBar, .user-profile-wrap, .pw-modal-bg').forEach(el => el.remove());
 
     // 7. ลบ @media print blocks จาก style
     htmlClone.querySelectorAll('style').forEach(s => {
