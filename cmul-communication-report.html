@@ -366,6 +366,7 @@ function closeSecModal() { document.getElementById('securityModal').classList.re
 function closeSuccessModal() { document.getElementById('emailSuccessModal').classList.remove('show'); }
 
 // --- 📧 Real Export & Send Email System ---
+// --- 📧 Fixed Export & Send Email System ---
 async function exportAndSendEmail() {
     const btn = document.getElementById('btnSendEmail');
     const btnLabel = btn.querySelector('.btn-label');
@@ -380,41 +381,73 @@ async function exportAndSendEmail() {
 
     if (!userId) { alert("กรุณาเข้าสู่ระบบก่อนทำการขอไฟล์รายงาน"); return; }
 
-    // 🌟 1. UI Status: Sending...
+    // 1. UI: กำลังส่ง...
     btn.disabled = true;
-    btnLabel.innerText = 'กำลังส่งข้อมูล...';
+    btnLabel.innerText = 'กำลังเตรียมข้อมูล...';
     btnIcon.style.display = 'none';
     btnSpin.style.display = 'block';
 
-    // 🌟 2. Build Clean HTML Clone
-    const htmlClone = document.documentElement.cloneNode(true);
-    const elementsToRemove = htmlClone.querySelectorAll('script, #entryLoader, #exitLoader, #securityModal, #emailSuccessModal, #mainNavBar');
-    elementsToRemove.forEach(el => el.remove());
-    
-    // Clear styles print blocks
-    const styles = htmlClone.querySelectorAll('style');
-    styles.forEach(s => { s.innerHTML = s.innerHTML.replace(/@media print\s*{[^}]+}/g, ''); });
+    // 2. แปลง Canvas (กราฟ) เป็นรูปภาพก่อน clone
+    const allCanvas = document.querySelectorAll('canvas');
+    const canvasImages = [];
+    allCanvas.forEach(canvas => {
+        try {
+            const img = document.createElement('img');
+            img.src = canvas.toDataURL('image/png');
+            img.style.cssText = canvas.style.cssText || '';
+            img.style.width = '100%';
+            img.style.maxWidth = canvas.width + 'px';
+            img.style.height = 'auto';
+            img.setAttribute('data-was-canvas', 'true');
+            // แทรกรูปไว้หลัง canvas ชั่วคราว
+            canvas.parentNode.insertBefore(img, canvas.nextSibling);
+            canvas.style.display = 'none';
+            canvasImages.push({ canvas, img });
+        } catch(e) { console.warn('ไม่สามารถแปลง canvas:', e); }
+    });
 
-    // Watermark
+    // 3. Clone หน้าเว็บ
+    const htmlClone = document.documentElement.cloneNode(true);
+
+    // 4. คืนสถานะ canvas เดิม (ไม่งั้นหน้าเว็บจริงจะพัง)
+    canvasImages.forEach(({ canvas, img }) => {
+        canvas.style.display = '';
+        img.remove();
+    });
+
+    // 5. ลบส่วนที่ไม่ต้องการออกจาก clone
+    const removeSelectors = 'script, #entryLoader, #exitLoader, #securityModal, #emailSuccessModal, #mainNavBar, .user-profile-wrap, .pw-modal-bg';
+    htmlClone.querySelectorAll(removeSelectors).forEach(el => el.remove());
+
+    // 6. ลบ canvas ที่ซ่อนอยู่ใน clone (เหลือแค่รูป img ที่แปลงไว้)
+    htmlClone.querySelectorAll('canvas').forEach(c => c.remove());
+
+    // 7. ลบ @media print blocks จาก style
+    htmlClone.querySelectorAll('style').forEach(s => {
+        s.innerHTML = s.innerHTML.replace(/@media\s+print\s*\{[^}]*\}/g, '');
+    });
+
+    // 8. เพิ่ม watermark
     const watermark = document.createElement('div');
-    watermark.style.cssText = "position: fixed; bottom: 20px; right: 20px; color: rgba(0,0,0,0.15); font-size: 13px; font-weight: 600; z-index: 9999; pointer-events: none; font-family: sans-serif; text-align:right;";
-    watermark.innerHTML = `เอกสารนี้ถูกดาวน์โหลดอย่างเป็นทางการโดย: คุณ ${userName}<br>เมื่อวันที่: ${new Date().toLocaleString('th-TH')}`;
+    watermark.style.cssText = "position:fixed;bottom:20px;right:20px;color:rgba(0,0,0,0.12);font-size:12px;font-weight:600;z-index:9999;pointer-events:none;font-family:sans-serif;text-align:right;";
+    watermark.innerHTML = 'เอกสารนี้ดาวน์โหลดอย่างเป็นทางการโดย: ' + userName + '<br>เมื่อ: ' + new Date().toLocaleString('th-TH');
     htmlClone.querySelector('body').appendChild(watermark);
 
     const cleanHtmlString = htmlClone.outerHTML;
 
+    btnLabel.innerText = 'กำลังส่งอีเมล...';
+
     try {
-        // 🌟 3. Real POST to Apps Script
+        // 9. ส่งไปยัง Apps Script
         const response = await fetch(SCRIPT_URL_POST, {
-    method: 'POST',
-    redirect: 'follow',
-    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-    body: JSON.stringify({ action: 'sendHtmlEmail', username: userId, htmlData: cleanHtmlString })
-});
-        
+            method: 'POST',
+            redirect: 'follow',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({ action: 'sendHtmlEmail', username: userId, htmlData: cleanHtmlString })
+        });
+
         const data = await response.json();
-        
-        // 🌟 4. Handle Success UI
+
         btn.disabled = false;
         btnLabel.innerText = 'ส่งข้อมูลไปยังอีเมลของท่าน';
         btnIcon.style.display = 'block';
@@ -425,16 +458,14 @@ async function exportAndSendEmail() {
         } else {
             alert("❌ ส่งไม่สำเร็จ: " + data.message);
         }
-
     } catch (err) {
         btn.disabled = false;
         btnLabel.innerText = 'ส่งข้อมูลไปยังอีเมลของท่าน';
         btnIcon.style.display = 'block';
         btnSpin.style.display = 'none';
-        alert("❌ เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์");
+        alert("❌ เกิดข้อผิดพลาดในการเชื่อมต่อ: " + err.message);
     }
 }
-
 initAdvancedSecurity();
 
 // --- Charts Logic (Condensed) ---
