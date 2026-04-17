@@ -7,7 +7,7 @@
 
 (function() {
     // ⭐ ต้องตรงกับใน index.html
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwTPmOSWEodjzrRMiJTCxjRHvQa0i-k0xUCK0OlYaUeCmiTqC3-eNb1TicHGs83LJiD/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwupoUQzwJPALm_xqDqV71DO7FwPuMm5aqM5_jMbtc39rvlcJ4MR_yP1rr216pAm1Vq/exec";
 
     // ตรวจสอบว่าอยู่หน้า login หรือเปล่า
     const path = window.location.pathname.toLowerCase();
