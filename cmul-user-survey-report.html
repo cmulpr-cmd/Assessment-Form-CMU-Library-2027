@@ -48,37 +48,9 @@ body { font-family: 'IBM Plex Sans Thai', 'Noto Sans Thai', sans-serif; backgrou
   transition: opacity 0.6s ease, visibility 0.6s ease;
 }
 
-.preloader-hidden {
-  opacity: 0;
-  visibility: hidden;
-}
 
-.penguin-loader {
-  width: 200px;
-  height: 200px;
-  margin-bottom: 24px;
-}
 
-.pen-arm {
-  transform-origin: 140px 85px;
-  animation: writing 0.4s ease-in-out infinite alternate;
-}
 
-@keyframes writing {
-  0% { transform: rotate(0deg) translate(0px, 0px); }
-  100% { transform: rotate(4deg) translate(-8px, 4px); }
-}
-
-.loading-text {
-  font-family: 'Noto Sans Thai', sans-serif;
-  font-size: 18px;
-  color: var(--text-primary);
-  font-weight: 600;
-  text-align: center;
-  max-width: 520px;
-  line-height: 1.5;
-  padding: 0 20px;
-}
 
 .loading-dots::after {
   content: '';
@@ -205,7 +177,7 @@ body { font-family: 'IBM Plex Sans Thai', 'Noto Sans Thai', sans-serif; backgrou
   body { background: #fff; color: #1a1a1a; }
   .card { border: 1px solid #e5e7eb; break-inside: avoid; box-shadow: none; }
   .kpi-card { break-inside: avoid; box-shadow: none; }
-  .back-bar, .back-top, #preloader { display: none; }
+  .back-bar, .back-top, #preloader, #exitLoader { display: none; }
 }
 
 @media (max-width: 900px) {
@@ -215,44 +187,148 @@ body { font-family: 'IBM Plex Sans Thai', 'Noto Sans Thai', sans-serif; backgrou
   .hero h1 { font-size: 24px; }
   .hero, .kpi-grid, .dashboard { padding-left: 20px; padding-right: 20px; }
 }
+
+
+/* === Database Loader Icon === */
+.db-icon { width: 100px; height: 100px; margin-bottom: 25px; filter: drop-shadow(0 10px 15px rgba(8,145,178,0.2)); }
+.db-disk { transform-origin: center; animation: floatDisk 3s ease-in-out infinite; }
+.db-disk-2 { animation-delay: 0.2s; }
+.db-disk-3 { animation-delay: 0.4s; }
+.db-light { animation: blinkLight 1.5s infinite alternate; }
+@keyframes floatDisk { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+@keyframes blinkLight { 0% { fill: #cbd5e1; } 100% { fill: #06b6d4; filter: drop-shadow(0 0 5px #06b6d4); } }
+
+/* === Exit Loader === */
+.full-overlay { position: fixed; inset: 0; z-index: 9999; background: rgba(248,250,252,0.95); backdrop-filter: blur(15px); display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.6s ease, visibility 0.6s ease; }
+.overlay-hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+.vault-icon { width: 110px; height: 110px; margin-bottom: 25px; color: var(--accent-emerald); }
+.vault-lock { transform-origin: center; animation: lockTurn 1.5s cubic-bezier(0.25,1,0.5,1) forwards; }
+@keyframes lockTurn { 0% { transform: rotate(-45deg); opacity: 0; } 100% { transform: rotate(0deg); opacity: 1; } }
+.overlay-text { font-family: 'Noto Sans Thai', sans-serif; font-size: 20px; color: var(--accent-cyan); font-weight: 800; text-align: center; line-height: 1.5; }
+.overlay-sub { font-size: 14px; color: var(--text-muted); font-weight: 500; margin-top: 8px; }
+
+/* === Security Modal === */
+.sec-modal-bg { position: fixed; inset: 0; background: rgba(15,23,42,0.7); z-index: 10000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(8px); padding: 20px; opacity: 0; transition: opacity 0.3s; }
+.sec-modal-bg.show { display: flex; opacity: 1; }
+.sec-modal { background: white; border-radius: 28px; width: 100%; max-width: 460px; padding: 40px; text-align: center; box-shadow: 0 30px 80px rgba(0,0,0,0.3); transform: scale(0.9) translateY(20px); opacity: 0; transition: all 0.4s cubic-bezier(0.25,1,0.5,1); }
+.sec-modal-bg.show .sec-modal { transform: scale(1) translateY(0); opacity: 1; }
+.sec-icon-wrap { width: 75px; height: 75px; border-radius: 22px; background: #fce7f3; color: #e11d48; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; }
+.sec-modal h3 { font-family: 'Noto Sans Thai', sans-serif; font-size: 22px; font-weight: 800; color: #0f172a; margin-bottom: 12px; }
+.sec-modal p { font-size: 15px; color: #475569; margin-bottom: 25px; line-height: 1.6; }
+.sec-highlight-box { background: #eff6ff; border-radius: 16px; padding: 20px; margin-bottom: 24px; color: #2563eb; font-weight: 600; font-size: 14.5px; border: 1px solid #dbeafe; line-height: 1.6; }
+.btn-close-modal { background: #f1f5f9; border: 1px solid #e2e8f0; color: #334155; font-size: 15px; font-weight: 700; cursor: pointer; transition: 0.3s; font-family: inherit; padding: 14px 24px; border-radius: 16px; width: 100%; }
+.btn-close-modal:hover { background: #e2e8f0; color: #0f172a; }
+
+/* === Email Success Modal === */
+.success-icon-wrap { width: 75px; height: 75px; border-radius: 22px; background: #d1fae5; color: #059669; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; box-shadow: 0 10px 20px rgba(5,150,105,0.15); }
+.btn-success-close { background: linear-gradient(135deg, var(--accent-emerald), var(--accent-cyan)); border: none; color: white; font-size: 15px; font-weight: 700; cursor: pointer; transition: 0.3s; font-family: inherit; padding: 14px 24px; border-radius: 16px; width: 100%; box-shadow: 0 4px 15px rgba(5,150,105,0.3); }
+.btn-success-close:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(5,150,105,0.4); }
+
+/* === Email Export Button === */
+.topbar-right { display: flex; align-items: center; gap: 20px; }
+.btn-email-export { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan)); color: white; border: none; padding: 10px 20px; border-radius: 100px; font-family: inherit; font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 15px rgba(37,99,235,0.25); min-width: 220px; position: relative; overflow: hidden; }
+.btn-email-export:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(37,99,235,0.4); }
+.btn-email-export:disabled { opacity: 0.85; cursor: not-allowed; transform: none; background: linear-gradient(135deg, #475569, #64748b); box-shadow: none; }
+.mini-spin-inline { width: 16px; height: 16px; border: 2.5px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 1s linear infinite; display: none; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* === Profile Menu === */
+.profile-menu { position: relative; display: flex; align-items: center; border-left: 1px solid var(--border-subtle); padding-left: 20px; }
+.profile-btn { display: flex; align-items: center; gap: 10px; cursor: pointer; background: transparent; border: none; outline: none; font-family: inherit; padding: 4px; border-radius: 100px; transition: background 0.2s; }
+.profile-btn:hover { background: rgba(0,0,0,0.04); }
+.profile-info { text-align: right; display: flex; flex-direction: column; }
+.profile-name { font-size: 13px; font-weight: 700; color: var(--text-primary); }
+.profile-role { font-size: 11px; color: var(--text-muted); font-weight: 500; }
+.profile-avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue)); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; box-shadow: 0 4px 10px rgba(8,145,178,0.2); }
+.profile-dropdown { position: absolute; top: calc(100% + 15px); right: 0; background: white; border: 1px solid var(--border-subtle); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); width: 220px; padding: 8px; opacity: 0; visibility: hidden; transform: translateY(10px); transition: all 0.25s cubic-bezier(0.25,1,0.5,1); z-index: 100; }
+.profile-menu.active .profile-dropdown { opacity: 1; visibility: visible; transform: translateY(0); }
+.dropdown-item { display: flex; align-items: center; gap: 10px; padding: 12px 16px; color: var(--text-secondary); text-decoration: none; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; border-radius: 10px; border: none; background: transparent; width: 100%; font-family: inherit; text-align: left; }
+.dropdown-item:hover { background: rgba(0,0,0,0.04); color: var(--text-primary); }
+
 </style>
 </head>
 <body id="top">
 
-<div id="preloader">
-  <svg class="penguin-loader" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-    <path d="M10 170 L190 170 L200 200 L0 200 Z" fill="#cbd5e1" />
-    <rect x="50" y="140" width="90" height="50" fill="#ffffff" rx="3" transform="rotate(-4 95 165)" stroke="#94a3b8" stroke-width="1.5"/>
-    <line x1="60" y1="150" x2="130" y2="150" stroke="#cbd5e1" stroke-width="2" transform="rotate(-4 95 165)"/>
-    <line x1="60" y1="162" x2="110" y2="162" stroke="#cbd5e1" stroke-width="2" transform="rotate(-4 95 165)"/>
-    <line x1="60" y1="174" x2="120" y2="174" stroke="#cbd5e1" stroke-width="2" transform="rotate(-4 95 165)"/>
-    <rect x="120" y="159" width="6" height="6" fill="#e2e8f0" transform="rotate(-4 95 165)"/>
-    <rect x="130" y="171" width="6" height="6" fill="#e2e8f0" transform="rotate(-4 95 165)"/>
-    
-    <ellipse cx="100" cy="95" rx="55" ry="70" fill="#1e293b"/>
-    <ellipse cx="100" cy="105" rx="42" ry="55" fill="#f8fafc"/>
-    <circle cx="82" cy="55" r="6" fill="#ffffff"/>
-    <circle cx="82" cy="55" r="2.5" fill="#0f172a"/>
-    <circle cx="118" cy="55" r="6" fill="#ffffff"/>
-    <circle cx="118" cy="55" r="2.5" fill="#0f172a"/>
-    <path d="M90 68 L110 68 L100 80 Z" fill="#f59e0b"/>
-    <path d="M50 85 Q 25 115 35 150 Q 55 130 55 90" fill="#1e293b"/>
-    
-    <g class="pen-arm">
-      <path d="M150 85 Q 175 115 140 155 Q 135 125 145 90" fill="#1e293b"/>
-      <rect x="135" y="140" width="8" height="35" fill="#ef4444" transform="rotate(35 139 157)" rx="2"/>
-      <polygon points="121,178 126,168 132,172" fill="#64748b"/>
-      <polygon points="121,178 124,175 123,173" fill="#1e293b"/>
-    </g>
+<div id="preloader" class="full-overlay">
+  <svg class="db-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path class="db-disk" d="M10 70 C10 81.0457 27.9086 90 50 90 C72.0914 90 90 81.0457 90 70 V80 C90 91.0457 72.0914 100 50 100 C27.9086 100 10 91.0457 10 80 V70 Z" fill="#e2e8f0"/>
+    <ellipse class="db-disk" cx="50" cy="70" rx="40" ry="20" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/>
+    <path class="db-disk db-disk-2" d="M10 45 C10 56.0457 27.9086 65 50 65 C72.0914 65 90 56.0457 90 45 V55 C90 66.0457 72.0914 75 50 75 C27.9086 75 10 66.0457 10 55 V45 Z" fill="#cbd5e1"/>
+    <ellipse class="db-disk db-disk-2" cx="50" cy="45" rx="40" ry="20" fill="#f1f5f9" stroke="#94a3b8" stroke-width="2"/>
+    <path class="db-disk db-disk-3" d="M10 20 C10 31.0457 27.9086 40 50 40 C72.0914 40 90 31.0457 90 20 V30 C90 41.0457 72.0914 50 50 50 C27.9086 50 10 41.0457 10 30 V20 Z" fill="#94a3b8"/>
+    <ellipse class="db-disk db-disk-3" cx="50" cy="20" rx="40" ry="20" fill="#e2e8f0" stroke="#64748b" stroke-width="2"/>
+    <circle class="db-light" cx="40" cy="85" r="3" fill="#cbd5e1"/>
+    <circle class="db-light" cx="50" cy="85" r="3" fill="#cbd5e1" style="animation-delay: 0.3s"/>
+    <circle class="db-light" cx="60" cy="85" r="3" fill="#cbd5e1" style="animation-delay: 0.6s"/>
   </svg>
-  <div class="loading-text">กำลังโหลดข้อมูล<br>สรุปผลการประเมินการเปิดรับข่าวสารและภาพลักษณ์<br>ของผู้ใช้บริการ<span class="loading-dots"></span></div>
+  <div class="overlay-text">กำลังโหลดข้อมูลจากฐานข้อมูล<br>หน่วยสื่อสารองค์กร สำนักหอสมุด</div>
+  <div class="overlay-sub">โปรดรอสักครู่<span class="loading-dots"></span></div>
 </div>
 
 <div class="noise-overlay"></div>
 
-<nav class="back-bar">
-  <a href="index.html" class="back-btn">← กลับหน้าหลัก</a>
-  <span class="back-bar-title">รายงานผู้ใช้บริการภายนอก</span>
+<!-- Exit Loader -->
+<div id="exitLoader" class="full-overlay overlay-hidden">
+  <svg class="vault-icon" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M15 35 H85 V85 A10 10 0 0 1 75 95 H25 A10 10 0 0 1 15 85 Z" fill="#f8fafc" stroke="#10b981"/>
+    <path d="M30 35 V25 A20 20 0 0 1 70 25 V35" stroke="#10b981"/>
+    <circle cx="50" cy="65" r="12" fill="#10b981" class="vault-lock"/>
+    <path d="M50 65 V75" stroke="#ffffff" stroke-width="3" class="vault-lock"/>
+  </svg>
+  <div class="overlay-text" style="color:var(--accent-emerald);">กำลังเก็บไฟล์คืนเข้าฐานข้อมูล<br>และกำลังพาท่านไปยังหน้า Dashboard</div>
+  <div class="overlay-sub">ปกป้องข้อมูลด้วยความปลอดภัยสูงสุด<span class="loading-dots"></span></div>
+</div>
+
+<!-- Security Modal -->
+<div id="securityModal" class="sec-modal-bg">
+  <div class="sec-modal">
+    <div class="sec-icon-wrap">
+      <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    </div>
+    <h3>ตรวจพบการพยายามบันทึกหน้าจอ!</h3>
+    <p>ไม่อนุญาตให้ใช้วิธีการแคปเจอร์ หรือสั่งพิมพ์ (Print) โดยตรง</p>
+    <div class="sec-highlight-box">หากท่านต้องการไฟล์รายงานฉบับสมบูรณ์<br>โปรดใช้ปุ่ม <span style="color:var(--accent-blue);">"ส่งข้อมูลไปยังอีเมลของท่าน"</span> ที่แถบเมนูด้านบน</div>
+    <button class="btn-close-modal" onclick="closeSecModal()">รับทราบ / ปิดหน้าต่างนี้</button>
+  </div>
+</div>
+
+<!-- Email Success Modal -->
+<div id="emailSuccessModal" class="sec-modal-bg">
+  <div class="sec-modal">
+    <div class="success-icon-wrap">
+      <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    </div>
+    <h3 style="color:var(--accent-emerald);">จัดส่งอีเมลสำเร็จ!</h3>
+    <p style="margin-bottom:30px;">ระบบได้จัดส่งไฟล์รายงานในรูปแบบ HTML ที่ปลอดภัย<br>ไปยังอีเมลของท่านเรียบร้อยแล้ว โปรดตรวจสอบในกล่องข้อความ</p>
+    <button class="btn-success-close" onclick="closeSuccessModal()">ตกลง</button>
+  </div>
+</div>
+
+<!-- Top Bar -->
+<nav class="back-bar" id="mainNavBar">
+  <button class="back-btn" onclick="handleExit()" style="cursor:pointer;">← กลับหน้าหลัก</button>
+  <div class="topbar-right">
+    <button class="btn-email-export" id="btnSendEmail" onclick="exportAndSendEmail()">
+      <svg class="normal-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      <span class="btn-label">ส่งข้อมูลไปยังอีเมลของท่าน</span>
+      <div class="mini-spin-inline" id="btnEmailSpin"></div>
+    </button>
+    <div class="profile-menu" id="profileMenu">
+      <button class="profile-btn" onclick="toggleProfile(event)">
+        <div class="profile-info">
+          <div class="profile-name" id="userNameDisplay">กำลังโหลด...</div>
+          <div class="profile-role" id="userRoleDisplay">-</div>
+        </div>
+        <div class="profile-avatar" id="userAvatarDisplay">?</div>
+      </button>
+      <div class="profile-dropdown">
+        <button class="dropdown-item" onclick="handleExit()">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          กลับหน้า Dashboard
+        </button>
+      </div>
+    </div>
+  </div>
 </nav>
 
 <section class="hero">
@@ -561,11 +637,33 @@ body { font-family: 'IBM Plex Sans Thai', 'Noto Sans Thai', sans-serif; backgrou
 </footer>
 
 <script>
-// Preloader Logic
+// === URL for Apps Script ===
+const SCRIPT_URL_POST = "https://script.google.com/macros/s/AKfycbxkQWe5ZFxQxpbEZuJkk3Id9eGubQwk2f4E7r1-LXEjLDloVzucc52ex6Qe9tP_fk4b/exec";
+
+// === Profile Loading ===
+(function loadProfile() {
+    try {
+        const rawUser = localStorage.getItem('cc_pr_user') || sessionStorage.getItem('cc_pr_user');
+        if (rawUser) {
+            const user = JSON.parse(rawUser);
+            const displayName = user.displayName || user.name || user.username || 'User';
+            const displayRole = user.roleLabel || user.position || 'บุคลากร';
+            document.getElementById('userNameDisplay').textContent = displayName;
+            document.getElementById('userRoleDisplay').textContent = displayRole;
+            const avatar = document.getElementById('userAvatarDisplay');
+            avatar.style.background = 'transparent';
+            avatar.innerHTML = '<img src="Staff/' + (user.username || '') + '.jpg" style="width:100%;height:100%;border-radius:50%;object-fit:cover;" onerror="this.onerror=null;this.parentElement.style.background=\'linear-gradient(135deg,#0891b2,#2563eb)\';this.parentElement.innerHTML=\'' + displayName.charAt(0).toUpperCase() + '\';">';
+        }
+    } catch(e) {}
+})();
+
+function toggleProfile(e) { e.stopPropagation(); document.getElementById('profileMenu').classList.toggle('active'); }
+document.addEventListener('click', (e) => { if (!e.target.closest('.profile-menu')) document.getElementById('profileMenu').classList.remove('active'); });
+
+// === Preloader + Loaders ===
 window.addEventListener('load', function() {
   setTimeout(function() {
-    document.getElementById('preloader').classList.add('preloader-hidden');
-    
+    document.getElementById('preloader').classList.add('overlay-hidden');
     setTimeout(() => {
       document.querySelectorAll('.sat-bar').forEach(bar => {
         bar.style.width = bar.getAttribute('data-target') + '%';
@@ -573,6 +671,95 @@ window.addEventListener('load', function() {
     }, 200);
   }, 2500); 
 });
+
+function handleExit() {
+  document.getElementById('exitLoader').classList.remove('overlay-hidden');
+  setTimeout(() => { window.location.href = 'dashboard.html'; }, 2000);
+}
+
+// === Security ===
+function initAdvancedSecurity() {
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'F12' || e.keyCode === 123) { e.preventDefault(); return false; }
+        if (((e.ctrlKey || e.metaKey) && (e.key === 'p' || e.key === 'P' || e.keyCode === 80)) || 
+             e.key === 'PrintScreen' || e.keyCode === 44 ||
+             ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'S' || e.key === 's'))) {
+            e.preventDefault(); triggerSecurityModal(); return false;
+        }
+    });
+    window.onbeforeprint = () => { triggerSecurityModal(); return false; };
+}
+function triggerSecurityModal() { document.getElementById('securityModal').classList.add('show'); }
+function closeSecModal() { document.getElementById('securityModal').classList.remove('show'); }
+function closeSuccessModal() { document.getElementById('emailSuccessModal').classList.remove('show'); }
+
+// === Email Export (with canvas-to-image fix) ===
+async function exportAndSendEmail() {
+    const btn = document.getElementById('btnSendEmail');
+    const btnLabel = btn.querySelector('.btn-label');
+    const btnIcon = btn.querySelector('svg');
+    const btnSpin = document.getElementById('btnEmailSpin');
+
+    let userName = "คุณผู้ใช้งาน"; let userId = "";
+    try {
+        const u = JSON.parse(localStorage.getItem('cc_pr_user') || sessionStorage.getItem('cc_pr_user') || '{}');
+        userName = u.displayName || "คุณผู้ใช้งาน"; userId = u.username || "";
+    } catch(e){}
+
+    if (!userId) { alert("กรุณาเข้าสู่ระบบก่อนทำการขอไฟล์รายงาน"); return; }
+
+    btn.disabled = true;
+    btnLabel.innerText = 'กำลังเตรียมข้อมูล...';
+    btnIcon.style.display = 'none';
+    btnSpin.style.display = 'block';
+
+    const allCanvas = document.querySelectorAll('canvas');
+    const canvasImages = [];
+    allCanvas.forEach(canvas => {
+        try {
+            const img = document.createElement('img');
+            img.src = canvas.toDataURL('image/png');
+            img.style.width = '100%';
+            img.style.maxWidth = canvas.width + 'px';
+            img.style.height = 'auto';
+            canvas.parentNode.insertBefore(img, canvas.nextSibling);
+            canvas.style.display = 'none';
+            canvasImages.push({ canvas, img });
+        } catch(e) {}
+    });
+
+    const htmlClone = document.documentElement.cloneNode(true);
+
+    canvasImages.forEach(({ canvas, img }) => { canvas.style.display = ''; img.remove(); });
+
+    htmlClone.querySelectorAll('script, #preloader, #exitLoader, #securityModal, #emailSuccessModal, #mainNavBar, .user-profile-wrap, .pw-modal-bg').forEach(el => el.remove());
+    htmlClone.querySelectorAll('canvas').forEach(c => c.remove());
+    htmlClone.querySelectorAll('style').forEach(s => { s.innerHTML = s.innerHTML.replace(/@media\s+print\s*\{[^}]*\}/g, ''); });
+
+    const watermark = document.createElement('div');
+    watermark.style.cssText = "position:fixed;bottom:20px;right:20px;color:rgba(0,0,0,0.12);font-size:12px;font-weight:600;z-index:9999;pointer-events:none;font-family:sans-serif;text-align:right;";
+    watermark.innerHTML = 'เอกสารนี้ดาวน์โหลดอย่างเป็นทางการโดย: ' + userName + '<br>เมื่อ: ' + new Date().toLocaleString('th-TH');
+    htmlClone.querySelector('body').appendChild(watermark);
+
+    btnLabel.innerText = 'กำลังส่งอีเมล...';
+
+    try {
+        const response = await fetch(SCRIPT_URL_POST, {
+            method: 'POST', redirect: 'follow',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({ action: 'sendHtmlEmail', username: userId, htmlData: htmlClone.outerHTML })
+        });
+        const data = await response.json();
+        btn.disabled = false; btnLabel.innerText = 'ส่งข้อมูลไปยังอีเมลของท่าน'; btnIcon.style.display = 'block'; btnSpin.style.display = 'none';
+        if (data.success) { document.getElementById('emailSuccessModal').classList.add('show'); }
+        else { alert("❌ ส่งไม่สำเร็จ: " + data.message); }
+    } catch (err) {
+        btn.disabled = false; btnLabel.innerText = 'ส่งข้อมูลไปยังอีเมลของท่าน'; btnIcon.style.display = 'block'; btnSpin.style.display = 'none';
+        alert("❌ เกิดข้อผิดพลาด: " + err.message);
+    }
+}
+initAdvancedSecurity();
 
 Chart.defaults.font.family = "'IBM Plex Sans Thai', 'Noto Sans Thai', sans-serif";
 Chart.defaults.color = '#64748b'; // Darker text for light mode
