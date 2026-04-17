@@ -168,11 +168,26 @@ body { font-family: 'IBM Plex Sans Thai', 'Noto Sans Thai', sans-serif; backgrou
 .dropdown-item { display: flex; align-items: center; gap: 10px; padding: 12px 16px; color: var(--text-secondary); text-decoration: none; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; border-radius: 10px; border: none; background: transparent; width: 100%; font-family: inherit; text-align: left; }
 .dropdown-item:hover { background: rgba(0,0,0,0.04); color: var(--text-primary); }
 
+/* Suggestion cards */
+.suggestion-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.suggestion-item { background: rgba(0,0,0,0.02); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 16px; font-size: 13px; color: var(--text-secondary); line-height: 1.7; transition: background 0.3s; }
+.suggestion-item:hover { background: rgba(0,0,0,0.04); }
+.suggestion-num { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 6px; background: rgba(37,99,235,0.1); color: var(--accent-blue); font-size: 11px; font-weight: 700; margin-right: 8px; flex-shrink: 0; }
+
 .report-footer { max-width: 1200px; margin: 0 auto; padding: 30px 40px 50px; text-align: center; color: var(--text-muted); font-size: 13px; border-top: 1px solid var(--border-subtle); position: relative; z-index: 1; }
 .back-top { display: inline-flex; align-items: center; justify-content: center; gap: 8px; color: var(--text-secondary); font-size: 14px; font-weight: 600; text-decoration: none; padding: 12px 28px; border-radius: 12px; background: rgba(0,0,0,0.04); border: 1px solid var(--border-subtle); transition: all 0.3s; margin-top: 16px; font-family: inherit; cursor: pointer; }
 .back-top:hover { background: rgba(0,0,0,0.08); color: var(--text-primary); transform: translateY(-2px); }
 
 @media print { body { display: none !important; } }
+@media (max-width: 900px) {
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  .row-2, .row-3 { grid-template-columns: 1fr; }
+  .suggestion-grid { grid-template-columns: 1fr; }
+  .hero h1 { font-size: 26px; }
+  .hero, .kpi-grid, .dashboard { padding-left: 20px; padding-right: 20px; }
+  .back-bar { padding-left: 16px; padding-right: 16px; }
+  .topbar-right { gap: 10px; }
+}
 </style>
 </head>
 <body id="top">
@@ -300,21 +315,119 @@ body { font-family: 'IBM Plex Sans Thai', 'Noto Sans Thai', sans-serif; backgrou
 </div>
 
 <div class="dashboard">
+
+  <!-- Row 1: Demographics -->
   <div class="row-3">
-    <div class="card"><div class="card-header"><div class="card-tag tag-blue">ข้อมูลผู้ตอบ</div><div class="card-title">สัดส่วนเพศ</div></div><div class="donut-wrap"><canvas id="chartGender" height="220"></canvas><div class="donut-center"><span class="big" style="color:var(--accent-blue)">65</span><span class="small">คน</span></div></div></div>
-    <div class="card"><div class="card-header"><div class="card-tag tag-violet">ข้อมูลผู้ตอบ</div><div class="card-title">กลุ่มอายุ</div></div><div class="chart-container"><canvas id="chartAge" height="220"></canvas></div></div>
-    <div class="card"><div class="card-header"><div class="card-tag tag-emerald">ข้อมูลผู้ตอบ</div><div class="card-title">ประเภทบุคลากร</div></div><div class="donut-wrap"><canvas id="chartType" height="220"></canvas><div class="donut-center"><span class="big" style="color:var(--accent-emerald)">65</span><span class="small">คน</span></div></div></div>
-  </div>
+    <div class="card">
+      <div class="card-header"><div class="card-tag tag-blue">ข้อมูลผู้ตอบ</div><div class="card-title">สัดส่วนเพศ</div></div>
+      <div class="donut-wrap"><canvas id="chartGender" height="220"></canvas><div class="donut-center"><span class="big" style="color:var(--accent-blue)">65</span><span class="small">คน</span></div></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-tag tag-violet">ข้อมูลผู้ตอบ</div><div class="card-title">กลุ่มอายุ</div></div>
+      <div class="chart-container"><canvas id="chartAge" height="220"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-tag tag-emerald">ข้อมูลผู้ตอบ</div><div class="card-title">ประเภทบุคลากร</div></div>
+      <div class="donut-wrap"><canvas id="chartType" height="220"></canvas><div class="donut-center"><span class="big" style="color:var(--accent-emerald)">65</span><span class="small">คน</span></div></div>
+    </div>
   </div>
 
+  <!-- Row 2: Channels -->
+  <div class="row-2">
+    <div class="card">
+      <div class="card-header"><div class="card-tag tag-cyan">ช่องทางการสื่อสาร</div><div class="card-title">ช่องทางการเปิดรับข่าวสาร (ตอบได้หลายข้อ)</div></div>
+      <div class="chart-container"><canvas id="chartChannels" height="280"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-tag tag-amber">ช่องทางการสื่อสาร</div><div class="card-title">ช่องทางที่นิยมมากที่สุด (อันดับ 1)</div></div>
+      <div class="donut-wrap"><canvas id="chartTopChannel" height="280"></canvas><div class="donut-center"><span class="big" style="color:var(--accent-amber)">63.1%</span><span class="small">Line อันดับ 1</span></div></div>
+    </div>
+  </div>
+
+  <!-- Row 3: Time & Frequency -->
+  <div class="row-2">
+    <div class="card">
+      <div class="card-header"><div class="card-tag tag-rose">พฤติกรรม</div><div class="card-title">ช่วงเวลาเปิดรับข่าวสาร</div></div>
+      <div class="chart-container"><canvas id="chartTime" height="260"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-tag tag-blue">พฤติกรรม</div><div class="card-title">ความถี่ในการเปิดรับข่าวสาร</div></div>
+      <div class="donut-wrap"><canvas id="chartFreq" height="260"></canvas><div class="donut-center"><span class="big" style="color:var(--accent-cyan)">72.3%</span><span class="small">เปิดรับทุกวัน</span></div></div>
+    </div>
+  </div>
+
+  <!-- Row 4: Content Types -->
+  <div class="row-full">
+    <div class="card">
+      <div class="card-header"><div class="card-tag tag-violet">ประเภทเนื้อหา</div><div class="card-title">เนื้อหาที่เปิดรับ (ตอบได้หลายข้อ) vs เนื้อหาที่นิยมมากที่สุด (อันดับ 1)</div></div>
+      <div class="chart-container"><canvas id="chartContent" height="200"></canvas></div>
+    </div>
+  </div>
+
+  <!-- Row 5: Satisfaction -->
+  <div class="row-full">
+    <div class="card">
+      <div class="card-header"><div class="card-tag tag-emerald">ความพึงพอใจ</div><div class="card-title">ความพึงพอใจต่อข่าวสารแต่ละด้าน (ค่าเฉลี่ย จาก 5.00)</div></div>
+      <div style="margin-top:8px;">
+        <div class="sat-item"><div class="sat-label">รูปแบบการนำเสนอ</div><div class="sat-bar-wrap"><div class="sat-bar blue" data-target="83.2">4.16</div></div></div>
+        <div class="sat-item"><div class="sat-label">กิจกรรมและโครงการ</div><div class="sat-bar-wrap"><div class="sat-bar emerald" data-target="82.4">4.12</div></div></div>
+        <div class="sat-item"><div class="sat-label">ประกาศ/นโยบาย</div><div class="sat-bar-wrap"><div class="sat-bar violet" data-target="81.4">4.07</div></div></div>
+        <div class="sat-item"><div class="sat-label">ข่าวสถานการณ์ปัจจุบัน</div><div class="sat-bar-wrap"><div class="sat-bar cyan" data-target="81.2">4.06</div></div></div>
+        <div class="sat-item"><div class="sat-label">ข่าวผู้บริหาร/บุคลากร</div><div class="sat-bar-wrap"><div class="sat-bar amber" data-target="80.4">4.02</div></div></div>
+        <div class="sat-item"><div class="sat-label">ข่าว PR จากหน่วยงานภายนอก</div><div class="sat-bar-wrap"><div class="sat-bar rose" data-target="77.6">3.88</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Row 6: CMUL News -->
+  <div class="row-2">
+    <div class="card">
+      <div class="card-header"><div class="card-tag tag-amber">CMUL News</div><div class="card-title">การเปิดรับ CMUL News และการเห็นควรผลิตต่อ</div></div>
+      <div class="chart-container"><canvas id="chartCMUL" height="240"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-tag tag-cyan">CMUL News</div><div class="card-title">ความพึงพอใจต่อ CMUL News แต่ละด้าน</div></div>
+      <div class="chart-container"><canvas id="chartCMULSat" height="240"></canvas></div>
+    </div>
+  </div>
+
+  <!-- Row 7: Department -->
+  <div class="row-full">
+    <div class="card">
+      <div class="card-header"><div class="card-tag tag-rose">ข้อมูลผู้ตอบ</div><div class="card-title">จำนวนผู้ตอบแบบสอบถาม จำแนกตามฝ่ายที่สังกัด</div></div>
+      <div class="chart-container"><canvas id="chartDept" height="180"></canvas></div>
+    </div>
+  </div>
+
+  <!-- Row 8: Suggestions -->
+  <div class="row-full">
+    <div class="card">
+      <div class="card-header"><div class="card-tag tag-violet">ข้อเสนอแนะ</div><div class="card-title">ข้อเสนอแนะเพิ่มเติมจากบุคลากร</div></div>
+      <div class="suggestion-grid">
+        <div class="suggestion-item"><span class="suggestion-num">1</span>ควรมีคลังค้นข่าวสารย้อนหลังที่เข้าถึงง่าย และรวมศูนย์ข่าวสารไว้ในที่เดียว</div>
+        <div class="suggestion-item"><span class="suggestion-num">2</span>ควรพัฒนาปฏิทินกิจกรรมและระบบแจ้งเตือนล่วงหน้า เพื่อวางแผนเข้าร่วมกิจกรรมได้สะดวก</div>
+        <div class="suggestion-item"><span class="suggestion-num">3</span>นำเสนอในหลายภาษา พหุวัฒนธรรม เพราะผู้ใช้บริการมีความหลากหลายทางภาษา</div>
+        <div class="suggestion-item"><span class="suggestion-num">4</span>ควรใช้ถ้อยคำที่ครอบคลุมทุกช่วงวัย ไม่จำกัดเฉพาะกลุ่ม</div>
+        <div class="suggestion-item"><span class="suggestion-num">5</span>ควรเน้นเนื้อหาที่สร้างความเชื่อมั่นต่อสำนักหอสมุด ไม่เน้นเพียงยอดไลค์/แชร์</div>
+        <div class="suggestion-item"><span class="suggestion-num">6</span>ขอเพิ่มความรอบคอบในการสะกดคำให้ถูกต้องก่อนเผยแพร่ และรักษาความสม่ำเสมอ</div>
+        <div class="suggestion-item"><span class="suggestion-num">7</span>ควรรวบรวม CMUL News เป็นฉบับรายปี เผยแพร่แบบ Public บน Social Media</div>
+        <div class="suggestion-item"><span class="suggestion-num">8</span>ควรประชาสัมพันธ์ให้มากขึ้น และเพิ่มช่องทางเผยแพร่ให้เข้าถึงง่าย</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
 <footer class="report-footer">
-  สำนักหอสมุด มหาวิทยาลัยเชียงใหม่ &middot; รายงานสรุปผลการประเมิน ประจำปี พ.ศ. 2569<br>
+  สำนักหอสมุด มหาวิทยาลัยเชียงใหม่ &middot; รายงานสรุปผลการประเมินการเปิดรับและการสื่อสารองค์กร ประจำปี พ.ศ. 2569<br>
+  เก็บข้อมูลระหว่างวันที่ 6 - 15 มีนาคม 2569 &middot; จำนวนผู้ตอบแบบสอบถาม 65 คน
+  <br>
   <button onclick="window.scrollTo({top:0, behavior:'smooth'})" class="back-top">↑ กลับขึ้นบนสุด</button>
 </footer>
 
 <script>
 // --- URL & Profile Init ---
-const SCRIPT_URL_POST = "https://script.google.com/macros/s/AKfycbz6K_dLqZbGm57PDuTWWhom5iwlTdAadIwz_5WctjEwy3t7BrBvkFkl_PRp58eiVxzG/exec";
+const SCRIPT_URL_POST = "https://script.google.com/macros/s/AKfycbzmzYhYYfJoshKHGW5U-APtmvTQMqlf9L3lzTlXfgDSE2WbU7-Oa9ZiI2nCrti6E60h/exec";
 
 (function loadProfile() {
     try {
@@ -468,23 +581,122 @@ async function exportAndSendEmail() {
 }
 initAdvancedSecurity();
 
-// --- Charts Logic (Condensed) ---
+// --- Charts Logic (Full Data from Original) ---
 Chart.defaults.font.family = "'IBM Plex Sans Thai', 'Noto Sans Thai', sans-serif";
-Chart.defaults.color = '#64748b'; 
-const gridColor = 'rgba(0, 0, 0, 0.05)';
-const colors = { blue: '#3b82f6', cyan: '#06b6d4', emerald: '#10b981', amber: '#f59e0b', rose: '#f43f5e', violet: '#8b5cf6' };
+Chart.defaults.color = '#64748b';
+Chart.defaults.plugins.legend.labels.usePointStyle = true;
+Chart.defaults.plugins.legend.labels.pointStyleWidth = 10;
+Chart.defaults.plugins.legend.labels.padding = 16;
 
-new Chart(document.getElementById('chartGender'), { type: 'doughnut', data: { labels: ['หญิง (75.4%)', 'ชาย (24.6%)'], datasets: [{ data: [49, 16], backgroundColor: ['#ec4899', '#38bdf8'], cutout: '68%' }] }, options: { plugins: { legend: { position: 'bottom' } }, responsive: true, maintainAspectRatio: false } });
-new Chart(document.getElementById('chartAge'), { type: 'bar', data: { labels: ['< 25 ปี', '25-42 ปี', '43-57 ปี', '58+ ปี'], datasets: [{ data: [2, 42, 20, 1], backgroundColor: [colors.cyan, colors.blue, colors.violet, colors.amber], borderRadius: 8 }] }, options: { plugins: { legend: { display: false } }, responsive: true, maintainAspectRatio: false } });
-new Chart(document.getElementById('chartType'), { type: 'doughnut', data: { labels: ['ปฏิบัติการ/วิชาชีพ (67.7%)', 'สนับสนุน/บริการ (32.3%)'], datasets: [{ data: [44, 21], backgroundColor: [colors.emerald, colors.amber], cutout: '68%' }] }, options: { plugins: { legend: { position: 'bottom' } }, responsive: true, maintainAspectRatio: false } });
-new Chart(document.getElementById('chartChannels'), { type: 'bar', data: { labels: ['Line', 'Facebook', 'e-Doc', 'MS Teams'], datasets: [{ data: [63, 57, 46, 28], backgroundColor: [colors.emerald, colors.blue, colors.amber, colors.cyan], borderRadius: 8 }] }, options: { indexAxis: 'y', plugins: { legend: { display: false } }, responsive: true, maintainAspectRatio: false } });
-new Chart(document.getElementById('chartTopChannel'), { type: 'doughnut', data: { labels: ['Line (63.1%)', 'Facebook (20%)', 'e-Doc (12.3%)'], datasets: [{ data: [41, 13, 8], backgroundColor: [colors.emerald, colors.blue, colors.amber], cutout: '65%' }] }, options: { plugins: { legend: { position: 'bottom' } }, responsive: true, maintainAspectRatio: false } });
-new Chart(document.getElementById('chartTime'), { type: 'bar', data: { labels: ['09-12 น.', 'ตลอดยามทำการ', '12-15 น.'], datasets: [{ data: [25, 30, 4], backgroundColor: colors.blue, borderRadius: 8 }] }, options: { plugins: { legend: { display: false } }, responsive: true, maintainAspectRatio: false } });
-new Chart(document.getElementById('chartFreq'), { type: 'doughnut', data: { labels: ['ทุกวัน (72.3%)', '3-4 ครั้ง/สัปดาห์'], datasets: [{ data: [47, 8], backgroundColor: [colors.cyan, colors.blue], cutout: '65%' }] }, options: { plugins: { legend: { position: 'bottom' } }, responsive: true, maintainAspectRatio: false } });
-new Chart(document.getElementById('chartContent'), { type: 'bar', data: { labels: ['กิจกรรม', 'ประกาศ', 'นโยบาย'], datasets: [{ label: 'เปิดรับ', data: [63, 50, 44], backgroundColor: colors.blue, borderRadius: 8 }] }, options: { responsive: true, maintainAspectRatio: false } });
-new Chart(document.getElementById('chartCMUL'), { type: 'bar', data: { labels: ['เคยเปิดรับ', 'ควรผลิตต่อ'], datasets: [{ data: [45, 41], backgroundColor: [colors.emerald, colors.blue], borderRadius: 8 }] }, options: { plugins: { legend: { display: false } }, responsive: true, maintainAspectRatio: false } });
-new Chart(document.getElementById('chartCMULSat'), { type: 'radar', data: { labels: ['ออกแบบ', 'ช่องทาง', 'เนื้อหา'], datasets: [{ data: [4.08, 4.06, 3.93], borderColor: colors.cyan, backgroundColor: 'rgba(8, 145, 178, 0.15)' }] }, options: { plugins: { legend: { display: false } }, responsive: true, maintainAspectRatio: false } });
-new Chart(document.getElementById('chartDept'), { type: 'bar', data: { labels: ['สำนักงาน', 'จัดการทรัพยากร', 'บริการ'], datasets: [{ data: [13, 11, 10], backgroundColor: colors.blue, borderRadius: 8 }] }, options: { plugins: { legend: { display: false } }, responsive: true, maintainAspectRatio: false } });
+const gridColor = 'rgba(0, 0, 0, 0.05)';
+const colors = {
+  blue: '#3b82f6', cyan: '#06b6d4', emerald: '#10b981',
+  amber: '#f59e0b', rose: '#f43f5e', violet: '#8b5cf6', orange: '#f97316',
+  blueA: 'rgba(59,130,246,0.7)', cyanA: 'rgba(6,182,212,0.7)',
+  emeraldA: 'rgba(16,185,129,0.7)', amberA: 'rgba(245,158,11,0.7)',
+  roseA: 'rgba(244,63,94,0.7)', violetA: 'rgba(139,92,246,0.7)',
+  orangeA: 'rgba(249,115,22,0.7)'
+};
+const chartOpt = (showLegend, pos) => ({ plugins: { legend: { display: showLegend, position: pos || 'bottom', labels: { font: { size: 11 } } } }, responsive: true, maintainAspectRatio: false });
+const barScales = { scales: { y: { grid: { color: gridColor }, ticks: { font: { size: 11 } } }, x: { grid: { display: false }, ticks: { font: { size: 11 } } } } };
+const hBarScales = { scales: { x: { grid: { color: gridColor }, ticks: { font: { size: 11 } } }, y: { grid: { display: false }, ticks: { font: { size: 12 } } } } };
+
+// 1. Gender
+new Chart(document.getElementById('chartGender'), {
+  type: 'doughnut',
+  data: { labels: ['หญิง (75.4%)', 'ชาย (24.6%)'], datasets: [{ data: [49, 16], backgroundColor: ['#ec4899', '#38bdf8'], borderWidth: 0, cutout: '68%' }] },
+  options: chartOpt(true)
+});
+
+// 2. Age
+new Chart(document.getElementById('chartAge'), {
+  type: 'bar',
+  data: { labels: ['< 25 ปี', '25-42 ปี', '43-57 ปี', '58+ ปี'], datasets: [{ data: [2, 42, 20, 1], backgroundColor: [colors.cyan, colors.blue, colors.violet, colors.amber], borderRadius: 8, borderSkipped: false }] },
+  options: { ...chartOpt(false), ...barScales }
+});
+
+// 3. Personnel Type
+new Chart(document.getElementById('chartType'), {
+  type: 'doughnut',
+  data: { labels: ['ปฏิบัติการ/วิชาชีพ (67.7%)', 'สนับสนุน/บริการ (32.3%)'], datasets: [{ data: [44, 21], backgroundColor: [colors.emerald, colors.amber], borderWidth: 0, cutout: '68%' }] },
+  options: chartOpt(true)
+});
+
+// 4. Channels (ครบ 7 ช่องทาง)
+new Chart(document.getElementById('chartChannels'), {
+  type: 'bar',
+  data: { labels: ['Line', 'Facebook', 'e-Document', 'พูดคุย', 'MS Teams', 'กิจกรรม', 'บอร์ด PR'],
+    datasets: [{ data: [63, 57, 46, 38, 28, 28, 25], backgroundColor: [colors.emerald, colors.blue, colors.amber, colors.violet, colors.cyan, colors.rose, colors.orange], borderRadius: 8, borderSkipped: false }] },
+  options: { indexAxis: 'y', ...chartOpt(false), ...hBarScales }
+});
+
+// 5. Top Channel (ครบ 4 อันดับ)
+new Chart(document.getElementById('chartTopChannel'), {
+  type: 'doughnut',
+  data: { labels: ['Line (63.1%)', 'Facebook (20%)', 'e-Document (12.3%)', 'พูดคุย (4.6%)'],
+    datasets: [{ data: [41, 13, 8, 3], backgroundColor: [colors.emerald, colors.blue, colors.amber, colors.violet], borderWidth: 0, cutout: '65%' }] },
+  options: chartOpt(true)
+});
+
+// 6. Time (ครบ 7 ช่วงเวลา)
+new Chart(document.getElementById('chartTime'), {
+  type: 'bar',
+  data: { labels: ['06-09 น.', '09-12 น.', '12-15 น.', '15-18 น.', '18-21 น.', '21-24 น.', 'ตลอดเวลาทำการ'],
+    datasets: [{ data: [1, 25, 4, 2, 2, 1, 30], backgroundColor: [colors.cyanA, colors.blueA, colors.violetA, colors.amberA, colors.roseA, colors.orangeA, colors.emeraldA], borderRadius: 8, borderSkipped: false }] },
+  options: { ...chartOpt(false), ...barScales }
+});
+
+// 7. Frequency (ครบ 5 ระดับ)
+new Chart(document.getElementById('chartFreq'), {
+  type: 'doughnut',
+  data: { labels: ['ทุกวัน (72.3%)', '3-4 ครั้ง/สัปดาห์ (12.3%)', '5-6 ครั้ง/สัปดาห์ (6.2%)', '1-2 ครั้ง/สัปดาห์ (4.6%)', 'นานๆ ครั้ง (4.6%)'],
+    datasets: [{ data: [47, 8, 4, 3, 3], backgroundColor: [colors.cyan, colors.blue, colors.violet, colors.amber, colors.rose], borderWidth: 0, cutout: '65%' }] },
+  options: chartOpt(true)
+});
+
+// 8. Content Types (ครบ 5 ประเภท + 2 ชุดข้อมูล)
+new Chart(document.getElementById('chartContent'), {
+  type: 'bar',
+  data: { labels: ['กิจกรรม/โครงการ', 'ประกาศ/นโยบาย', 'ข่าวผู้บริหาร', 'ข่าวสถานการณ์', 'ข่าว PR ภายนอก'],
+    datasets: [
+      { label: 'เปิดรับ (หลายข้อ)', data: [63, 50, 44, 41, 31], backgroundColor: colors.blueA, borderRadius: 8, borderSkipped: false },
+      { label: 'นิยมอันดับ 1', data: [48, 5, 7, 4, 0], backgroundColor: colors.emeraldA, borderRadius: 8, borderSkipped: false }
+    ] },
+  options: { plugins: { legend: { position: 'top', labels: { font: { size: 12 } } } }, ...barScales, responsive: true, maintainAspectRatio: false }
+});
+
+// 9. CMUL News (ครบ 4 รายการ)
+new Chart(document.getElementById('chartCMUL'), {
+  type: 'bar',
+  data: { labels: ['เคยเปิดรับ', 'ไม่เคยเปิดรับ', 'ควรผลิตต่อ', 'ไม่จำเป็น'],
+    datasets: [{ data: [45, 20, 41, 4], backgroundColor: [colors.emerald, colors.rose, colors.blue, colors.amber], borderRadius: 8, borderSkipped: false }] },
+  options: { ...chartOpt(false), ...barScales }
+});
+
+// 10. CMUL News Satisfaction (ครบ 4 ด้าน)
+new Chart(document.getElementById('chartCMULSat'), {
+  type: 'radar',
+  data: { labels: ['ออกแบบ/ผลิตสื่อ', 'ช่องทางเผยแพร่', 'ภาพรวม', 'เนื้อหา/นำเสนอ'],
+    datasets: [{ label: 'ค่าเฉลี่ย', data: [4.08, 4.06, 4.03, 3.93],
+      borderColor: colors.cyan, backgroundColor: 'rgba(8,145,178,0.15)',
+      pointBackgroundColor: colors.cyan, pointBorderColor: '#fff', pointRadius: 5, borderWidth: 2 }] },
+  options: { plugins: { legend: { display: false } },
+    scales: { r: { beginAtZero: false, min: 3.5, max: 4.5,
+      angleLines: { color: 'rgba(0,0,0,0.05)' }, grid: { color: 'rgba(0,0,0,0.05)' },
+      pointLabels: { font: { size: 12 }, color: '#64748b' },
+      ticks: { stepSize: 0.25, font: { size: 10 }, backdropColor: 'transparent' } } },
+    responsive: true, maintainAspectRatio: false }
+});
+
+// 11. Department (ครบ 8 ฝ่าย)
+new Chart(document.getElementById('chartDept'), {
+  type: 'bar',
+  data: { labels: ['สำนักงานสำนัก', 'จัดการทรัพยากรฯ', 'บริการ/เรียนรู้', 'วิทย์สุขภาพ', 'มนุษยศาสตร์ฯ', 'สารสนเทศล้านนาฯ', 'วิทย์/เทคโนโลยี', 'IT ห้องสมุด'],
+    datasets: [{ data: [13, 11, 10, 7, 7, 6, 6, 5],
+      backgroundColor: [colors.blue, colors.emerald, colors.cyan, colors.violet, colors.amber, colors.rose, colors.orange, '#64748b'],
+      borderRadius: 8, borderSkipped: false }] },
+  options: { ...chartOpt(false), ...barScales }
+});
 </script>
   <script src="auth.js"></script>
 </body>
